@@ -71,6 +71,7 @@
             display: flex;
             align-items: center;
             padding: 2px 15px;
+            position: relative;
         }
         .search-container input {
             background: transparent;
@@ -80,6 +81,25 @@
             width: 100%;
             outline: none;
             font-size: 0.95em;
+            padding-right: 40px;
+        }
+        .clear-search {
+            position: absolute;
+            right: 15px;
+            background: transparent;
+            border: none;
+            color: #666;
+            cursor: pointer;
+            font-size: 1.1em;
+            padding: 5px;
+            display: none;
+            transition: color 0.2s ease;
+        }
+        .clear-search:hover {
+            color: var(--primary);
+        }
+        .clear-search.visible {
+            display: block;
         }
         .tabs-container {
             max-width: 1000px;
@@ -844,6 +864,9 @@
         <div class="search-container">
             <i class="fa-solid fa-magnifying-glass" style="color: #555;"></i>
             <input type="text" id="mainSearch" placeholder="¿Qué buscas?">
+            <button class="clear-search" id="clearSearch" title="Borrar búsqueda">
+                <i class="fa-solid fa-times"></i>
+            </button>
         </div>
     </div>
     <div class="tabs-container">
@@ -1061,7 +1084,7 @@
                     <!-- Assault Cube -->
                     <div class="content-item">
                         <div class="item-header"><div class="item-icon"><i class="fa-solid fa-cube"></i></div><div><h3 class="item-title">Assault Cube</h3></div></div>
-                        <p class="item-description">Shooter FPS gratuito y de código abierto, estilo Counter-Strike. Multijugador online y offline con bots, muy ligero.</p>
+                        <p class="item-description">Shooter FPS gratuitos, de código abierto, estilo Counter-Strike. Multijugador online y offline con bots, muy ligero.</p>
                         <div class="item-meta"><span class="item-badge">FPS</span><span class="item-badge">OPEN SOURCE</span><span class="item-badge">MULTIJUGADOR</span></div>
                         <a href="https://assault.cubers.net/download.html" class="download-btn" target="_blank"><i class="fa-solid fa-download"></i> Página Oficial</a>
                     </div>
@@ -1553,11 +1576,30 @@
             setTimeout(performSearch, 50);
         }
         
-        // BUSCADOR
+        // BUSCADOR CON BOTÓN DE BORRAR
         const searchInput = document.getElementById('mainSearch');
+        const clearSearchBtn = document.getElementById('clearSearch');
+        
+        function updateClearButton() {
+            if (searchInput.value.trim() !== '') {
+                clearSearchBtn.classList.add('visible');
+            } else {
+                clearSearchBtn.classList.remove('visible');
+            }
+        }
+        
+        function clearSearch() {
+            searchInput.value = '';
+            clearSearchBtn.classList.remove('visible');
+            performSearch();
+            searchInput.focus();
+        }
+        
         function performSearch() {
             if (!searchInput) return;
             const searchTerm = searchInput.value.toLowerCase().trim();
+            updateClearButton();
+            
             const activeTab = document.querySelector('.tab-content.active');
             if (!activeTab) return;
             const items = activeTab.querySelectorAll('.content-item');
@@ -1585,7 +1627,20 @@
                 noResults.style.display = visibleCount === 0 && searchTerm !== '' ? "block" : "none";
             }
         }
-        if (searchInput) searchInput.addEventListener('input', performSearch);
+        
+        if (searchInput) {
+            searchInput.addEventListener('input', performSearch);
+            searchInput.addEventListener('input', updateClearButton);
+            searchInput.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape' && searchInput.value) {
+                    clearSearch();
+                }
+            });
+        }
+        
+        if (clearSearchBtn) {
+            clearSearchBtn.addEventListener('click', clearSearch);
+        }
         
         // MODALES
         function openModal(modalId) { 
@@ -1951,7 +2006,10 @@
             const validTabs = ['Programas', 'Sistemas', 'Juegos', 'Extras', 'APKs'];
             const defaultTab = validTabs.includes(hash) ? hash : 'Programas';
             openTab(defaultTab);
-            if (searchInput && searchInput.value) performSearch();
+            if (searchInput && searchInput.value) {
+                updateClearButton();
+                performSearch();
+            }
         });
         
         // MANEJAR EL BOTÓN ATRÁS/ADELANTE DEL NAVEGADOR
