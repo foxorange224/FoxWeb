@@ -1,109 +1,21 @@
 {
-  "name": "FoxWeb - Centro de Descargas",
+  "name": "FoxWeb",
   "short_name": "FoxWeb",
-  "description": "Centro de descargas confiable con software esencial, sistemas operativos, juegos clásicos y utilidades",
-  "start_url": "/",
-  "scope": "/",
-  "display": "standalone",
-  "orientation": "portrait",
-  "theme_color": "#FF4500",
-  "background_color": "#0c0c0c",
-  "categories": ["utilities", "productivity", "education"],
-  "lang": "es",
-  "dir": "ltr",
   "icons": [
     {
-      "src": "https://i.imgur.com/5JzgCvZ.png",
-      "sizes": "72x72",
-      "type": "image/png",
-      "purpose": "any"
-    },
-    {
-      "src": "https://i.imgur.com/5JzgCvZ.png",
-      "sizes": "96x96",
-      "type": "image/png",
-      "purpose": "any"
-    },
-    {
-      "src": "https://i.imgur.com/5JzgCvZ.png",
-      "sizes": "128x128",
-      "type": "image/png",
-      "purpose": "any"
-    },
-    {
-      "src": "https://i.imgur.com/5JzgCvZ.png",
-      "sizes": "144x144",
-      "type": "image/png",
-      "purpose": "any"
-    },
-    {
-      "src": "https://i.imgur.com/5JzgCvZ.png",
-      "sizes": "152x152",
-      "type": "image/png",
-      "purpose": "any"
-    },
-    {
-      "src": "https://i.imgur.com/qfsMx7V.png",
+      "src": "/web-app-manifest-192x192.png",
       "sizes": "192x192",
       "type": "image/png",
-      "purpose": "any maskable"
+      "purpose": "maskable"
     },
     {
-      "src": "https://i.imgur.com/qfsMx7V.png",
-      "sizes": "256x256",
-      "type": "image/png",
-      "purpose": "any maskable"
-    },
-    {
-      "src": "https://i.imgur.com/qfsMx7V.png",
-      "sizes": "384x384",
-      "type": "image/png",
-      "purpose": "any maskable"
-    },
-    {
-      "src": "https://i.imgur.com/qfsMx7V.png",
+      "src": "/web-app-manifest-512x512.png",
       "sizes": "512x512",
       "type": "image/png",
-      "purpose": "any maskable"
+      "purpose": "maskable"
     }
   ],
-  "shortcuts": [
-    {
-      "name": "Programas Esenciales",
-      "short_name": "Programas",
-      "description": "Descarga programas básicos y esenciales",
-      "url": "/#Programas",
-      "icons": [{ "src": "https://i.imgur.com/5JzgCvZ.png", "sizes": "96x96" }]
-    },
-    {
-      "name": "Sistemas Operativos",
-      "short_name": "Sistemas",
-      "description": "Distribuciones Linux y herramientas",
-      "url": "/#Sistemas",
-      "icons": [{ "src": "https://i.imgur.com/5JzgCvZ.png", "sizes": "96x96" }]
-    },
-    {
-      "name": "Juegos Clásicos",
-      "short_name": "Juegos",
-      "description": "Juegos retro y ligeros para PC",
-      "url": "/#Juegos",
-      "icons": [{ "src": "https://i.imgur.com/5JzgCvZ.png", "sizes": "96x96" }]
-    }
-  ],
-  "screenshots": [
-    {
-      "src": "https://i.imgur.com/qJpo1hb.jpeg",
-      "sizes": "1280x720",
-      "type": "image/jpeg",
-      "form_factor": "wide",
-      "label": "FoxWeb - Página principal"
-    }
-  ],
-  "related_applications": [
-    {
-      "platform": "web",
-      "url": "https://foxweb.vercel.app"
-    }
-  ],
-  "prefer_related_applications": false
+  "theme_color": "#ffffff",
+  "background_color": "#ffffff",
+  "display": "standalone"
 }
