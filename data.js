@@ -6,6 +6,14 @@ const FoxWebDB = {
   // ==================== PROGRAMAS ====================
   programas: [
     {
+    name: "Krita",
+    icon: "fa-solid fa-paintbrush",  // o "fa-solid fa-palette"
+    info: "Software de pintura digital y animación de código abierto. Alternativa gratuita a Photoshop para artistas digitales.",
+    enlace: "https://krita.org/es/download/",
+    modal: null,
+    badges: ["DISEÑO", "PINTURA DIGITAL", "OPEN SOURCE"]
+    },
+    {
       name: "VLC Media Player",
       icon: "fa-solid fa-compact-disc",
       info: "El reproductor multimedia universal. Reproduce cualquier formato de video o audio sin necesidad de instalar códecs adicionales.",
@@ -77,6 +85,111 @@ const FoxWebDB = {
       modal: null,
       badges: ["AUDIO", "EDITOR", "OPEN SOURCE"]
     },
+    {
+  name: "GIMP",
+  icon: "fa-solid fa-image",
+  info: "Editor de imágenes de código abierto. Potente alternativa a Photoshop con soporte para capas, filtros y scripts.",
+  enlace: "https://www.gimp.org/downloads/",
+  modal: null,
+  badges: ["EDICIÓN", "FOTOS", "OPEN SOURCE"]
+},
+{
+  name: "Inkscape",
+  icon: "fa-solid fa-draw-polygon",
+  info: "Editor de gráficos vectoriales profesional. Crea logotipos, ilustraciones, diagramas y más. Alternativa a Illustrator.",
+  enlace: "https://inkscape.org/release/",
+  modal: null,
+  badges: ["VECTORES", "DISEÑO", "OPEN SOURCE"]
+},
+{
+  name: "DaVinci Resolve",
+  icon: "fa-solid fa-film",
+  info: "Software profesional de edición de video, colorización y postproducción. Versión gratuita con funciones completas.",
+  enlace: "https://www.blackmagicdesign.com/products/davinciresolve/",
+  modal: null,
+  badges: ["VIDEO", "EDICIÓN", "PROFESIONAL"]
+},
+{
+  name: "OBS Studio",
+  icon: "fa-solid fa-video",
+  info: "Software de grabación y transmisión en vivo. Gratuito y open source para streamers, youtubers y creadores.",
+  enlace: "https://obsproject.com/download",
+  modal: null,
+  badges: ["STREAMING", "GRABACIÓN", "OPEN SOURCE"]
+},
+{
+  name: "Visual Studio Code",
+  icon: "fa-solid fa-code",
+  info: "Editor de código fuente ligero pero potente. Soporte para múltiples lenguajes, debugging y control de Git integrado.",
+  enlace: "https://code.visualstudio.com/Download",
+  modal: null,
+  badges: ["PROGRAMACIÓN", "EDITOR", "GRATUITO"]
+},
+{
+  name: "Git",
+  icon: "fa-brands fa-git-alt",
+  info: "Sistema de control de versiones distribuido. Esencial para desarrolladores para gestionar código y colaborar.",
+  enlace: "https://git-scm.com/downloads",
+  modal: null,
+  badges: ["CONTROL VERSIONES", "DESARROLLO", "OPEN SOURCE"]
+},
+{
+  name: "Python",
+  icon: "fa-brands fa-python",
+  info: "Lenguaje de programación interpretado. Simple, potente y popular para ciencia de datos, IA, web y automatización.",
+  enlace: "https://www.python.org/downloads/",
+  modal: null,
+  badges: ["PROGRAMACIÓN", "LENGUAJE", "OPEN SOURCE"]
+},
+{
+  name: "Node.js",
+  icon: "fa-brands fa-node-js",
+  info: "Entorno de ejecución para JavaScript del lado del servidor. Ideal para aplicaciones web escalables y APIs.",
+  enlace: "https://nodejs.org/en/download/",
+  modal: null,
+  badges: ["JAVASCRIPT", "SERVER", "OPEN SOURCE"]
+},
+{
+  name: "XAMPP",
+  icon: "fa-solid fa-server",
+  info: "Paquete de servidor web Apache con PHP, MySQL y Perl. Entorno de desarrollo web local completo y gratuito.",
+  enlace: "https://www.apachefriends.org/download.html",
+  modal: null,
+  badges: ["WEB", "DESARROLLO", "SERVIDOR"]
+},
+{
+  name: "Everything",
+  icon: "fa-solid fa-search",
+  info: "Motor de búsqueda de archivos instantáneo para Windows. Encuentra cualquier archivo en segundos.",
+  enlace: "https://www.voidtools.com/downloads/",
+  modal: null,
+  badges: ["BÚSQUEDA", "PRODUCTIVIDAD", "RÁPIDO"]
+},
+{
+  name: "Greenshot",
+  icon: "fa-solid fa-camera",
+  info: "Herramienta de captura de pantalla ligera y potente. Captura, anota y comparte fácilmente.",
+  enlace: "https://getgreenshot.org/downloads/",
+  modal: null,
+  badges: ["CAPTURA", "PRODUCTIVIDAD", "OPEN SOURCE"]
+},
+{
+  name: "KeePassXC",
+  icon: "fa-solid fa-key",
+  info: "Gestor de contraseñas seguro y de código abierto. Almacena tus contraseñas en una base de datos encriptada.",
+  enlace: "https://keepassxc.org/download/",
+  modal: null,
+  badges: ["SEGURIDAD", "CONTRASEÑAS", "OPEN SOURCE"]
+},
+{
+  name: "CrystalDiskMark",
+  icon: "fa-solid fa-hard-drive",
+  info: "Benchmark para medir velocidad de lectura/escritura de discos duros y SSD. Simple y efectivo.",
+  enlace: "https://crystalmark.info/en/software/crystaldiskmark/",
+  modal: null,
+  badges: ["BENCHMARK", "DISCO", "DIAGNÓSTICO"]
+},
+
     {
       name: "FileZilla",
       icon: "fa-solid fa-server",
