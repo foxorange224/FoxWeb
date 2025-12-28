@@ -40,8 +40,18 @@ self.addEventListener('activate', event => {
   );
 });
 
-// Interceptar peticiones y servir desde cache
+// Intercepter peticiones y servir desde cache
 self.addEventListener('fetch', event => {
+  const url = event.request.url;
+
+  // --- INICIO DE LA CORRECCIÓN PARA VERCEL ---
+  // Si la petición es para Vercel Insights, NO interceptar.
+  // Esto evita el error "(cancelado)" y permite que Vercel reciba los datos.
+  if (url.includes('_vercel/insights') || url.includes('vercel-scripts.com')) {
+    return; // El Service Worker ignora esta petición
+  }
+  // --- FIN DE LA CORRECCIÓN ---
+
   event.respondWith(
     caches.match(event.request)
       .then(response => {
@@ -57,10 +67,9 @@ self.addEventListener('fetch', event => {
             return response;
           }
           
-          // Clonamos la respuesta
+          // Clonamos la respuesta para guardarla en el cache
           const responseToCache = response.clone();
           
-          // Agregamos al cache
           caches.open(CACHE_NAME)
             .then(cache => {
               cache.put(event.request, responseToCache);
@@ -69,7 +78,7 @@ self.addEventListener('fetch', event => {
           return response;
         });
       }).catch(() => {
-        // Si falla todo, podemos mostrar una página offline personalizada
+        // Si falla todo, mostramos main.html como respaldo offline
         return caches.match('/main.html');
       })
   );
