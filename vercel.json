@@ -6,26 +6,11 @@
     "enabled": true
   },
   "builds": [
-    {
-      "src": "*.html",
-      "use": "@vercel/static"
-    },
-    {
-      "src": "*.js",
-      "use": "@vercel/static"
-    },
-    {
-      "src": "*.json",
-      "use": "@vercel/static"
-    },
-    {
-      "src": "*.txt",
-      "use": "@vercel/static"
-    },
-    {
-      "src": "*.xml",
-      "use": "@vercel/static"
-    }
+    { "src": "*.html", "use": "@vercel/static" },
+    { "src": "*.js", "use": "@vercel/static" },
+    { "src": "*.json", "use": "@vercel/static" },
+    { "src": "*.txt", "use": "@vercel/static" },
+    { "src": "*.xml", "use": "@vercel/static" }
   ],
   "routes": [
     {
@@ -33,213 +18,58 @@
       "continue": true
     },
     {
-      "src": "/",
-      "dest": "/main.html",
+      "src": "/(.*\\.(html|js|json|txt|xml|png|jpg|jpeg|gif|ico|svg))",
       "headers": {
-        "Cache-Control": "public, max-age=3600, s-maxage=86400"
-      }
+        "Cache-Control": "public, max-age=0, must-revalidate"
+      },
+      "continue": true
     },
     {
       "src": "/main",
-      "dest": "/main.html",
-      "headers": {
-        "Cache-Control": "public, max-age=3600, s-maxage=86400"
-      }
+      "dest": "/main.html"
     },
     {
       "src": "/index",
-      "dest": "/main.html",
-      "headers": {
-        "Cache-Control": "public, max-age=3600, s-maxage=86400"
-      }
+      "dest": "/main.html"
     },
     {
       "src": "/home",
-      "dest": "/main.html",
-      "headers": {
-        "Cache-Control": "public, max-age=3600, s-maxage=86400"
-      }
-    },
-    {
-      "src": "/(.*\\.(html|js|json|txt|xml))",
-      "headers": {
-        "Cache-Control": "public, max-age=31536000, immutable"
-      }
+      "dest": "/main.html"
     },
     {
       "src": "/sitemap\\.xml",
-      "dest": "/sitemap.xml",
-      "headers": {
-        "Content-Type": "application/xml",
-        "Cache-Control": "public, max-age=3600, s-maxage=86400"
-      }
+      "dest": "/sitemap.xml"
     },
     {
       "src": "/robots\\.txt",
-      "dest": "/robots.txt",
-      "headers": {
-        "Content-Type": "text/plain",
-        "Cache-Control": "public, max-age=3600, s-maxage=86400"
-      }
+      "dest": "/robots.txt"
     },
     {
       "src": "/manifest\\.json",
-      "dest": "/manifest.json",
-      "headers": {
-        "Content-Type": "application/json",
-        "Cache-Control": "public, max-age=3600, s-maxage=86400"
-      }
-    },
-    {
-      "src": "/data\\.js",
-      "dest": "/data.js",
-      "headers": {
-        "Content-Type": "application/javascript",
-        "Cache-Control": "public, max-age=3600, s-maxage=86400"
-      }
-    },
-    {
-      "src": "/(.*\\.(png|jpg|jpeg|gif|ico|svg))",
-      "headers": {
-        "Cache-Control": "public, max-age=31536000, immutable"
-      }
-    },
-    {
-      "src": "/service-worker\\.js",
-      "dest": "/service-worker.js",
-      "headers": {
-        "Content-Type": "application/javascript",
-        "Cache-Control": "no-cache, no-store, must-revalidate"
-      }
-    },
-    {
-      "src": "/api/(.*)",
-      "dest": "/404.html",
-      "status": 404
-    },
-    {
-      "src": "/admin/(.*)",
-      "dest": "/404.html",
-      "status": 404
+      "dest": "/manifest.json"
     },
     {
       "src": "/(.*)",
-      "dest": "/main.html",
-      "headers": {
-        "Cache-Control": "public, max-age=0, must-revalidate"
-      }
-    }
-  ],
-  "headers": [
-    {
-      "source": "/(.*)",
-      "headers": [
-        {
-          "key": "X-Content-Type-Options",
-          "value": "nosniff"
-        },
-        {
-          "key": "X-Frame-Options",
-          "value": "DENY"
-        },
-        {
-          "key": "X-XSS-Protection",
-          "value": "1; mode=block"
-        },
-        {
-          "key": "Referrer-Policy",
-          "value": "strict-origin-when-cross-origin"
-        },
-        {
-          "key": "Permissions-Policy",
-          "value": "camera=(), microphone=(), geolocation=()"
-        },
-        {
-          "key": "X-Robots-Tag",
-          "value": "index, follow"
-        }
-      ]
-    },
-    {
-      "source": "/main\\.html",
-      "headers": [
-        {
-          "key": "Link",
-          "value": "</manifest.json>; rel=\"manifest\""
-        }
-      ]
+      "dest": "/main.html"
     }
   ],
   "rewrites": [
-    {
-      "source": "/",
-      "destination": "/main.html"
-    },
-    {
-      "source": "/descargas",
-      "destination": "/main.html#Programas"
-    },
-    {
-      "source": "/programas",
-      "destination": "/main.html#Programas"
-    },
-    {
-      "source": "/sistemas",
-      "destination": "/main.html#Sistemas"
-    },
-    {
-      "source": "/juegos",
-      "destination": "/main.html#Juegos"
-    },
-    {
-      "source": "/extras",
-      "destination": "/main.html#Extras"
-    },
-    {
-      "source": "/apks",
-      "destination": "/main.html#APKs"
-    }
+    { "source": "/", "destination": "/main.html" },
+    { "source": "/descargas", "destination": "/main.html#Programas" },
+    { "source": "/programas", "destination": "/main.html#Programas" },
+    { "source": "/sistemas", "destination": "/main.html#Sistemas" },
+    { "source": "/juegos", "destination": "/main.html#Juegos" },
+    { "source": "/extras", "destination": "/main.html#Extras" },
+    { "source": "/apks", "destination": "/main.html#APKs" }
   ],
   "redirects": [
-    {
-      "source": "/index.html",
-      "destination": "/",
-      "permanent": true
-    },
-    {
-      "source": "/main.html",
-      "destination": "/main",
-      "permanent": true
-    },
-    {
-      "source": "/github",
-      "destination": "https://github.com/foxorange224",
-      "permanent": true
-    },
-    {
-      "source": "/youtube",
-      "destination": "https://www.youtube.com/@FoxOrange224",
-      "permanent": true
-    },
-    {
-      "source": "/discord",
-      "destination": "https://discord.gg/r9v67gFRcp",
-      "permanent": true
-    },
-    {
-      "source": "/paypal",
-      "destination": "https://www.paypal.com/ncp/payment/QLFVSACHGMW5E",
-      "permanent": true
-    }
+    { "source": "/index.html", "destination": "/", "permanent": true },
+    { "source": "/main.html", "destination": "/main", "permanent": true },
+    { "source": "/github", "destination": "https://github.com/foxorange224", "permanent": true },
+    { "source": "/youtube", "destination": "https://www.youtube.com/@FoxOrange224", "permanent": true },
+    { "source": "/discord", "destination": "https://discord.gg/r9v67gFRcp", "permanent": true },
+    { "source": "/paypal", "destination": "https://www.paypal.com/ncp/payment/QLFVSACHGMW5E", "permanent": true }
   ],
-  "trailingSlash": false,
   "cleanUrls": true,
-  "git": {
-    "deploymentEnabled": {
-      "main": true
-    }
-  },
-  "env": {
-    "NODE_ENV": "production"
-  }
+  "trailingSlash": false
 }
