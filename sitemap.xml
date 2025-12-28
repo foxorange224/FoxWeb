@@ -31,22 +31,4 @@
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
-  
-  <!-- ITEMS INDIVIDUALES (ejemplos) -->
-  <url>
-    <loc>https://foxweb.vercel.app/main#Programas/vlc-media-player</loc>
-    <lastmod>2025-01-28</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  
-  <url>
-    <loc>https://foxweb.vercel.app/main#Programas/7-zip</loc>
-    <lastmod>2025-01-28</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  
-  <!-- ... agregar más items ... -->
-  
 </urlset>
