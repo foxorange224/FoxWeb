@@ -4,6 +4,7 @@ const CACHE_NAME = 'foxweb-v1.0';
 const urlsToCache = [
   '/',
   '/index.html',
+  '/main.html',
   '/data.js',
   'https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap',
   'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css',
