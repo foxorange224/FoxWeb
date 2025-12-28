@@ -312,7 +312,7 @@ const FoxWebDB = {
       enlace: "#",
       modal: "driverBoosterModal",
       badges: ["DRIVERS", "WINDOWS XP", "COMPATIBILIDAD"]
-    }
+    },
     {
       name: "Smart Defrag (Versión 11)",
       icon: "fa-solid fa-gears",
@@ -320,7 +320,7 @@ const FoxWebDB = {
       enlace: "#",
       modal: null,
       badges: ["DISCOS", "DESFRAGMENTAR", "HDD"]
-    }
+    },
   ],
   
   // ==================== APKs ====================
