@@ -1,32 +1,11 @@
 {
   "version": 2,
-  "name": "foxweb",
   "public": true,
   "speedInsights": {
     "enabled": true
   },
-  "routes": [
-    {
-      "src": "/_vercel/insights/script.js",
-      "continue": true
-    },
-    {
-      "src": "/main",
-      "dest": "/main.html"
-    },
-    {
-      "src": "/index",
-      "dest": "/main.html"
-    },
-    {
-      "src": "/home",
-      "dest": "/main.html"
-    },
-    {
-      "src": "/(.*)",
-      "dest": "/main.html"
-    }
-  ],
+  "cleanUrls": true,
+  "trailingSlash": false,
   "headers": [
     {
       "source": "/(.*)",
@@ -34,22 +13,6 @@
         {
           "key": "Content-Security-Policy",
           "value": "default-src 'self'; script-src 'self' 'unsafe-inline' https://va.vercel-scripts.com; connect-src 'self' https://vitals.vercel-insights.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdnjs.cloudflare.com; font-src 'self' https://fonts.gstatic.com https://cdnjs.cloudflare.com; img-src 'self' data: https://i.imgur.com https://imgur.com;"
-        },
-        {
-          "key": "X-Content-Type-Options",
-          "value": "nosniff"
-        },
-        {
-          "key": "X-Frame-Options",
-          "value": "DENY"
-        },
-        {
-          "key": "X-XSS-Protection",
-          "value": "1; mode=block"
-        },
-        {
-          "key": "Referrer-Policy",
-          "value": "strict-origin-when-cross-origin"
         }
       ]
     }
@@ -58,19 +21,11 @@
     { "source": "/", "destination": "/main.html" },
     { "source": "/descargas", "destination": "/main.html#Programas" },
     { "source": "/programas", "destination": "/main.html#Programas" },
-    { "source": "/sistemas", "destination": "/main.html#Sistemas" },
-    { "source": "/juegos", "destination": "/main.html#Juegos" },
-    { "source": "/extras", "destination": "/main.html#Extras" },
-    { "source": "/apks", "destination": "/main.html#APKs" }
+    { "source": "/juegos", "destination": "/main.html#Juegos" }
   ],
   "redirects": [
     { "source": "/index.html", "destination": "/", "permanent": true },
-    { "source": "/main.html", "destination": "/main", "permanent": true },
     { "source": "/github", "destination": "https://github.com/foxorange224", "permanent": true },
-    { "source": "/youtube", "destination": "https://www.youtube.com/@FoxOrange224", "permanent": true },
-    { "source": "/discord", "destination": "https://discord.gg/r9v67gFRcp", "permanent": true },
     { "source": "/paypal", "destination": "https://www.paypal.com/ncp/payment/QLFVSACHGMW5E", "permanent": true }
-  ],
-  "cleanUrls": true,
-  "trailingSlash": false
+  ]
 }
