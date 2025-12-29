@@ -1,71 +1,25 @@
 {
-  "name": "FoxWeb - Centro de Descargas",
+  "name": "FoxWeb",
   "short_name": "FoxWeb",
-  "description": "Descarga software gratis, sistemas operativos, juegos clásicos y APKs. Enlaces directos y seguros.",
+  "description": "Descarga software, APKs, juegos y sistemas operativos. Enlaces directos y seguros.",
   "start_url": "/",
-  "scope": "/",
   
   "display": "standalone",
-  "display_override": ["standalone", "minimal-ui"],
-  
-  "orientation": "any",
-  "dir": "ltr",
-  
   "theme_color": "#FF4500",
   "background_color": "#0c0c0c",
-  "categories": ["utilities", "productivity", "entertainment"],
-  
-  "lang": "es",
-  "id": "/",
   
   "icons": [
     {
       "src": "https://i.imgur.com/qJpo1hb.jpeg",
-      "sizes": "72x72",
-      "type": "image/jpeg",
-      "purpose": "any"
-    },
-    {
-      "src": "https://i.imgur.com/qJpo1hb.jpeg",
-      "sizes": "96x96",
-      "type": "image/jpeg",
-      "purpose": "any"
-    },
-    {
-      "src": "https://i.imgur.com/qJpo1hb.jpeg",
-      "sizes": "128x128",
-      "type": "image/jpeg",
-      "purpose": "any"
-    },
-    {
-      "src": "https://i.imgur.com/qJpo1hb.jpeg",
-      "sizes": "144x144",
-      "type": "image/jpeg",
-      "purpose": "any"
-    },
-    {
-      "src": "https://i.imgur.com/qJpo1hb.jpeg",
-      "sizes": "152x152",
-      "type": "image/jpeg",
-      "purpose": "any"
-    },
-    {
-      "src": "https://i.imgur.com/qJpo1hb.jpeg",
       "sizes": "192x192",
       "type": "image/jpeg",
-      "purpose": "any maskable"
-    },
-    {
-      "src": "https://i.imgur.com/qJpo1hb.jpeg",
-      "sizes": "384x384",
-      "type": "image/jpeg",
       "purpose": "any"
     },
     {
       "src": "https://i.imgur.com/qJpo1hb.jpeg",
-      "sizes": "512x512",
+      "sizes": "512x512", 
       "type": "image/jpeg",
-      "purpose": "any maskable"
+      "purpose": "any"
     }
   ],
   
@@ -74,45 +28,7 @@
       "src": "https://i.imgur.com/qJpo1hb.jpeg",
       "sizes": "512x512",
       "type": "image/jpeg",
-      "form_factor": "any",
-      "label": "FoxWeb - Centro de Descargas"
+      "form_factor": "any"
     }
-  ],
-  
-  "shortcuts": [
-    {
-      "name": "APKs Premium",
-      "short_name": "APKs",
-      "description": "Aplicaciones Android modificadas",
-      "url": "/#apks"
-    },
-    {
-      "name": "Programas Windows",
-      "short_name": "Programas",
-      "description": "Software optimizado para PC",
-      "url": "/#programas"
-    },
-    {
-      "name": "Juegos Clásicos",
-      "short_name": "Juegos",
-      "description": "Juegos retro y livianos",
-      "url": "/#juegos"
-    },
-    {
-      "name": "Sistemas Operativos",
-      "short_name": "OS",
-      "description": "Windows, Linux y más",
-      "url": "/#os"
-    }
-  ],
-  
-  "share_target": {
-    "action": "/",
-    "method": "GET",
-    "params": {
-      "title": "title",
-      "text": "text",
-      "url": "url"
-    }
-  }
+  ]
 }
