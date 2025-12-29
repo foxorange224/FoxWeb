@@ -22,10 +22,6 @@
       "use": "@vercel/static"
     },
     {
-      "src": "*.xml",
-      "use": "@vercel/static"
-    },
-    {
       "src": "*.ico",
       "use": "@vercel/static"
     },
@@ -52,27 +48,19 @@
   ],
   "routes": [
     {
-      "src": "/(ads\\.txt|robots\\.txt|humans\\.txt)",
-      "dest": "/$1",
+      "src": "/ads\\.txt",
+      "dest": "/ads.txt",
       "headers": {
         "cache-control": "public, max-age=86400",
         "content-type": "text/plain; charset=utf-8"
       }
     },
     {
-      "src": "/sitemap\\.xml",
-      "dest": "/sitemap.xml",
+      "src": "/robots\\.txt",
+      "dest": "/robots.txt",
       "headers": {
         "cache-control": "public, max-age=86400",
-        "content-type": "application/xml; charset=utf-8"
-      }
-    },
-    {
-      "src": "/manifest\\.json",
-      "dest": "/manifest.json",
-      "headers": {
-        "cache-control": "public, max-age=86400",
-        "content-type": "application/manifest+json"
+        "content-type": "text/plain; charset=utf-8"
       }
     },
     {
@@ -84,15 +72,16 @@
       }
     },
     {
-      "src": "/favicon\\.ico",
-      "dest": "/favicon.ico",
+      "src": "/manifest\\.json",
+      "dest": "/manifest.json",
       "headers": {
-        "cache-control": "public, max-age=31536000, immutable"
+        "cache-control": "public, max-age=86400",
+        "content-type": "application/manifest+json"
       }
     },
     {
-      "src": "/apple-touch-icon(?:\\.png)?",
-      "dest": "/apple-touch-icon.png",
+      "src": "/favicon\\.ico",
+      "dest": "/favicon.ico",
       "headers": {
         "cache-control": "public, max-age=31536000, immutable"
       }
@@ -108,7 +97,8 @@
       "src": "/(.*)\\.(css|js)$",
       "dest": "/$1.$2",
       "headers": {
-        "cache-control": "public, max-age=31536000, immutable"
+        "cache-control": "public, max-age=31536000, immutable",
+        "content-type": "application/javascript"
       }
     },
     {
@@ -164,18 +154,8 @@
         {
           "key": "Strict-Transport-Security",
           "value": "max-age=63072000; includeSubDomains; preload"
-        },
-        {
-          "key": "Access-Control-Allow-Origin",
-          "value": "*"
         }
       ]
-    }
-  ],
-  "rewrites": [
-    {
-      "source": "/main",
-      "destination": "/"
     }
   ]
 }
