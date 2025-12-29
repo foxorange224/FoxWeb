@@ -87,14 +87,39 @@ body::before {
   background-attachment: fixed;
 }
 
+/* ===== CONTENEDORES PRINCIPALES - CENTRADOS ===== */
+.header-container,
+.search-section,
+.tabs-container,
+.content-container {
+  max-width: 1400px;
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 15px;
+  padding-right: 15px;
+  width: 100%;
+  position: relative;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+/* Asegurar que los contenedores se mantengan centrados incluso con zoom */
+@media (max-width: 1400px) {
+  .header-container,
+  .search-section,
+  .tabs-container,
+  .content-container {
+    width: calc(100% - 30px);
+    max-width: 100%;
+  }
+}
+
 /* ===== HEADER ===== */
 .header-container {
   display: flex;
   flex-direction: column;
   align-items: center;
-  max-width: 1400px;
   margin: 0 auto 20px;
-  padding: 0 15px;
   gap: 15px;
 }
 
@@ -127,9 +152,7 @@ body::before {
 
 /* ===== SEARCH ===== */
 .search-section {
-  max-width: 1400px;
   margin: 0 auto 15px;
-  padding: 0 15px;
 }
 
 .search-container {
@@ -186,14 +209,11 @@ body::before {
 
 /* ===== TABS ===== */
 .tabs-container {
-  max-width: 1400px;
-  margin: 0 auto 30px;
   background-color: var(--bg-tab);
   border-radius: 10px;
   border: 1px solid var(--border);
   overflow: hidden;
-  margin-left: 15px;
-  margin-right: 15px;
+  margin-bottom: 30px;
 }
 
 .tab-buttons {
@@ -251,7 +271,6 @@ body::before {
 
 /* ===== CONTENT GRID ===== */
 .content-container {
-  max-width: 1400px;
   margin: 0 auto;
   padding: 0 10px;
 }
@@ -284,6 +303,7 @@ body::before {
   grid-template-columns: 1fr;
   gap: 20px;
   margin-bottom: 30px;
+  width: 100%;
 }
 
 .content-item {
@@ -296,6 +316,7 @@ body::before {
   transition: all 0.2s ease;
   min-height: 180px;
   justify-content: space-between;
+  width: 100%;
 }
 
 .content-item:hover {
@@ -411,6 +432,7 @@ body::before {
   color: #666;
   grid-column: 1/-1;
   display: none;
+  width: 100%;
 }
 
 .password-notice {
@@ -422,11 +444,13 @@ body::before {
   border-radius: 10px;
   border: 1px solid rgba(255, 69, 0, 0.2);
   font-size: 0.9em;
+  width: 100%;
 }
 
 .loading-data {
   text-align: center;
   padding: 60px 20px;
+  width: 100%;
 }
 
 .loading-spinner {
@@ -732,6 +756,10 @@ body::before {
   font-size: 0.9em;
   font-weight: 500;
   padding: 0 15px;
+  width: 100%;
+  max-width: 1400px;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 /* ===== SCROLLBARS ===== */
@@ -769,6 +797,8 @@ body::before {
     flex-direction: row;
     justify-content: space-between;
     margin-bottom: 30px;
+    padding-left: 25px;
+    padding-right: 25px;
   }
   
   .main-logo {
@@ -783,10 +813,15 @@ body::before {
     font-size: 1.6em;
   }
   
+  .search-section {
+    padding-left: 25px;
+    padding-right: 25px;
+  }
+  
   .tabs-container {
-    margin-left: 25px;
-    margin-right: 25px;
     margin-bottom: 40px;
+    padding-left: 0;
+    padding-right: 0;
   }
   
   .tab-buttons {
@@ -838,10 +873,9 @@ body::before {
     grid-template-columns: repeat(3, 1fr);
   }
   
-  .tabs-container {
-    max-width: 1200px;
-  }
-  
+  .header-container,
+  .search-section,
+  .tabs-container,
   .content-container {
     max-width: 1200px;
   }
@@ -851,6 +885,8 @@ body::before {
 @media (max-width: 480px) {
   .header-container {
     gap: 10px;
+    padding-left: 10px;
+    padding-right: 10px;
   }
   
   .main-logo {
@@ -866,10 +902,15 @@ body::before {
     padding: 5px;
   }
   
+  .search-section {
+    padding-left: 10px;
+    padding-right: 10px;
+  }
+  
   .tabs-container {
-    margin-left: 10px;
-    margin-right: 10px;
     margin-bottom: 20px;
+    padding-left: 0;
+    padding-right: 0;
   }
   
   .tablink {
@@ -989,6 +1030,36 @@ body::before {
     font-size: 16px !important;
   }
 }
+
+/* Ajustes específicos para zoom - mantener contenido centrado */
+@media (max-width: 1400px) {
+  .content-grid {
+    justify-content: center;
+  }
+  
+  .content-item {
+    margin-left: auto;
+    margin-right: auto;
+  }
+}
+
+/* Asegurar que todo el contenido se mantenga centrado */
+body {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+}
+
+/* Contenedor principal que envuelve todo */
+.main-wrapper {
+  width: 100%;
+  max-width: 1400px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 0 auto;
+}
 </style>
 
 <!-- Google Ads -->
@@ -998,6 +1069,8 @@ body::before {
 <script src="/data.js"></script>
 
 <body>
+<!-- Contenedor principal -->
+<div class="main-wrapper">
 <!-- Header -->
 <div class="header-container">
   <header>
@@ -1076,6 +1149,7 @@ body::before {
 
 <!-- Modals Container -->
 <div id="modales-container"></div>
+</div> <!-- Cierre del .main-wrapper -->
 
 <!-- Driver Booster Modal -->
 <div id="driverBoosterModal" class="modal">
