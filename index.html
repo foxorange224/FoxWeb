@@ -2092,6 +2092,238 @@ function cleanOldServiceWorkers() {
 cleanOldServiceWorkers();
 </script>
 
+<!-- ===== CHAT FOXWEB ===== -->
+<style>
+/* CHAT STYLES - AGREGAR AL FINAL DEL <style> EXISTENTE */
+.chat-widget {
+  position: fixed;
+  bottom: 90px;
+  right: 25px;
+  width: 70px;
+  height: 70px;
+  background: var(--primary);
+  color: white;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2em;
+  cursor: pointer;
+  box-shadow: 0 5px 25px rgba(255, 69, 0, 0.4);
+  z-index: 1001;
+  transition: all 0.3s ease;
+}
+
+.chat-widget:hover {
+  transform: scale(1.1);
+  background: var(--primary-hover);
+}
+
+.chat-container {
+  position: fixed;
+  bottom: 90px;
+  right: 25px;
+  width: 350px;
+  max-width: 90vw;
+  height: 500px;
+  max-height: 70vh;
+  background: var(--bg-card);
+  border-radius: 15px;
+  border: 1px solid var(--border);
+  box-shadow: 0 15px 50px rgba(0, 0, 0, 0.5);
+  display: none;
+  flex-direction: column;
+  z-index: 1002;
+  overflow: hidden;
+}
+
+.chat-header {
+  background: linear-gradient(90deg, #4f46e5, #7c3aed);
+  color: white;
+  padding: 15px 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid var(--border);
+}
+
+.chat-header h3 {
+  margin: 0;
+  font-size: 1.1em;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.chat-header .online-count {
+  background: rgba(255, 255, 255, 0.2);
+  padding: 3px 10px;
+  border-radius: 15px;
+  font-size: 0.85em;
+}
+
+.chat-messages {
+  flex: 1;
+  padding: 15px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.message {
+  max-width: 80%;
+  padding: 10px 15px;
+  border-radius: 15px;
+  font-size: 0.95em;
+  line-height: 1.4;
+  animation: messageSlide 0.3s ease;
+}
+
+@keyframes messageSlide {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.message.own {
+  background: var(--primary);
+  color: white;
+  align-self: flex-end;
+  border-bottom-right-radius: 5px;
+}
+
+.message.other {
+  background: #2d2d2d;
+  color: var(--text-main);
+  align-self: flex-start;
+  border-bottom-left-radius: 5px;
+}
+
+.message-system {
+  background: rgba(255, 69, 0, 0.1);
+  color: var(--text-dim);
+  align-self: center;
+  font-size: 0.85em;
+  padding: 8px 15px;
+  border-radius: 10px;
+  text-align: center;
+  max-width: 90%;
+}
+
+.message .sender {
+  font-weight: 600;
+  font-size: 0.85em;
+  margin-bottom: 3px;
+  display: block;
+}
+
+.message .time {
+  font-size: 0.75em;
+  opacity: 0.7;
+  float: right;
+  margin-left: 10px;
+}
+
+.typing-indicator {
+  padding: 10px 15px;
+  color: var(--text-dim);
+  font-style: italic;
+  font-size: 0.9em;
+  display: none;
+}
+
+.chat-input {
+  padding: 15px;
+  border-top: 1px solid var(--border);
+  display: flex;
+  gap: 10px;
+}
+
+.chat-input input {
+  flex: 1;
+  padding: 12px 15px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--bg-card);
+  color: white;
+  font-family: 'Inter', sans-serif;
+  font-size: 0.95em;
+}
+
+.chat-input input:focus {
+  outline: none;
+  border-color: var(--primary);
+}
+
+.chat-input button {
+  background: var(--primary);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 0 20px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: background 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 60px;
+}
+
+.chat-input button:hover {
+  background: var(--primary-hover);
+}
+
+.chat-input button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Scrollbar para chat */
+.chat-messages::-webkit-scrollbar {
+  width: 6px;
+}
+
+.chat-messages::-webkit-scrollbar-track {
+  background: #222;
+}
+
+.chat-messages::-webkit-scrollbar-thumb {
+  background: var(--primary);
+  border-radius: 3px;
+}
+
+/* Responsive */
+@media (max-width: 480px) {
+  .chat-container {
+    width: 300px;
+    height: 450px;
+    right: 15px;
+    bottom: 80px;
+  }
+  
+  .chat-widget {
+    right: 15px;
+    bottom: 80px;
+    width: 60px;
+    height: 60px;
+    font-size: 1.7em;
+  }
+  
+  .floating-suggest-btn {
+    bottom: 15px;
+    right: 15px;
+  }
+}
+</style>
+
+
 <!-- CHAT HTML - AGREGAR ANTES DEL </body> -->
 <div class="chat-widget" onclick="toggleChat()" title="Chat FoxWeb">
   <i class="fa-solid fa-comments"></i>
