@@ -69,6 +69,9 @@ body {
   overflow-x: hidden;
   min-height: 100vh;
   padding-top: 40px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 body::before {
@@ -87,31 +90,15 @@ body::before {
   background-attachment: fixed;
 }
 
-/* ===== CONTENEDORES PRINCIPALES - CENTRADOS ===== */
-.header-container,
-.search-section,
-.tabs-container,
-.content-container {
-  max-width: 1400px;
-  margin-left: auto;
-  margin-right: auto;
-  padding-left: 15px;
-  padding-right: 15px;
+/* ===== CONTENEDOR PRINCIPAL ===== */
+.page-container {
   width: 100%;
-  position: relative;
-  left: 50%;
-  transform: translateX(-50%);
-}
-
-/* Asegurar que los contenedores se mantengan centrados incluso con zoom */
-@media (max-width: 1400px) {
-  .header-container,
-  .search-section,
-  .tabs-container,
-  .content-container {
-    width: calc(100% - 30px);
-    max-width: 100%;
-  }
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 15px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 /* ===== HEADER ===== */
@@ -119,7 +106,9 @@ body::before {
   display: flex;
   flex-direction: column;
   align-items: center;
+  width: 100%;
   margin: 0 auto 20px;
+  padding: 0 15px;
   gap: 15px;
 }
 
@@ -143,6 +132,9 @@ body::before {
   text-decoration: none;
   transition: all 0.2s ease;
   padding: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .social-icons-top a:hover {
@@ -152,7 +144,9 @@ body::before {
 
 /* ===== SEARCH ===== */
 .search-section {
+  width: 100%;
   margin: 0 auto 15px;
+  padding: 0 15px;
 }
 
 .search-container {
@@ -163,6 +157,8 @@ body::before {
   align-items: center;
   padding: 0 15px;
   position: relative;
+  max-width: 800px;
+  margin: 0 auto;
 }
 
 .search-container i {
@@ -209,11 +205,13 @@ body::before {
 
 /* ===== TABS ===== */
 .tabs-container {
+  width: 100%;
+  max-width: 1400px;
+  margin: 0 auto 30px;
   background-color: var(--bg-tab);
   border-radius: 10px;
   border: 1px solid var(--border);
   overflow: hidden;
-  margin-bottom: 30px;
 }
 
 .tab-buttons {
@@ -271,6 +269,8 @@ body::before {
 
 /* ===== CONTENT GRID ===== */
 .content-container {
+  width: 100%;
+  max-width: 1400px;
   margin: 0 auto;
   padding: 0 10px;
 }
@@ -303,7 +303,6 @@ body::before {
   grid-template-columns: 1fr;
   gap: 20px;
   margin-bottom: 30px;
-  width: 100%;
 }
 
 .content-item {
@@ -316,7 +315,6 @@ body::before {
   transition: all 0.2s ease;
   min-height: 180px;
   justify-content: space-between;
-  width: 100%;
 }
 
 .content-item:hover {
@@ -432,7 +430,6 @@ body::before {
   color: #666;
   grid-column: 1/-1;
   display: none;
-  width: 100%;
 }
 
 .password-notice {
@@ -444,13 +441,11 @@ body::before {
   border-radius: 10px;
   border: 1px solid rgba(255, 69, 0, 0.2);
   font-size: 0.9em;
-  width: 100%;
 }
 
 .loading-data {
   text-align: center;
   padding: 60px 20px;
-  width: 100%;
 }
 
 .loading-spinner {
@@ -758,8 +753,6 @@ body::before {
   padding: 0 15px;
   width: 100%;
   max-width: 1400px;
-  margin-left: auto;
-  margin-right: auto;
 }
 
 /* ===== SCROLLBARS ===== */
@@ -789,6 +782,22 @@ body::before {
   background: var(--primary-hover);
 }
 
+/* ===== CORRECCIÓN ESPECÍFICA PARA BOTONES MODALES ===== */
+/* Aseguramos que los botones de los modales tengan buen espaciado */
+.modal-content .modal-btn,
+.donate-modal-content .donate-btn,
+.info-modal-content .info-content {
+  white-space: normal;
+  word-break: break-word;
+  padding: 12px 15px !important;
+}
+
+/* Corregir espaciado en botones específicos */
+.modal-content .modal-btn i {
+  margin-right: 8px;
+  flex-shrink: 0;
+}
+
 /* ===== RESPONSIVE ===== */
 
 /* Tablets */
@@ -797,8 +806,7 @@ body::before {
     flex-direction: row;
     justify-content: space-between;
     margin-bottom: 30px;
-    padding-left: 25px;
-    padding-right: 25px;
+    padding: 0 25px;
   }
   
   .main-logo {
@@ -814,14 +822,11 @@ body::before {
   }
   
   .search-section {
-    padding-left: 25px;
-    padding-right: 25px;
+    padding: 0 25px;
   }
   
   .tabs-container {
     margin-bottom: 40px;
-    padding-left: 0;
-    padding-right: 0;
   }
   
   .tab-buttons {
@@ -865,6 +870,10 @@ body::before {
   .item-title {
     font-size: 1.3em;
   }
+  
+  .page-container {
+    padding: 0 25px;
+  }
 }
 
 /* Desktop */
@@ -873,20 +882,29 @@ body::before {
     grid-template-columns: repeat(3, 1fr);
   }
   
-  .header-container,
-  .search-section,
-  .tabs-container,
+  .tabs-container {
+    max-width: 1200px;
+  }
+  
   .content-container {
+    max-width: 1200px;
+  }
+  
+  .page-container {
     max-width: 1200px;
   }
 }
 
 /* Small Mobile */
 @media (max-width: 480px) {
+  body {
+    padding-top: 20px;
+  }
+  
   .header-container {
     gap: 10px;
-    padding-left: 10px;
-    padding-right: 10px;
+    padding: 0 10px;
+    margin-bottom: 15px;
   }
   
   .main-logo {
@@ -903,14 +921,12 @@ body::before {
   }
   
   .search-section {
-    padding-left: 10px;
-    padding-right: 10px;
+    padding: 0 10px;
+    margin-bottom: 10px;
   }
   
   .tabs-container {
     margin-bottom: 20px;
-    padding-left: 0;
-    padding-right: 0;
   }
   
   .tablink {
@@ -970,7 +986,22 @@ body::before {
   
   .modal-btn {
     min-width: 120px;
-    padding: 10px 15px;
+    padding: 10px 15px !important;
+    font-size: 0.9em;
+  }
+  
+  .page-container {
+    padding: 0 10px;
+  }
+  
+  /* Corrección específica para botones modales en móviles */
+  .modal-buttons-container {
+    gap: 8px;
+  }
+  
+  .modal-btn {
+    min-width: 130px;
+    padding: 10px 12px !important;
   }
 }
 
@@ -1031,34 +1062,48 @@ body::before {
   }
 }
 
-/* Ajustes específicos para zoom - mantener contenido centrado */
+/* Ajustes para zoom - mantener todo centrado */
 @media (max-width: 1400px) {
+  .page-container {
+    width: 100%;
+    max-width: 100%;
+  }
+  
   .content-grid {
     justify-content: center;
   }
+}
+
+/* Corrección específica para botones en modales existentes */
+#driverBoosterModal .modal-btn,
+#locosModal .modal-btn,
+#vlcModal .modal-btn,
+#javaModal .modal-btn {
+  padding: 12px 15px !important;
+  min-width: 140px;
+}
+
+/* Asegurar que todo el contenido se mantenga centrado en zoom extremo */
+@media (max-width: 320px) {
+  .header-container {
+    flex-direction: column;
+    text-align: center;
+  }
   
-  .content-item {
-    margin-left: auto;
-    margin-right: auto;
+  .social-icons-top {
+    justify-content: center;
+  }
+  
+  .modal-btn {
+    min-width: 110px !important;
+    padding: 8px 10px !important;
+    font-size: 0.85em !important;
   }
 }
 
-/* Asegurar que todo el contenido se mantenga centrado */
-body {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  width: 100%;
-}
-
-/* Contenedor principal que envuelve todo */
-.main-wrapper {
-  width: 100%;
-  max-width: 1400px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  margin: 0 auto;
+/* Ajuste para botones de descarga en content items */
+.download-btn i {
+  margin-right: 8px;
 }
 </style>
 
@@ -1069,8 +1114,8 @@ body {
 <script src="/data.js"></script>
 
 <body>
-<!-- Contenedor principal -->
-<div class="main-wrapper">
+<!-- Contenedor principal de toda la página -->
+<div class="page-container">
 <!-- Header -->
 <div class="header-container">
   <header>
@@ -1149,15 +1194,15 @@ body {
 
 <!-- Modals Container -->
 <div id="modales-container"></div>
-</div> <!-- Cierre del .main-wrapper -->
+</div> <!-- Cierre del .page-container -->
 
 <!-- Driver Booster Modal -->
 <div id="driverBoosterModal" class="modal">
   <div class="modal-content">
     <span class="close" onclick="closeModal('driverBoosterModal')">&times;</span>
-    <i class="fa-solid fa-gears"></i>
-    <h2>Driver Booster (Versión 10.3)</h2>
-    <p>Versión especial compatible con Windows XP, también compatible con 64 bits</p>
+    <i class="fa-solid fa-gears" style="font-size:3em;color:var(--primary);margin-bottom:15px;"></i>
+    <h2 style="margin-bottom:10px;color:var(--primary);">Driver Booster (Versión 10.3)</h2>
+    <p style="color:var(--text-dim);margin-bottom:20px;">Versión especial compatible con Windows XP, también compatible con 64 bits</p>
     <div class="modal-buttons-container">
       <a href="https://www.mediafire.com/file/o547i07igt8wcy1" class="modal-btn bit-64" target="_blank"><i class="fa-solid fa-desktop"></i>Descargar</a>
     </div>
@@ -1171,9 +1216,9 @@ body {
 <div id="locosModal" class="modal">
   <div class="modal-content">
     <span class="close" onclick="closeModal('locosModal')">&times;</span>
-    <i class="fa-brands fa-linux"></i>
-    <h2>Loc-OS Linux 23</h2>
-    <p>Distribución Linux ligera para hardware antiguo. Selecciona tu versión:</p>
+    <i class="fa-brands fa-linux" style="font-size:3em;color:var(--primary);margin-bottom:15px;"></i>
+    <h2 style="margin-bottom:10px;color:var(--primary);">Loc-OS Linux 23</h2>
+    <p style="color:var(--text-dim);margin-bottom:20px;">Distribución Linux ligera para hardware antiguo. Selecciona tu versión:</p>
     <div class="modal-buttons-container">
       <a href="https://sourceforge.net/projects/loc-os/files/Loc-OS%2023/Loc-OS-23-LXDE-i686.iso/download" class="modal-btn bit-32" target="_blank"><i class="fa-solid fa-download"></i>32-bit (x86)</a>
       <a href="https://sourceforge.net/projects/loc-os/files/Loc-OS%2023/Loc-OS-23-LXDE-x86_64.iso/download" class="modal-btn bit-64" target="_blank"><i class="fa-solid fa-download"></i>64-bit (x64)</a>
@@ -1188,9 +1233,9 @@ body {
 <div id="vlcModal" class="modal">
   <div class="modal-content">
     <span class="close" onclick="closeModal('vlcModal')">&times;</span>
-    <i class="fa-solid fa-compact-disc"></i>
-    <h2>VLC Media Player</h2>
-    <p>Selecciona la versión para tu sistema operativo:</p>
+    <i class="fa-solid fa-compact-disc" style="font-size:3em;color:var(--primary);margin-bottom:15px;"></i>
+    <h2 style="margin-bottom:10px;color:var(--primary);">VLC Media Player</h2>
+    <p style="color:var(--text-dim);margin-bottom:20px;">Selecciona la versión para tu sistema operativo:</p>
     <div class="modal-buttons-container">
       <a href="https://www.videolan.org/vlc/download-windows.html" class="modal-btn bit-32" target="_blank"><i class="fa-brands fa-windows"></i>Windows</a>
       <a href="https://www.videolan.org/vlc/download-linux.html" class="modal-btn bit-64" target="_blank"><i class="fa-brands fa-linux"></i>Linux</a>
@@ -1203,9 +1248,9 @@ body {
 <div id="javaModal" class="modal">
   <div class="modal-content">
     <span class="close" onclick="closeModal('javaModal')">&times;</span>
-    <i class="fa-brands fa-java"></i>
-    <h2>Java Runtime Environment</h2>
-    <p>Selecciona la carpeta según la arquitectura de tu Windows:</p>
+    <i class="fa-brands fa-java" style="font-size:3em;color:var(--primary);margin-bottom:15px;"></i>
+    <h2 style="margin-bottom:10px;color:var(--primary);">Java Runtime Environment</h2>
+    <p style="color:var(--text-dim);margin-bottom:20px;">Selecciona la carpeta según la arquitectura de tu Windows:</p>
     <div class="modal-buttons-container">
       <a href="https://www.mediafire.com/folder/8ckd6guquv59m/32" class="modal-btn bit-32" target="_blank"><i class="fa-solid fa-folder-open"></i>Carpeta 32-bit</a>
       <a href="https://www.mediafire.com/folder/v0rx72k6wye1t/64" class="modal-btn bit-64" target="_blank"><i class="fa-solid fa-folder-open"></i>Carpeta 64-bit</a>
@@ -1547,9 +1592,9 @@ function generateDynamicModals(foxWebData) {
       <div id="${modalId}" class="modal">
         <div class="modal-content">
           <span class="close" onclick="closeModal('${modalId}')">&times;</span>
-          <i class="${modal.icono || 'fa-solid fa-download'}"></i>
-          <h2>${modal.titulo}</h2>
-          <p>${modal.descripcion}</p>
+          <i class="${modal.icono || 'fa-solid fa-download'}" style="font-size:3em;color:var(--primary);margin-bottom:15px;"></i>
+          <h2 style="margin-bottom:10px;color:var(--primary);">${modal.titulo}</h2>
+          <p style="color:var(--text-dim);margin-bottom:20px;">${modal.descripcion}</p>
           <div class="modal-buttons-container">${buttonsHTML}</div>
           ${modal.nota ? `
           <div style="margin-top:20px;padding:15px;background:rgba(255,69,0,0.05);border-radius:8px;border-left:3px solid var(--primary);">
