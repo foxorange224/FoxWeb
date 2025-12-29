@@ -1,33 +1,38 @@
 {
   "version": 2,
-  "routes": [
+  "headers": [
     {
-      "src": "/(.*)\\.(ico|png|jpg|jpeg|gif|svg|webp|avif|css|js|woff|woff2|ttf|eot|json)$",
-      "headers": {
-        "Cache-Control": "public, max-age=31536000, immutable",
-        "CDN-Cache-Control": "public, max-age=31536000"
-      },
-      "continue": true
+      "source": "/(.*)",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=3600, stale-while-revalidate=86400"
+        },
+        {
+          "key": "CDN-Cache-Control", 
+          "value": "public, max-age=604800"
+        }
+      ]
     },
     {
-      "src": "/manifest.json",
-      "headers": {
-        "Cache-Control": "public, max-age=86400",
-        "Content-Type": "application/manifest+json"
-      },
-      "continue": true
+      "source": "/(.*)\\.(ico|png|jpg|jpeg|gif|svg|webp|avif)$",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=31536000, immutable"
+        }
+      ]
     },
     {
-      "src": "/(.*)",
-      "dest": "/main.html",
-      "headers": {
-        "Cache-Control": "public, max-age=3600, stale-while-revalidate=86400",
-        "CDN-Cache-Control": "public, max-age=604800",
-        "Vary": "Accept-Encoding"
-      }
+      "source": "/(.*)\\.(css|js)$",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=31536000, immutable"
+        }
+      ]
     }
   ],
-  "trailingSlash": false,
   "cleanUrls": true,
-  "regions": ["gru1"]
+  "trailingSlash": false
 }
