@@ -49,7 +49,7 @@
       "src": "/(.*)",
       "dest": "/index.html",
       "headers": {
-        "cache-control": "public, max-age=0, s-maxage=31536000, stale-while-revalidate=86400"
+        "cache-control": "public, max-age=0, s-maxage=7200, stale-while-revalidate=86400"
       }
     }
   ],
