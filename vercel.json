@@ -18,33 +18,13 @@
       "use": "@vercel/static"
     },
     {
-      "src": "*.xml",
-      "use": "@vercel/static"
-    },
-    {
       "src": "*.json",
-      "use": "@vercel/static"
-    },
-    {
-      "src": "*.png",
-      "use": "@vercel/static"
-    },
-    {
-      "src": "*.jpg",
-      "use": "@vercel/static"
-    },
-    {
-      "src": "*.svg",
-      "use": "@vercel/static"
-    },
-    {
-      "src": "*.ico",
       "use": "@vercel/static"
     }
   ],
   "routes": [
     {
-      "src": "^/chat\\.html$",
+      "src": "/chat\\.html",
       "dest": "/chat.html",
       "headers": {
         "Cache-Control": "public, max-age=300, s-maxage=3600",
@@ -53,26 +33,16 @@
       }
     },
     {
-      "src": "^/index\\.html$",
-      "dest": "/index.html",
-      "headers": {
-        "Cache-Control": "public, max-age=0, s-maxage=3600",
-        "Content-Type": "text/html; charset=utf-8",
-        "X-Robots-Tag": "index, follow, max-image-preview:large"
-      }
-    },
-    {
-      "src": "^/data\\.js$",
+      "src": "/data\\.js",
       "dest": "/data.js",
       "headers": {
-        "Cache-Control": "public, max-age=3600, s-maxage=86400, stale-while-revalidate=604800",
+        "Cache-Control": "public, max-age=3600, s-maxage=86400",
         "Content-Type": "application/javascript; charset=utf-8",
-        "Access-Control-Allow-Origin": "*",
-        "Timing-Allow-Origin": "*"
+        "Access-Control-Allow-Origin": "*"
       }
     },
     {
-      "src": "^/ads\\.txt$",
+      "src": "/ads\\.txt",
       "dest": "/ads.txt",
       "headers": {
         "Cache-Control": "public, max-age=86400, s-maxage=604800",
@@ -81,7 +51,7 @@
       }
     },
     {
-      "src": "^/robots\\.txt$",
+      "src": "/robots\\.txt",
       "dest": "/robots.txt",
       "headers": {
         "Cache-Control": "public, max-age=86400, s-maxage=604800",
@@ -90,97 +60,30 @@
       }
     },
     {
-      "src": "^/sitemap\\.xml$",
-      "dest": "/sitemap.xml",
+      "src": "/assets/(.*)",
       "headers": {
-        "Cache-Control": "public, max-age=3600, s-maxage=86400",
-        "Content-Type": "application/xml; charset=utf-8"
-      }
+        "Cache-Control": "public, max-age=31536000, immutable"
+      },
+      "continue": true
     },
     {
-      "src": "^/(.*\\.(js|mjs))$",
-      "headers": {
-        "Cache-Control": "public, max-age=31536000, immutable",
-        "Content-Type": "application/javascript",
-        "Access-Control-Allow-Origin": "*"
-      }
-    },
-    {
-      "src": "^/(.*\\.css)$",
-      "headers": {
-        "Cache-Control": "public, max-age=31536000, immutable",
-        "Content-Type": "text/css",
-        "Access-Control-Allow-Origin": "*"
-      }
-    },
-    {
-      "src": "^/(.*\\.(png|jpg|jpeg|gif|ico|svg|webp))$",
+      "src": "/(.*\\.(js|css))",
       "headers": {
         "Cache-Control": "public, max-age=31536000, immutable",
         "Access-Control-Allow-Origin": "*"
-      }
+      },
+      "continue": true
     },
     {
-      "src": "^/(.*\\.(woff|woff2|ttf|eot|otf))$",
+      "src": "/(.*\\.(png|jpg|jpeg|gif|ico|svg|webp|woff|woff2|ttf|eot))",
       "headers": {
         "Cache-Control": "public, max-age=31536000, immutable",
         "Access-Control-Allow-Origin": "*"
-      }
+      },
+      "continue": true
     },
     {
-      "src": "^/(.*\\.(json|xml))$",
-      "headers": {
-        "Cache-Control": "public, max-age=3600, s-maxage=86400",
-        "Access-Control-Allow-Origin": "*"
-      }
-    },
-    {
-      "src": "^/manifest\\.json$",
-      "dest": "/manifest.json",
-      "headers": {
-        "Cache-Control": "public, max-age=3600, s-maxage=86400",
-        "Content-Type": "application/manifest+json; charset=utf-8",
-        "Access-Control-Allow-Origin": "*"
-      }
-    },
-    {
-      "src": "^/service-worker\\.js$",
-      "dest": "/service-worker.js",
-      "headers": {
-        "Cache-Control": "no-cache, no-store, must-revalidate",
-        "Content-Type": "application/javascript; charset=utf-8",
-        "Service-Worker-Allowed": "/"
-      }
-    },
-    {
-      "src": "^/(.*\\.(zip|rar|7z|exe|msi|dmg|pkg|deb|rpm))$",
-      "headers": {
-        "Cache-Control": "public, max-age=31536000, immutable",
-        "Content-Type": "application/octet-stream",
-        "Content-Disposition": "attachment"
-      }
-    },
-    {
-      "src": "^/(.*\\.(pdf))$",
-      "headers": {
-        "Cache-Control": "public, max-age=604800, s-maxage=2592000",
-        "Content-Type": "application/pdf",
-        "Access-Control-Allow-Origin": "*"
-      }
-    },
-    {
-      "src": "^/(.*\\.(mp4|webm|ogg|mp3|wav|flac|aac))$",
-      "headers": {
-        "Cache-Control": "public, max-age=604800, s-maxage=2592000",
-        "Access-Control-Allow-Origin": "*",
-        "Accept-Ranges": "bytes"
-      }
-    },
-    {
-      "handle": "filesystem"
-    },
-    {
-      "src": "^/(.*)$",
+      "src": "/(.*)",
       "dest": "/index.html",
       "headers": {
         "Cache-Control": "public, max-age=0, s-maxage=3600",
@@ -188,69 +91,11 @@
       }
     }
   ],
-  "headers": [
-    {
-      "source": "/(.*)",
-      "headers": [
-        {
-          "key": "X-Content-Type-Options",
-          "value": "nosniff"
-        },
-        {
-          "key": "X-Frame-Options",
-          "value": "DENY"
-        },
-        {
-          "key": "X-XSS-Protection",
-          "value": "1; mode=block"
-        },
-        {
-          "key": "Referrer-Policy",
-          "value": "strict-origin-when-cross-origin"
-        },
-        {
-          "key": "Permissions-Policy",
-          "value": "accelerometer=(), autoplay=(), camera=(), cross-origin-isolated=(), display-capture=(), encrypted-media=(), fullscreen=(), geolocation=(), gyroscope=(), keyboard-map=(), magnetometer=(), microphone=(), midi=(), payment=(), picture-in-picture=(), publickey-credentials-get=(), screen-wake-lock=(), sync-xhr=(), usb=(), xr-spatial-tracking=()"
-        },
-        {
-          "key": "Cross-Origin-Opener-Policy",
-          "value": "same-origin"
-        },
-        {
-          "key": "Cross-Origin-Resource-Policy",
-          "value": "cross-origin"
-        }
-      ]
-    },
-    {
-      "source": "/assets/(.*)",
-      "headers": [
-        {
-          "key": "Cache-Control",
-          "value": "public, max-age=31536000, immutable"
-        }
-      ]
-    },
-    {
-      "source": "/(.*\\.(js|css|png|jpg|jpeg|gif|ico|svg|webp|woff|woff2|ttf|eot))$",
-      "headers": [
-        {
-          "key": "Access-Control-Allow-Origin",
-          "value": "*"
-        }
-      ]
-    }
-  ],
   "redirects": [
-    {
-      "source": "/",
-      "destination": "/index.html",
-      "permanent": false
-    },
     {
       "source": "/chat",
       "destination": "/chat.html",
-      "permanent": false
+      "permanent": true
     },
     {
       "source": "/home",
@@ -259,11 +104,6 @@
     },
     {
       "source": "/inicio",
-      "destination": "/",
-      "permanent": true
-    },
-    {
-      "source": "/main",
       "destination": "/",
       "permanent": true
     },
@@ -291,58 +131,31 @@
       "source": "/apks",
       "destination": "/#APKs",
       "permanent": false
-    },
+    }
+  ],
+  "headers": [
     {
-      "source": "/descargas",
-      "destination": "/#Programas",
-      "permanent": false
-    },
-    {
-      "source": "/software",
-      "destination": "/#Programas",
-      "permanent": false
-    },
-    {
-      "source": "/downloads",
-      "destination": "/#Programas",
-      "permanent": false
-    },
-    {
-      "source": "/discord",
-      "destination": "https://discord.gg/r9v67gFRcp",
-      "permanent": true
-    },
-    {
-      "source": "/youtube",
-      "destination": "https://www.youtube.com/@FoxOrange224",
-      "permanent": true
-    },
-    {
-      "source": "/github",
-      "destination": "https://github.com/foxorange224",
-      "permanent": true
-    },
-    {
-      "source": "/paypal",
-      "destination": "https://www.paypal.com/ncp/payment/QLFVSACHGMW5E",
-      "permanent": true
-    },
-    {
-      "source": "/donate",
-      "destination": "https://www.paypal.com/ncp/payment/QLFVSACHGMW5E",
-      "permanent": true
-    },
-    {
-      "source": "/donar",
-      "destination": "https://www.paypal.com/ncp/payment/QLFVSACHGMW5E",
-      "permanent": true
+      "source": "/(.*)",
+      "headers": [
+        {
+          "key": "X-Content-Type-Options",
+          "value": "nosniff"
+        },
+        {
+          "key": "X-Frame-Options",
+          "value": "DENY"
+        },
+        {
+          "key": "X-XSS-Protection",
+          "value": "1; mode=block"
+        },
+        {
+          "key": "Referrer-Policy",
+          "value": "strict-origin-when-cross-origin"
+        }
+      ]
     }
   ],
   "trailingSlash": false,
-  "cleanUrls": true,
-  "github": {
-    "silent": true,
-    "autoAlias": true
-  },
-  "regions": ["sfo1", "iad1", "gru1", "cdg1", "hnd1", "syd1"]
+  "cleanUrls": true
 }
