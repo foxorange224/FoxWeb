@@ -90,6 +90,177 @@ body::before {
   background-attachment: fixed;
 }
 
+/* ===== COPOS DE NAVIDAD ===== */
+.christmas-snow {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 9999;
+}
+
+.christmas-flake {
+  position: absolute;
+  background: linear-gradient(45deg, #ffffff, #f0f0f0);
+  border-radius: 50%;
+  opacity: 0.7;
+  animation: christmas-fall linear infinite;
+  box-shadow: 0 0 5px rgba(255, 255, 255, 0.5);
+}
+
+.christmas-flake.red {
+  background: linear-gradient(45deg, #FF4500, #FF6B6B);
+  box-shadow: 0 0 8px rgba(255, 69, 0, 0.6);
+}
+
+.christmas-flake.green {
+  background: linear-gradient(45deg, #2ea44f, #4CAF50);
+  box-shadow: 0 0 8px rgba(46, 164, 79, 0.6);
+}
+
+.christmas-flake.gold {
+  background: linear-gradient(45deg, #FFD700, #FFA500);
+  box-shadow: 0 0 8px rgba(255, 215, 0, 0.6);
+}
+
+@keyframes christmas-fall {
+  to {
+    transform: translateY(100vh) rotate(360deg);
+  }
+}
+
+@keyframes christmas-swing {
+  0%, 100% { transform: translateX(0); }
+  50% { transform: translateX(30px); }
+}
+
+/* ===== ANUNCIO AÑO NUEVO ===== */
+.newyear-announcement {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: linear-gradient(90deg, rgba(255, 69, 0, 0.1), rgba(255, 215, 0, 0.1));
+  border: 2px solid rgba(255, 69, 0, 0.3);
+  border-radius: 12px;
+  padding: 10px 16px;
+  margin: 10px auto;
+  max-width: 400px;
+  backdrop-filter: blur(10px);
+  animation: newyear-pulse 2s infinite;
+  position: relative;
+  overflow: hidden;
+  text-decoration: none;
+  transition: all 0.3s ease;
+}
+
+.newyear-announcement:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 20px rgba(255, 69, 0, 0.3);
+  border-color: var(--primary);
+}
+
+@keyframes newyear-pulse {
+  0%, 100% { 
+    box-shadow: 0 0 0 rgba(255, 69, 0, 0.2); 
+  }
+  50% { 
+    box-shadow: 0 0 15px rgba(255, 69, 0, 0.4); 
+  }
+}
+
+.newyear-announcement::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+  transform: translateX(-100%);
+  animation: newyear-shine 3s infinite;
+}
+
+@keyframes newyear-shine {
+  100% { transform: translateX(100%); }
+}
+
+.newyear-icon {
+  font-size: 1.4em;
+  color: #FFD700;
+  animation: newyear-sparkle 1.5s infinite;
+}
+
+@keyframes newyear-sparkle {
+  0%, 100% { 
+    transform: scale(1) rotate(0deg); 
+    color: #FFD700;
+  }
+  50% { 
+    transform: scale(1.1) rotate(10deg); 
+    color: #FF4500;
+  }
+}
+
+.announcement-content {
+  flex: 1;
+  text-align: center;
+}
+
+.announcement-title {
+  font-weight: 700;
+  color: white;
+  font-size: 0.95em;
+  margin-bottom: 2px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+}
+
+.announcement-subtitle {
+  color: var(--text-dim);
+  font-size: 0.8em;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+}
+
+.arrow-icon {
+  color: var(--primary);
+  font-size: 0.9em;
+  margin-left: 3px;
+  transition: transform 0.3s ease;
+}
+
+.newyear-announcement:hover .arrow-icon {
+  transform: translateX(3px);
+}
+
+.newyear-close {
+  background: transparent;
+  border: none;
+  color: var(--text-dim);
+  cursor: pointer;
+  font-size: 0.9em;
+  padding: 4px;
+  border-radius: 50%;
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+  flex-shrink: 0;
+}
+
+.newyear-close:hover {
+  background: rgba(255, 69, 0, 0.2);
+  color: var(--primary);
+}
+
 /* ===== CONTENEDOR PRINCIPAL ===== */
 .page-container {
   width: 100%;
@@ -109,7 +280,7 @@ body::before {
   width: 100%;
   margin: 0 auto 20px;
   padding: 0 15px;
-  gap: 15px;
+  gap: 10px;
 }
 
 .main-logo {
@@ -782,20 +953,32 @@ body::before {
   background: var(--primary-hover);
 }
 
-/* ===== CORRECCIÓN ESPECÍFICA PARA BOTONES MODALES ===== */
-/* Aseguramos que los botones de los modales tengan buen espaciado */
-.modal-content .modal-btn,
-.donate-modal-content .donate-btn,
-.info-modal-content .info-content {
-  white-space: normal;
-  word-break: break-word;
-  padding: 12px 15px !important;
+/* ===== BOTÓN FLOTANTE DE CHAT ===== */
+.floating-chat-btn {
+  position: fixed;
+  bottom: 95px;
+  right: 25px;
+  background: #25D366;
+  color: white;
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.8em;
+  cursor: pointer;
+  box-shadow: 0 5px 20px rgba(37, 211, 102, 0.3);
+  z-index: 1000;
+  text-decoration: none;
+  transition: all 0.3s ease;
+  border: none;
 }
 
-/* Corregir espaciado en botones específicos */
-.modal-content .modal-btn i {
-  margin-right: 8px;
-  flex-shrink: 0;
+.floating-chat-btn:hover {
+  transform: scale(1.1);
+  box-shadow: 0 8px 25px rgba(37, 211, 102, 0.4);
+  background: #1da851;
 }
 
 /* ===== RESPONSIVE ===== */
@@ -807,6 +990,12 @@ body::before {
     justify-content: space-between;
     margin-bottom: 30px;
     padding: 0 25px;
+  }
+  
+  .newyear-announcement {
+    order: 2;
+    margin: 0 20px;
+    max-width: 350px;
   }
   
   .main-logo {
@@ -871,6 +1060,10 @@ body::before {
     font-size: 1.3em;
   }
   
+  .floating-chat-btn {
+    bottom: 100px;
+  }
+  
   .page-container {
     padding: 0 25px;
   }
@@ -893,55 +1086,9 @@ body::before {
   .page-container {
     max-width: 1200px;
   }
-}
-
-/* ===== BOTÓN FLOTANTE DE CHAT ===== */
-.floating-chat-btn {
-  position: fixed;
-  bottom: 95px; /* Ajusta según sea necesario para separar del botón de sugerir */
-  right: 25px;
-  background: #25D366; /* Color WhatsApp para asociar con chat */
-  color: white;
-  width: 60px;
-  height: 60px;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 1.8em;
-  cursor: pointer;
-  box-shadow: 0 5px 20px rgba(37, 211, 102, 0.3);
-  z-index: 1000;
-  text-decoration: none;
-  transition: all 0.3s ease;
-  border: none;
-}
-
-.floating-chat-btn:hover {
-  transform: scale(1.1);
-  box-shadow: 0 8px 25px rgba(37, 211, 102, 0.4);
-  background: #1da851;
-}
-
-/* Ajuste para móviles pequeños */
-@media (max-width: 480px) {
-  .floating-chat-btn {
-    width: 55px;
-    height: 55px;
-    font-size: 1.5em;
-    bottom: 85px; /* Ajusta para móviles */
-    right: 20px;
-  }
   
-  .floating-suggest-btn {
-    bottom: 20px;
-  }
-}
-
-/* Ajuste para tablets */
-@media (min-width: 768px) {
-  .floating-chat-btn {
-    bottom: 100px; /* Más separación en pantallas grandes */
+  .newyear-announcement {
+    max-width: 380px;
   }
 }
 
@@ -952,9 +1099,33 @@ body::before {
   }
   
   .header-container {
-    gap: 10px;
+    gap: 8px;
     padding: 0 10px;
     margin-bottom: 15px;
+  }
+  
+  .newyear-announcement {
+    margin: 8px auto;
+    padding: 8px 12px;
+    gap: 8px;
+  }
+  
+  .newyear-icon {
+    font-size: 1.2em;
+  }
+  
+  .announcement-title {
+    font-size: 0.85em;
+  }
+  
+  .announcement-subtitle {
+    font-size: 0.75em;
+  }
+  
+  .newyear-close {
+    width: 20px;
+    height: 20px;
+    font-size: 0.8em;
   }
   
   .main-logo {
@@ -1019,6 +1190,14 @@ body::before {
     margin-bottom: 10px;
   }
   
+  .floating-chat-btn {
+    width: 55px;
+    height: 55px;
+    font-size: 1.5em;
+    bottom: 85px;
+    right: 20px;
+  }
+  
   .floating-suggest-btn {
     width: 55px;
     height: 55px;
@@ -1044,7 +1223,6 @@ body::before {
     padding: 0 10px;
   }
   
-  /* Corrección específica para botones modales en móviles */
   .modal-buttons-container {
     gap: 8px;
   }
@@ -1164,6 +1342,9 @@ body::before {
 <script src="/data.js"></script>
 
 <body>
+<!-- Copos de Navidad -->
+<div class="christmas-snow" id="christmasSnow"></div>
+
 <!-- Contenedor principal de toda la página -->
 <div class="page-container">
 <!-- Header -->
@@ -1171,6 +1352,24 @@ body::before {
   <header>
     <img src="https://i.imgur.com/qfsMx7V.png" alt="FoxWeb Logo" class="main-logo" loading="lazy">
   </header>
+  
+  <!-- ANUNCIO AÑO NUEVO 2026 -->
+  <a href="https://foxweb.vercel.app/2026.html" class="newyear-announcement" id="newyearAnnouncement">
+    <div class="newyear-icon">
+      <i class="fa-solid fa-star"></i>
+    </div>
+    <div class="announcement-content">
+      <div class="announcement-title">
+        <i class="fa-solid fa-champagne-glasses"></i> ¡Feliz próspero año 2026!
+      </div>
+      <div class="announcement-subtitle">
+        <i class="fa-solid fa-clock"></i> ¡Mira la cuenta regresiva! <i class="fas fa-arrow-right arrow-icon"></i>
+      </div>
+    </div>
+    <button class="newyear-close" onclick="closeNewYearAnnouncement(event)" title="Cerrar anuncio">
+      <i class="fa-solid fa-times"></i>
+    </button>
+  </a>
   
   <div class="social-icons-top">
     <a href="https://www.youtube.com/@FoxOrange224" target="_blank" title="YouTube"><i class="fa-brands fa-youtube"></i></a>
@@ -1456,8 +1655,169 @@ body::before {
 
 <!-- Data.js will be loaded here -->
 <script>
+// ===== FUNCIONES NAVIDEÑAS Y AÑO NUEVO =====
+
+// Crear copos de navidad
+function createChristmasSnow() {
+  const container = document.getElementById('christmasSnow');
+  const flakeCount = 50;
+  
+  for (let i = 0; i < flakeCount; i++) {
+    const flake = document.createElement('div');
+    flake.classList.add('christmas-flake');
+    
+    const colors = ['', 'red', 'green', 'gold'];
+    const colorClass = colors[Math.floor(Math.random() * colors.length)];
+    if (colorClass) {
+      flake.classList.add(colorClass);
+    }
+    
+    const size = Math.random() * 8 + 3;
+    const startX = Math.random() * 100;
+    const duration = Math.random() * 15 + 10;
+    const delay = Math.random() * 5;
+    const opacity = Math.random() * 0.6 + 0.3;
+    const swing = Math.random() * 0.5;
+    
+    flake.style.width = `${size}px`;
+    flake.style.height = `${size}px`;
+    flake.style.left = `${startX}%`;
+    flake.style.opacity = opacity;
+    flake.style.animationDuration = `${duration}s`;
+    flake.style.animationDelay = `${delay}s`;
+    
+    if (swing > 0.3) {
+      flake.style.animationName = 'christmas-fall, christmas-swing';
+      flake.style.animationDuration = `${duration}s, ${duration * 2}s`;
+    }
+    
+    container.appendChild(flake);
+  }
+}
+
+// Cerrar anuncio año nuevo
+function closeNewYearAnnouncement(event) {
+  event.preventDefault();
+  event.stopPropagation();
+  
+  const announcement = document.getElementById('newyearAnnouncement');
+  if (announcement) {
+    announcement.style.display = 'none';
+    localStorage.setItem('newyearAnnouncementClosed', 'true');
+  }
+}
+
+// Mostrar anuncio año nuevo (solo en diciembre/enero)
+function showNewYearAnnouncement() {
+  const now = new Date();
+  const month = now.getMonth();
+  const day = now.getDate();
+  
+  // Mostrar solo en diciembre (11) y enero (0)
+  if (month === 11 || month === 0) {
+    const announcementClosed = localStorage.getItem('newyearAnnouncementClosed');
+    const announcement = document.getElementById('newyearAnnouncement');
+    
+    if (announcement && !announcementClosed) {
+      // Cambiar mensaje según la fecha
+      if (month === 11 && day > 20) {
+        // Finales de diciembre
+        announcement.querySelector('.announcement-title').innerHTML = '<i class="fa-solid fa-champagne-glasses"></i> ¡Feliz próspero año 2026!';
+        announcement.querySelector('.announcement-subtitle').innerHTML = '<i class="fa-solid fa-clock"></i> ¡Mira la cuenta regresiva! <i class="fas fa-arrow-right arrow-icon"></i>';
+      } else if (month === 0 && day < 15) {
+        // Primera quincena de enero
+        announcement.querySelector('.announcement-title').innerHTML = '<i class="fa-solid fa-champagne-glasses"></i> ¡Feliz 2026 FoxWeb!';
+        announcement.querySelector('.announcement-subtitle').innerHTML = '<i class="fa-solid fa-gift"></i> Nuevo año, nuevas descargas <i class="fas fa-arrow-right arrow-icon"></i>';
+      }
+      
+      announcement.style.display = 'flex';
+      
+      // Ocultar automáticamente después de 20 segundos
+      setTimeout(() => {
+        if (announcement.style.display !== 'none') {
+          announcement.style.opacity = '1';
+          let opacity = 1;
+          const fadeOut = setInterval(() => {
+            opacity -= 0.05;
+            announcement.style.opacity = opacity;
+            if (opacity <= 0) {
+              clearInterval(fadeOut);
+              announcement.style.display = 'none';
+            }
+          }, 100);
+        }
+      }, 20000);
+    }
+  } else {
+    // Ocultar anuncio si no es época de fin de año
+    const announcement = document.getElementById('newyearAnnouncement');
+    if (announcement) {
+      announcement.style.display = 'none';
+    }
+  }
+}
+
+// Agregar efecto especial a los botones de descarga en diciembre/enero
+function addHolidayEffects() {
+  const now = new Date();
+  const month = now.getMonth();
+  
+  if (month === 11 || month === 0) {
+    const downloadBtns = document.querySelectorAll('.download-btn');
+    downloadBtns.forEach(btn => {
+      btn.style.position = 'relative';
+      btn.style.overflow = 'hidden';
+      
+      btn.addEventListener('mouseenter', function() {
+        const sparkles = document.createElement('div');
+        sparkles.style.position = 'absolute';
+        sparkles.style.top = '0';
+        sparkles.style.left = '-100%';
+        sparkles.style.width = '100%';
+        sparkles.style.height = '100%';
+        sparkles.style.background = 'linear-gradient(90deg, transparent, rgba(255, 215, 0, 0.2), transparent)';
+        sparkles.style.animation = 'newyear-shine 1.5s';
+        
+        this.appendChild(sparkles);
+        
+        setTimeout(() => {
+          if (sparkles.parentNode === this) {
+            this.removeChild(sparkles);
+          }
+        }, 1500);
+      });
+    });
+    
+    // Añadir efecto especial al logo
+    const logo = document.querySelector('.main-logo');
+    if (logo) {
+      logo.style.filter = 'drop-shadow(0 0 10px rgba(255, 69, 0, 0.2)) drop-shadow(0 0 20px rgba(255, 215, 0, 0.3))';
+    }
+  }
+}
+
+// Inicializar efectos de fin de año
+function initHolidayFeatures() {
+  createChristmasSnow();
+  showNewYearAnnouncement();
+  addHolidayEffects();
+  
+  // Actualizar copos periódicamente para evitar acumulación
+  setInterval(() => {
+    const snowContainer = document.getElementById('christmasSnow');
+    if (snowContainer.children.length < 20) {
+      createChristmasSnow();
+    }
+  }, 30000);
+}
+
+// ===== FUNCIONES PRINCIPALES =====
+
 // Wait for DOM to be fully loaded
 document.addEventListener('DOMContentLoaded', function() {
+  // Inicializar efectos de fin de año
+  setTimeout(initHolidayFeatures, 1000);
+  
   // Load data.js dynamically
   loadDataJS();
   
@@ -1476,7 +1836,6 @@ function loadDataJS() {
   const script = document.createElement('script');
   script.src = 'data.js?v=' + Date.now();
   script.onload = function() {
-    // Wait a bit for FoxWebDB to be defined
     setTimeout(() => {
       if (typeof FoxWebDB !== 'undefined') {
         console.log('✅ FoxWebDB loaded successfully');
@@ -1498,14 +1857,12 @@ function loadDataJS() {
 function initApp(foxWebData) {
   console.log('🎉 Initializing FoxWeb with', foxWebData);
   
-  // Load all tabs with data
   loadTab('Programas', foxWebData.programas);
   loadTab('Sistemas', foxWebData.sistemas);
   loadTab('Juegos', foxWebData.juegos);
   loadTab('Extras', foxWebData.extras);
   loadTab('APKs', foxWebData.apks);
   
-  // Generate dynamic modals
   generateDynamicModals(foxWebData);
 }
 
@@ -1689,7 +2046,6 @@ let currentTab = 'Programas';
 function openTab(tabName) {
   currentTab = tabName;
   
-  // Update tabs
   const tabContents = document.getElementsByClassName('tab-content');
   const tablinks = document.getElementsByClassName('tablink');
   
@@ -1711,10 +2067,8 @@ function openTab(tabName) {
     activeBtn.classList.add('active');
   }
   
-  // Update URL
   history.pushState(null, null, `#${tabName}`);
   
-  // Perform search on new tab
   setTimeout(performSearch, 50);
 }
 
@@ -1788,7 +2142,6 @@ function performSearch() {
     }
   });
   
-  // Show/hide no results message
   let noResults = grid.nextElementSibling;
   
   if (!noResults || !noResults.classList.contains('no-results')) {
@@ -1991,7 +2344,6 @@ function handleUrlHash() {
   openTab(defaultTab);
   updateClearButton();
   
-  // Admin panel shortcut (Ctrl+Shift+A)
   document.addEventListener('keydown', function(e) {
     if (e.ctrlKey && e.shiftKey && e.key === 'A') {
       e.preventDefault();
