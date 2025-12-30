@@ -272,11 +272,19 @@
             justify-content: center;
             cursor: pointer;
             transition: all 0.2s ease;
+            display: none; /* Ocultado por defecto */
         }
 
         .sidebar-close:hover {
             background: var(--primary-light);
             color: var(--primary);
+        }
+
+        /* Mostrar solo en móvil */
+        @media (max-width: 767px) {
+            .sidebar-close {
+                display: flex;
+            }
         }
 
         .sidebar-content {
@@ -338,8 +346,34 @@
             gap: 6px;
         }
 
-        /* ===== ONLINE USERS ===== */
-        .online-section {
+        /* ===== ONLINE COUNTER ===== */
+        .online-counter {
+            margin-bottom: 24px;
+        }
+
+        .counter-title {
+            font-weight: 600;
+            font-size: 0.9em;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .counter-number {
+            background: var(--primary);
+            color: white;
+            padding: 4px 12px;
+            border-radius: 10px;
+            font-size: 0.9em;
+            font-weight: 600;
+        }
+
+        /* ===== PREFERENCES ===== */
+        .preferences-section {
             margin-bottom: 24px;
         }
 
@@ -352,67 +386,12 @@
             margin-bottom: 12px;
             display: flex;
             align-items: center;
-            justify-content: space-between;
-        }
-
-        .online-count {
-            background: var(--primary);
-            color: white;
-            padding: 2px 8px;
-            border-radius: 10px;
-            font-size: 0.8em;
-            font-weight: 600;
-        }
-
-        .online-list {
-            display: flex;
-            flex-direction: column;
             gap: 8px;
         }
 
-        .online-user {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            padding: 10px;
-            border-radius: var(--radius-sm);
-            background: var(--bg-tertiary);
-            border: 1px solid var(--border-light);
-            transition: all 0.2s ease;
-        }
-
-        .online-user:hover {
-            background: var(--primary-transparent);
-            border-color: var(--primary);
-        }
-
-        .online-avatar {
-            width: 32px;
-            height: 32px;
-            border-radius: 50%;
-            background: var(--primary-light);
+        .section-title i {
             color: var(--primary);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: 600;
             font-size: 0.9em;
-            flex-shrink: 0;
-        }
-
-        .online-name {
-            font-weight: 500;
-            font-size: 0.9em;
-            color: var(--text-primary);
-            flex: 1;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-
-        /* ===== PREFERENCES ===== */
-        .preferences-section {
-            margin-bottom: 24px;
         }
 
         .pref-option {
@@ -478,6 +457,24 @@
             transform: translateX(20px);
         }
 
+        .pref-select {
+            background: var(--bg-input);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            color: var(--text-primary);
+            padding: 6px 10px;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.85em;
+            width: 120px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .pref-select:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+
         .pref-button {
             width: 100%;
             padding: 12px;
@@ -510,6 +507,17 @@
         .pref-button.danger:hover {
             background: rgba(255, 68, 68, 0.2);
             border-color: var(--danger);
+        }
+
+        .pref-button.primary {
+            background: var(--primary);
+            border-color: var(--primary);
+            color: white;
+        }
+
+        .pref-button.primary:hover {
+            background: var(--primary-hover);
+            border-color: var(--primary-hover);
         }
 
         /* ===== CHAT AREA ===== */
@@ -950,6 +958,46 @@
             background: var(--primary-hover);
             transform: scale(1.1);
         }
+
+        /* ===== NOTIFICATION BADGE ===== */
+        .notification-badge {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background: var(--danger);
+            color: white;
+            font-size: 0.7em;
+            padding: 2px 6px;
+            border-radius: 10px;
+            font-weight: 600;
+            min-width: 18px;
+            text-align: center;
+        }
+
+        /* ===== SETTINGS SECTIONS ===== */
+        .settings-group {
+            margin-bottom: 20px;
+            padding: 16px;
+            background: var(--bg-tertiary);
+            border-radius: var(--radius-sm);
+            border: 1px solid var(--border-light);
+        }
+
+        .settings-group-title {
+            font-weight: 600;
+            font-size: 0.9em;
+            color: var(--text-primary);
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid var(--border-light);
+        }
+
+        .settings-group-title i {
+            color: var(--primary);
+        }
     </style>
 </head>
 <body>
@@ -995,9 +1043,6 @@
                 <button id="themeToggle" class="header-btn" title="Cambiar tema">
                     <i class="fas fa-moon"></i>
                 </button>
-                <button id="usersToggle" class="header-btn" title="Usuarios en línea">
-                    <i class="fas fa-users"></i>
-                </button>
                 <a href="https://foxweb.vercel.app" class="header-btn" title="Volver al sitio">
                     <i class="fas fa-home"></i>
                 </a>
@@ -1036,23 +1081,19 @@
                         </button>
                     </div>
                     
-                    <!-- Online Users -->
-                    <div class="online-section">
-                        <div class="section-title">
+                    <!-- Online Counter -->
+                    <div class="online-counter">
+                        <div class="counter-title">
                             <span>Usuarios en línea</span>
-                            <span class="online-count" id="onlineCount">0</span>
-                        </div>
-                        <div class="online-list" id="onlineList">
-                            <div class="online-user">
-                                <div class="online-avatar">U</div>
-                                <div class="online-name">Cargando...</div>
-                            </div>
+                            <span class="counter-number" id="onlineCount">0</span>
                         </div>
                     </div>
                     
-                    <!-- Preferences -->
-                    <div class="preferences-section">
-                        <div class="section-title">Preferencias</div>
+                    <!-- Chat Settings -->
+                    <div class="settings-group">
+                        <div class="settings-group-title">
+                            <i class="fas fa-comments"></i> Configuración del Chat
+                        </div>
                         
                         <div class="pref-option">
                             <label class="pref-label">
@@ -1066,7 +1107,7 @@
                         
                         <div class="pref-option">
                             <label class="pref-label">
-                                <i class="fas fa-bell"></i> Sonidos
+                                <i class="fas fa-bell"></i> Sonidos de notificación
                             </label>
                             <div class="toggle-switch">
                                 <input type="checkbox" id="soundToggle" class="toggle-checkbox" checked>
@@ -1076,7 +1117,7 @@
                         
                         <div class="pref-option">
                             <label class="pref-label">
-                                <i class="fas fa-eye"></i> Ver escribiendo
+                                <i class="fas fa-eye"></i> Ver quién escribe
                             </label>
                             <div class="toggle-switch">
                                 <input type="checkbox" id="typingToggle" class="toggle-checkbox" checked>
@@ -1084,11 +1125,94 @@
                             </div>
                         </div>
                         
+                        <div class="pref-option">
+                            <label class="pref-label">
+                                <i class="fas fa-clock"></i> Formato de hora
+                            </label>
+                            <select id="timeFormat" class="pref-select">
+                                <option value="12">12 horas</option>
+                                <option value="24">24 horas</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <!-- Message Settings -->
+                    <div class="settings-group">
+                        <div class="settings-group-title">
+                            <i class="fas fa-envelope"></i> Configuración de Mensajes
+                        </div>
+                        
+                        <div class="pref-option">
+                            <label class="pref-label">
+                                <i class="fas fa-image"></i> Mostrar imágenes
+                            </label>
+                            <div class="toggle-switch">
+                                <input type="checkbox" id="imagesToggle" class="toggle-checkbox" checked>
+                                <label for="imagesToggle" class="toggle-slider"></label>
+                            </div>
+                        </div>
+                        
+                        <div class="pref-option">
+                            <label class="pref-label">
+                                <i class="fas fa-link"></i> Enlaces clickeables
+                            </label>
+                            <div class="toggle-switch">
+                                <input type="checkbox" id="linksToggle" class="toggle-checkbox" checked>
+                                <label for="linksToggle" class="toggle-slider"></label>
+                            </div>
+                        </div>
+                        
+                        <div class="pref-option">
+                            <label class="pref-label">
+                                <i class="fas fa-scroll"></i> Mensajes por carga
+                            </label>
+                            <select id="messagesPerLoad" class="pref-select">
+                                <option value="25">25</option>
+                                <option value="50" selected>50</option>
+                                <option value="100">100</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <!-- Chat Management -->
+                    <div class="settings-group">
+                        <div class="settings-group-title">
+                            <i class="fas fa-tools"></i> Gestión del Chat
+                        </div>
+                        
                         <button id="clearChatBtn" class="pref-button">
-                            <i class="fas fa-trash"></i> Limpiar chat
+                            <i class="fas fa-trash"></i> Limpiar historial
                         </button>
                         <button id="exportChatBtn" class="pref-button">
-                            <i class="fas fa-download"></i> Exportar chat
+                            <i class="fas fa-download"></i> Exportar conversación
+                        </button>
+                        <button id="importChatBtn" class="pref-button">
+                            <i class="fas fa-upload"></i> Importar conversación
+                        </button>
+                    </div>
+                    
+                    <!-- Connection Info -->
+                    <div class="settings-group">
+                        <div class="settings-group-title">
+                            <i class="fas fa-wifi"></i> Información de Conexión
+                        </div>
+                        
+                        <div class="pref-option">
+                            <label class="pref-label">
+                                <i class="fas fa-server"></i> Estado:
+                            </label>
+                            <span id="connectionStatus" style="color: var(--success); font-weight: 600;">Conectado</span>
+                        </div>
+                        
+                        <div class="pref-option">
+                            <label class="pref-label">
+                                <i class="fas fa-signal"></i> Ping:
+                            </label>
+                            <span id="pingValue" style="font-weight: 600;">0ms</span>
+                        </div>
+                        
+                        <button id="reconnectBtn" class="pref-button primary">
+                            <i class="fas fa-sync-alt"></i> Re-conectar
                         </button>
                     </div>
                 </div>
@@ -1133,6 +1257,9 @@
         </button>
     </div>
 
+    <!-- Hidden file input for import -->
+    <input type="file" id="importFileInput" accept=".json" style="display: none;">
+
     <script>
         // Configuración
         const CONFIG = {
@@ -1143,8 +1270,9 @@
                 PREFERENCES: 'foxweb_chat_prefs',
                 MESSAGES: 'foxweb_chat_msgs'
             },
-            TYPING_TIMEOUT: 3000, // 3 segundos
-            MAX_MESSAGES: 500
+            TYPING_TIMEOUT: 3000,
+            MAX_MESSAGES: 500,
+            PING_INTERVAL: 30000 // 30 segundos
         };
 
         // Estado
@@ -1154,13 +1282,20 @@
             connected: false,
             socket: null,
             messages: [],
-            onlineUsers: new Map(),
+            onlineUsers: 0,
             typingUsers: new Map(),
             preferences: {
                 darkTheme: true,
                 sounds: true,
-                showTyping: true
-            }
+                showTyping: true,
+                timeFormat: '12',
+                showImages: true,
+                showLinks: true,
+                messagesPerLoad: 50
+            },
+            typingTimeout: null,
+            pingInterval: null,
+            lastPing: 0
         };
 
         // Elementos DOM
@@ -1173,7 +1308,6 @@
         const statusDot = document.getElementById('statusDot');
         const statusText = document.getElementById('statusText');
         const onlineCount = document.getElementById('onlineCount');
-        const onlineList = document.getElementById('onlineList');
         const messagesContainer = document.getElementById('messagesContainer');
         const messageInput = document.getElementById('messageInput');
         const sendBtn = document.getElementById('sendBtn');
@@ -1184,13 +1318,21 @@
         const sidebarOverlay = document.getElementById('sidebarOverlay');
         const sidebarClose = document.getElementById('sidebarClose');
         const themeToggle = document.getElementById('themeToggle');
-        const usersToggle = document.getElementById('usersToggle');
         const darkThemeToggle = document.getElementById('darkThemeToggle');
         const soundToggle = document.getElementById('soundToggle');
         const typingToggle = document.getElementById('typingToggle');
+        const timeFormat = document.getElementById('timeFormat');
+        const imagesToggle = document.getElementById('imagesToggle');
+        const linksToggle = document.getElementById('linksToggle');
+        const messagesPerLoad = document.getElementById('messagesPerLoad');
         const changeNameBtn = document.getElementById('changeNameBtn');
         const clearChatBtn = document.getElementById('clearChatBtn');
         const exportChatBtn = document.getElementById('exportChatBtn');
+        const importChatBtn = document.getElementById('importChatBtn');
+        const importFileInput = document.getElementById('importFileInput');
+        const connectionStatus = document.getElementById('connectionStatus');
+        const pingValue = document.getElementById('pingValue');
+        const reconnectBtn = document.getElementById('reconnectBtn');
         const scrollBottomBtn = document.getElementById('scrollBottomBtn');
 
         // Inicializar
@@ -1229,7 +1371,6 @@
             menuToggle.addEventListener('click', toggleSidebar);
             sidebarOverlay.addEventListener('click', closeSidebar);
             sidebarClose.addEventListener('click', closeSidebar);
-            usersToggle.addEventListener('click', toggleSidebar);
             
             // Preferencias
             themeToggle.addEventListener('click', toggleTheme);
@@ -1247,12 +1388,39 @@
             typingToggle.addEventListener('change', e => {
                 state.preferences.showTyping = e.target.checked;
                 savePreferences();
+                if (!e.target.checked) {
+                    typingIndicator.style.display = 'none';
+                }
+            });
+            
+            timeFormat.addEventListener('change', e => {
+                state.preferences.timeFormat = e.target.value;
+                savePreferences();
+                renderMessages();
+            });
+            
+            imagesToggle.addEventListener('change', e => {
+                state.preferences.showImages = e.target.checked;
+                savePreferences();
+            });
+            
+            linksToggle.addEventListener('change', e => {
+                state.preferences.showLinks = e.target.checked;
+                savePreferences();
+            });
+            
+            messagesPerLoad.addEventListener('change', e => {
+                state.preferences.messagesPerLoad = parseInt(e.target.value);
+                savePreferences();
             });
             
             // Botones
             changeNameBtn.addEventListener('click', changeUsername);
             clearChatBtn.addEventListener('click', clearChat);
             exportChatBtn.addEventListener('click', exportChat);
+            importChatBtn.addEventListener('click', () => importFileInput.click());
+            importFileInput.addEventListener('change', importChat);
+            reconnectBtn.addEventListener('click', reconnect);
             
             // Scroll
             messagesContainer.addEventListener('scroll', handleScroll);
@@ -1307,10 +1475,15 @@
         // Inicializar Socket.io
         function initSocket() {
             try {
+                if (state.socket) {
+                    state.socket.disconnect();
+                }
+                
                 state.socket = io(CONFIG.SERVER_URL, {
                     transports: ['websocket', 'polling'],
                     reconnection: true,
-                    reconnectionAttempts: 5
+                    reconnectionAttempts: 5,
+                    reconnectionDelay: 1000
                 });
                 
                 // Eventos
@@ -1319,10 +1492,14 @@
                     updateConnectionStatus(true);
                     state.socket.emit('join', state.username);
                     addSystemMessage('Conectado al chat');
+                    
+                    // Iniciar ping
+                    startPing();
                 });
                 
                 state.socket.on('userCount', count => {
-                    updateOnlineCount(count);
+                    state.onlineUsers = count;
+                    updateOnlineCount();
                 });
                 
                 state.socket.on('userJoined', data => {
@@ -1362,14 +1539,24 @@
                     }, CONFIG.TYPING_TIMEOUT);
                 });
                 
+                state.socket.on('stopTyping', () => {
+                    // Limpiar todos los usuarios escribiendo después de un breve delay
+                    setTimeout(() => {
+                        state.typingUsers.clear();
+                        updateTypingIndicator();
+                    }, 500);
+                });
+                
                 state.socket.on('disconnect', () => {
                     state.connected = false;
                     updateConnectionStatus(false);
                     addSystemMessage('Desconectado. Reconectando...');
+                    stopPing();
                 });
                 
                 state.socket.on('connect_error', () => {
                     addSystemMessage('Error de conexión');
+                    stopPing();
                 });
                 
             } catch (error) {
@@ -1378,8 +1565,42 @@
             }
         }
 
+        // Iniciar ping
+        function startPing() {
+            stopPing();
+            state.pingInterval = setInterval(() => {
+                if (state.socket && state.socket.connected) {
+                    const start = Date.now();
+                    state.socket.emit('ping');
+                    state.socket.once('pong', () => {
+                        const latency = Date.now() - start;
+                        pingValue.textContent = `${latency}ms`;
+                        state.lastPing = latency;
+                    });
+                }
+            }, CONFIG.PING_INTERVAL);
+        }
+
+        // Detener ping
+        function stopPing() {
+            if (state.pingInterval) {
+                clearInterval(state.pingInterval);
+                state.pingInterval = null;
+            }
+        }
+
+        // Re-conectar
+        function reconnect() {
+            if (state.socket) {
+                state.socket.disconnect();
+            }
+            
+            addSystemMessage('Reconectando...');
+            setTimeout(connectToChat, 1000);
+        }
+
         // Manejar input
-        let typingTimeout;
+        let typingTimer;
         function handleInput() {
             // Ajustar altura
             this.style.height = 'auto';
@@ -1390,10 +1611,13 @@
             
             // Notificar que está escribiendo
             if (state.connected && state.socket) {
-                clearTimeout(typingTimeout);
+                clearTimeout(typingTimer);
+                
+                // Emitir typing
                 state.socket.emit('typing');
                 
-                typingTimeout = setTimeout(() => {
+                // Configurar timer para stopTyping
+                typingTimer = setTimeout(() => {
                     if (state.connected && state.socket) {
                         state.socket.emit('stopTyping');
                     }
@@ -1413,6 +1637,14 @@
             messageInput.value = '';
             messageInput.style.height = 'auto';
             sendBtn.disabled = true;
+            
+            // Detener indicador de escritura inmediatamente
+            if (state.connected && state.socket) {
+                clearTimeout(typingTimer);
+                state.socket.emit('stopTyping');
+            }
+            
+            // Enfocar input
             messageInput.focus();
         }
 
@@ -1423,7 +1655,7 @@
                 id: Date.now(),
                 username,
                 text,
-                time: time || new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}),
+                time: time || formatTime(new Date()),
                 isOwn,
                 date: new Date().toISOString()
             };
@@ -1437,16 +1669,42 @@
             renderMessage(message);
         }
 
+        // Formatear hora
+        function formatTime(date) {
+            const hours = date.getHours();
+            const minutes = date.getMinutes().toString().padStart(2, '0');
+            
+            if (state.preferences.timeFormat === '24') {
+                return `${hours}:${minutes}`;
+            } else {
+                const ampm = hours >= 12 ? 'PM' : 'AM';
+                const hour12 = hours % 12 || 12;
+                return `${hour12}:${minutes} ${ampm}`;
+            }
+        }
+
         // Renderizar mensaje
         function renderMessage(message) {
             const div = document.createElement('div');
             div.className = `message ${message.isOwn ? 'own' : ''}`;
             
-            // Formatear texto (enlaces y saltos de línea)
-            const formattedText = message.text
-                .replace(/</g, '&lt;').replace(/>/g, '&gt;')
-                .replace(/(https?:\/\/[^\s]+)/g, '<a href="$1" target="_blank" style="color: inherit; text-decoration: underline;">$1</a>')
-                .replace(/\n/g, '<br>');
+            // Formatear texto
+            let formattedText = escapeHtml(message.text);
+            
+            // Reemplazar enlaces si está habilitado
+            if (state.preferences.showLinks) {
+                formattedText = formattedText.replace(
+                    /(https?:\/\/[^\s]+)/g, 
+                    '<a href="$1" target="_blank" style="color: inherit; text-decoration: underline;">$1</a>'
+                );
+            }
+            
+            // Reemplazar saltos de línea
+            formattedText = formattedText.replace(/\n/g, '<br>');
+            
+            // Color de avatar basado en nombre
+            const avatarColor = getAvatarColor(message.username);
+            const avatarLetter = message.username.charAt(0).toUpperCase();
             
             div.innerHTML = `
                 <div class="message-content">
@@ -1511,22 +1769,24 @@
         }
 
         // Actualizar contador en línea
-        function updateOnlineCount(count) {
-            onlineCount.textContent = count;
-            
-            // Actualizar lista (simulada - necesitarías recibir lista completa del servidor)
-            updateOnlineList();
+        function updateOnlineCount() {
+            onlineCount.textContent = state.onlineUsers;
         }
 
-        // Actualizar lista en línea
-        function updateOnlineList() {
-            // Esto es un ejemplo - necesitarías recibir la lista real del servidor
-            onlineList.innerHTML = `
-                <div class="online-user">
-                    <div class="online-avatar" style="background: ${getAvatarColor(state.username)}">${state.username.charAt(0).toUpperCase()}</div>
-                    <div class="online-name">${state.username} (tú)</div>
-                </div>
-            `;
+        // Actualizar estado de conexión
+        function updateConnectionStatus(connected) {
+            if (connected) {
+                statusDot.className = 'status-dot';
+                statusText.textContent = 'Conectado';
+                connectionStatus.textContent = 'Conectado';
+                connectionStatus.style.color = 'var(--success)';
+            } else {
+                statusDot.className = 'status-dot offline';
+                statusText.textContent = 'Desconectado';
+                connectionStatus.textContent = 'Desconectado';
+                connectionStatus.style.color = 'var(--danger)';
+                pingValue.textContent = '--';
+            }
         }
 
         // Cambiar nombre de usuario
@@ -1556,6 +1816,7 @@
                     </div>
                 `;
                 saveMessages();
+                addSystemMessage('Historial limpiado');
             }
         }
 
@@ -1565,7 +1826,8 @@
                 const data = {
                     username: state.username,
                     exportDate: new Date().toISOString(),
-                    messages: state.messages
+                    messages: state.messages,
+                    preferences: state.preferences
                 };
                 
                 const blob = new Blob([JSON.stringify(data, null, 2)], {type: 'application/json'});
@@ -1578,10 +1840,61 @@
                 document.body.removeChild(a);
                 URL.revokeObjectURL(url);
                 
-                addSystemMessage('Chat exportado');
+                addSystemMessage('Chat exportado correctamente');
             } catch (error) {
                 alert('Error al exportar el chat');
             }
+        }
+
+        // Importar chat
+        function importChat(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    const data = JSON.parse(e.target.result);
+                    
+                    if (data.messages && Array.isArray(data.messages)) {
+                        // Agregar mensajes importados
+                        data.messages.forEach(msg => {
+                            if (!state.messages.some(m => m.id === msg.id)) {
+                                state.messages.push(msg);
+                            }
+                        });
+                        
+                        // Limitar tamaño
+                        if (state.messages.length > CONFIG.MAX_MESSAGES) {
+                            state.messages = state.messages.slice(-CONFIG.MAX_MESSAGES);
+                        }
+                        
+                        // Renderizar
+                        renderMessages();
+                        saveMessages();
+                        addSystemMessage(`Chat importado: ${data.messages.length} mensajes`);
+                    }
+                } catch (error) {
+                    alert('Error al importar el archivo');
+                }
+                
+                // Limpiar input
+                event.target.value = '';
+            };
+            
+            reader.readAsText(file);
+        }
+
+        // Renderizar todos los mensajes
+        function renderMessages() {
+            messagesContainer.innerHTML = `
+                <div class="system-message">
+                    <i class="fas fa-comments"></i> Historial del chat
+                </div>
+            `;
+            
+            state.messages.forEach(msg => renderMessage(msg));
+            scrollToBottom();
         }
 
         // Alternar sidebar
@@ -1613,17 +1926,6 @@
             }
         }
 
-        // Actualizar estado de conexión
-        function updateConnectionStatus(connected) {
-            if (connected) {
-                statusDot.className = 'status-dot';
-                statusText.textContent = 'Conectado';
-            } else {
-                statusDot.className = 'status-dot offline';
-                statusText.textContent = 'Desconectado';
-            }
-        }
-
         // Manejar scroll
         function handleScroll() {
             const threshold = 200;
@@ -1647,23 +1949,31 @@
             if (!state.preferences.sounds) return;
             
             try {
-                const audio = new Audio();
+                // Crear sonido simple con Web Audio API
+                const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                const oscillator = audioContext.createOscillator();
+                const gainNode = audioContext.createGain();
                 
-                // Sonidos base64 simples
+                oscillator.connect(gainNode);
+                gainNode.connect(audioContext.destination);
+                
                 if (type === 'message') {
-                    audio.src = 'data:audio/wav;base64,UklGRigAAABXQVZFZm10IBIAAAABAAEAQB8AAEAfAAABAAgAZGF0YQ';
+                    oscillator.frequency.setValueAtTime(800, audioContext.currentTime);
                 } else if (type === 'join') {
-                    audio.src = 'data:audio/wav;base64,UklGRigAAABXQVZFZm10IBIAAAABAAEAQB8AAEAfAAABAAgAZGF0YQ';
+                    oscillator.frequency.setValueAtTime(600, audioContext.currentTime);
                 }
                 
-                audio.volume = 0.3;
-                audio.play().catch(() => {});
+                gainNode.gain.setValueAtTime(0.1, audioContext.currentTime);
+                gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.1);
+                
+                oscillator.start(audioContext.currentTime);
+                oscillator.stop(audioContext.currentTime + 0.1);
             } catch (e) {
                 // Ignorar errores de audio
             }
         }
 
-        // Obtener color de avatar
+        // Obtener color de avatar (fijo basado en nombre)
         function getAvatarColor(username) {
             const colors = [
                 'linear-gradient(135deg, #FF4500, #FF6B35)',
@@ -1675,11 +1985,13 @@
                 'linear-gradient(135deg, #00CED1, #20B2AA)'
             ];
             
+            // Hash simple y consistente
             let hash = 0;
             for (let i = 0; i < username.length; i++) {
                 hash = username.charCodeAt(i) + ((hash << 5) - hash);
             }
             
+            // Siempre devuelve el mismo color para el mismo nombre
             return colors[Math.abs(hash) % colors.length];
         }
 
@@ -1705,6 +2017,11 @@
             darkThemeToggle.checked = state.preferences.darkTheme;
             soundToggle.checked = state.preferences.sounds;
             typingToggle.checked = state.preferences.showTyping;
+            timeFormat.value = state.preferences.timeFormat;
+            imagesToggle.checked = state.preferences.showImages;
+            linksToggle.checked = state.preferences.showLinks;
+            messagesPerLoad.value = state.preferences.messagesPerLoad;
+            
             applyTheme();
         }
 
@@ -1723,7 +2040,7 @@
                 const saved = localStorage.getItem(CONFIG.STORAGE_KEYS.MESSAGES);
                 if (saved) {
                     state.messages = JSON.parse(saved);
-                    state.messages.forEach(renderMessage);
+                    renderMessages();
                 }
             } catch (e) {
                 console.warn('Error cargando mensajes:', e);
