@@ -895,6 +895,56 @@ body::before {
   }
 }
 
+/* ===== BOTÓN FLOTANTE DE CHAT ===== */
+.floating-chat-btn {
+  position: fixed;
+  bottom: 95px; /* Ajusta según sea necesario para separar del botón de sugerir */
+  right: 25px;
+  background: #25D366; /* Color WhatsApp para asociar con chat */
+  color: white;
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.8em;
+  cursor: pointer;
+  box-shadow: 0 5px 20px rgba(37, 211, 102, 0.3);
+  z-index: 1000;
+  text-decoration: none;
+  transition: all 0.3s ease;
+  border: none;
+}
+
+.floating-chat-btn:hover {
+  transform: scale(1.1);
+  box-shadow: 0 8px 25px rgba(37, 211, 102, 0.4);
+  background: #1da851;
+}
+
+/* Ajuste para móviles pequeños */
+@media (max-width: 480px) {
+  .floating-chat-btn {
+    width: 55px;
+    height: 55px;
+    font-size: 1.5em;
+    bottom: 85px; /* Ajusta para móviles */
+    right: 20px;
+  }
+  
+  .floating-suggest-btn {
+    bottom: 20px;
+  }
+}
+
+/* Ajuste para tablets */
+@media (min-width: 768px) {
+  .floating-chat-btn {
+    bottom: 100px; /* Más separación en pantallas grandes */
+  }
+}
+
 /* Small Mobile */
 @media (max-width: 480px) {
   body {
@@ -1396,8 +1446,10 @@ body::before {
 <div id="adminPanel" class="admin-panel"></div>
 
 <!-- Floating Button -->
- <button onclick="openModal('sugerenciaModal')" class="floating-suggest-btn" title="Sugerir contenido"><i class="fa-solid fa-plus"></i></button>
- <button href="https://foxweb.vercel.app/chat.html" target="_blank" title="Ir al Chat"><i class="fa-solid fa-paper-plane"></i></button>
+<a href="https://foxweb.vercel.app/chat.html" class="floating-chat-btn" title="Chat con FoxWeb">
+  <i class="fa-solid fa-message"></i>
+</a>
+<button onclick="openModal('sugerenciaModal')" class="floating-suggest-btn" title="Sugerir contenido"><i class="fa-solid fa-plus"></i></button>
 
 <!-- Footer -->
 <p class="footer-text">© Copyright 2025 FoxOrange224 | FoxWeb - Tu centro de descargas confiable</p>
