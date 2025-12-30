@@ -36,6 +36,10 @@
     {
       "src": "/(.*)",
       "dest": "/index.html"
+    },
+    {
+      "src": "/chat",
+      "dest": "/chat.html"
     }
   ]
 }
