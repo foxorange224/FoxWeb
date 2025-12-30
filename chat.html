@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>FoxWeb Chat</title>
-    <link rel="icon" href="https://i.imgur.com/qfsMx7V.png" type="image/png">
+    <link rel="icon" href="https://i.imgur.com/5JzgCvZ.png" type="image/png">
     
     <!-- Fonts & Icons -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -998,6 +998,77 @@
         .settings-group-title i {
             color: var(--primary);
         }
+
+        /* ===== LOADING INDICATOR ===== */
+        .loading {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            color: var(--text-secondary);
+            gap: 10px;
+        }
+
+        .loading-spinner {
+            width: 20px;
+            height: 20px;
+            border: 2px solid var(--primary-light);
+            border-top-color: var(--primary);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* ===== CONNECTION STATUS ===== */
+        .connection-status {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 0.8em;
+            font-weight: 500;
+        }
+
+        .connection-status.connected {
+            background: rgba(0, 204, 102, 0.1);
+            color: var(--success);
+        }
+
+        .connection-status.disconnected {
+            background: rgba(255, 68, 68, 0.1);
+            color: var(--danger);
+        }
+
+        /* ===== MESSAGE DATE SEPARATOR ===== */
+        .date-separator {
+            text-align: center;
+            margin: 16px 0;
+            position: relative;
+        }
+
+        .date-separator::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: var(--border);
+            z-index: 1;
+        }
+
+        .date-separator span {
+            background: var(--bg-main);
+            padding: 0 12px;
+            color: var(--text-secondary);
+            font-size: 0.85em;
+            position: relative;
+            z-index: 2;
+        }
     </style>
 </head>
 <body>
@@ -1016,8 +1087,8 @@
             </button>
             
             <div class="login-note">
-                <i class="fas fa-info-circle"></i> Tu nombre se guardará para futuras visitas. 
-                Este es un chat público donde puedes hablar sobre software, juegos y más.
+                <i class="fas fa-info-circle"></i> El chat guarda mensajes por 24 horas.<br>
+                Tu nombre se guardará para futuras visitas.
             </div>
         </div>
     </div>
@@ -1072,7 +1143,7 @@
                                 <div class="username" id="sidebarUsername">Usuario</div>
                                 <div class="user-status">
                                     <span class="status-dot"></span>
-                                    <span>En línea</span>
+                                    <span id="sidebarStatus">En línea</span>
                                 </div>
                             </div>
                         </div>
@@ -1181,7 +1252,7 @@
                         </div>
                         
                         <button id="clearChatBtn" class="pref-button">
-                            <i class="fas fa-trash"></i> Limpiar historial
+                            <i class="fas fa-trash"></i> Limpiar historial local
                         </button>
                         <button id="exportChatBtn" class="pref-button">
                             <i class="fas fa-download"></i> Exportar conversación
@@ -1201,7 +1272,9 @@
                             <label class="pref-label">
                                 <i class="fas fa-server"></i> Estado:
                             </label>
-                            <span id="connectionStatus" style="color: var(--success); font-weight: 600;">Conectado</span>
+                            <span id="connectionStatus" class="connection-status connected">
+                                <i class="fas fa-circle"></i> Conectado
+                            </span>
                         </div>
                         
                         <div class="pref-option">
@@ -1209,6 +1282,13 @@
                                 <i class="fas fa-signal"></i> Ping:
                             </label>
                             <span id="pingValue" style="font-weight: 600;">0ms</span>
+                        </div>
+                        
+                        <div class="pref-option">
+                            <label class="pref-label">
+                                <i class="fas fa-history"></i> Historial:
+                            </label>
+                            <span id="historyCount" style="font-weight: 600;">0 mensajes</span>
                         </div>
                         
                         <button id="reconnectBtn" class="pref-button primary">
@@ -1224,6 +1304,10 @@
                 <div class="messages-container" id="messagesContainer">
                     <div class="system-message">
                         <i class="fas fa-comments"></i> Bienvenido al chat de FoxWeb
+                    </div>
+                    <div class="loading" id="loadingIndicator">
+                        <div class="loading-spinner"></div>
+                        <span>Cargando mensajes...</span>
                     </div>
                 </div>
                 
@@ -1271,8 +1355,9 @@
                 MESSAGES: 'foxweb_chat_msgs'
             },
             TYPING_TIMEOUT: 3000,
-            MAX_MESSAGES: 500,
-            PING_INTERVAL: 30000 // 30 segundos
+            MAX_MESSAGES: 1000,
+            PING_INTERVAL: 30000,
+            HISTORY_LIMIT: 50
         };
 
         // Estado
@@ -1295,7 +1380,9 @@
             },
             typingTimeout: null,
             pingInterval: null,
-            lastPing: 0
+            lastPing: 0,
+            isLoading: false,
+            serverHistoryLoaded: false
         };
 
         // Elementos DOM
@@ -1305,6 +1392,7 @@
         const loginBtn = document.getElementById('loginBtn');
         const userAvatar = document.getElementById('userAvatar');
         const sidebarUsername = document.getElementById('sidebarUsername');
+        const sidebarStatus = document.getElementById('sidebarStatus');
         const statusDot = document.getElementById('statusDot');
         const statusText = document.getElementById('statusText');
         const onlineCount = document.getElementById('onlineCount');
@@ -1332,8 +1420,10 @@
         const importFileInput = document.getElementById('importFileInput');
         const connectionStatus = document.getElementById('connectionStatus');
         const pingValue = document.getElementById('pingValue');
+        const historyCount = document.getElementById('historyCount');
         const reconnectBtn = document.getElementById('reconnectBtn');
         const scrollBottomBtn = document.getElementById('scrollBottomBtn');
+        const loadingIndicator = document.getElementById('loadingIndicator');
 
         // Inicializar
         function init() {
@@ -1441,7 +1531,8 @@
             }
             
             state.username = username;
-            state.userId = Date.now().toString(36) + Math.random().toString(36).substr(2);
+            state.userId = localStorage.getItem(CONFIG.STORAGE_KEYS.USER_ID) || 
+                          Date.now().toString(36) + Math.random().toString(36).substr(2, 9);
             
             // Guardar
             localStorage.setItem(CONFIG.STORAGE_KEYS.USERNAME, username);
@@ -1451,6 +1542,9 @@
             updateUserInfo();
             loginOverlay.style.display = 'none';
             app.classList.remove('hidden');
+            
+            // Mostrar loading
+            loadingIndicator.style.display = 'flex';
             
             // Conectar al chat
             connectToChat();
@@ -1490,11 +1584,70 @@
                 state.socket.on('connect', () => {
                     state.connected = true;
                     updateConnectionStatus(true);
-                    state.socket.emit('join', state.username);
-                    addSystemMessage('Conectado al chat');
+                    
+                    // Unirse al chat
+                    state.socket.emit('join', {
+                        username: state.username,
+                        userId: state.userId
+                    });
+                    
+                    addSystemMessage('Conectado al servidor');
                     
                     // Iniciar ping
                     startPing();
+                    
+                    // Solicitar usuarios en línea
+                    state.socket.emit('requestOnlineUsers');
+                });
+                
+                // Recibir historial del servidor
+                state.socket.on('history', (historyData) => {
+                    console.log('Historial recibido:', historyData.messages.length, 'mensajes');
+                    
+                    // Ocultar loading
+                    loadingIndicator.style.display = 'none';
+                    
+                    // Si ya cargamos el historial, no hacer nada
+                    if (state.serverHistoryLoaded) return;
+                    
+                    state.serverHistoryLoaded = true;
+                    
+                    // Agregar mensajes del servidor (evitando duplicados)
+                    const existingIds = new Set(state.messages.map(m => m.id));
+                    
+                    historyData.messages.forEach(msg => {
+                        if (!existingIds.has(msg.id)) {
+                            const message = {
+                                id: msg.id,
+                                username: msg.username,
+                                userId: msg.userId,
+                                text: msg.text,
+                                time: msg.time || formatTime(new Date(msg.timestamp)),
+                                isOwn: msg.username === state.username,
+                                date: new Date(msg.timestamp).toISOString(),
+                                fromServer: true
+                            };
+                            
+                            state.messages.push(message);
+                        }
+                    });
+                    
+                    // Ordenar por fecha
+                    state.messages.sort((a, b) => new Date(a.date) - new Date(b.date));
+                    
+                    // Limitar tamaño
+                    if (state.messages.length > CONFIG.MAX_MESSAGES) {
+                        state.messages = state.messages.slice(-CONFIG.MAX_MESSAGES);
+                    }
+                    
+                    // Actualizar contador de historial
+                    historyCount.textContent = `${historyData.total} mensajes (24h)`;
+                    
+                    // Renderizar todos los mensajes
+                    renderMessages();
+                    scrollToBottom();
+                    
+                    addSystemMessage(`Cargado historial de ${historyData.messages.length} mensajes`);
                 });
                 
                 state.socket.on('userCount', count => {
@@ -1502,66 +1655,78 @@
                     updateOnlineCount();
                 });
                 
-                state.socket.on('userJoined', data => {
+                state.socket.on('onlineUsers', (users) => {
+                    state.onlineUsers = users.length;
+                    updateOnlineCount();
+                });
+                
+                state.socket.on('userJoined', (data) => {
                     if (data.username !== state.username) {
-                        addSystemMessage(`${data.username} se ha unido`);
+                        addSystemMessage(`${data.username} se ha unido al chat`);
                         playSound('join');
                     }
+                    state.onlineUsers = data.onlineCount;
+                    updateOnlineCount();
                 });
                 
-                state.socket.on('userLeft', data => {
-                    addSystemMessage(`${data.username} se ha ido`);
+                state.socket.on('userLeft', (data) => {
+                    addSystemMessage(`${data.username} ha salido del chat`);
+                    state.onlineUsers = data.onlineCount;
+                    updateOnlineCount();
                 });
                 
-                state.socket.on('message', data => {
-                    addMessage(data.username, data.message, data.time);
-                    if (data.username !== state.username && state.preferences.sounds) {
+                state.socket.on('message', (messageData) => {
+                    addMessageFromServer(messageData);
+                    if (messageData.username !== state.username && state.preferences.sounds) {
                         playSound('message');
                     }
                 });
                 
-                state.socket.on('typing', data => {
+                state.socket.on('typing', (data) => {
                     if (data.username === state.username || !state.preferences.showTyping) return;
                     
-                    // Actualizar usuario escribiendo
-                    state.typingUsers.set(data.username, Date.now());
-                    updateTypingIndicator();
-                    
-                    // Limpiar después de 3 segundos
-                    setTimeout(() => {
-                        if (state.typingUsers.has(data.username)) {
-                            const typingTime = state.typingUsers.get(data.username);
-                            if (Date.now() - typingTime >= CONFIG.TYPING_TIMEOUT) {
-                                state.typingUsers.delete(data.username);
-                                updateTypingIndicator();
-                            }
+                    // Actualizar lista de usuarios escribiendo
+                    data.typingUsers.forEach(username => {
+                        if (username !== state.username) {
+                            state.typingUsers.set(username, Date.now());
                         }
-                    }, CONFIG.TYPING_TIMEOUT);
+                    });
+                    
+                    updateTypingIndicator();
                 });
                 
-                state.socket.on('stopTyping', () => {
-                    // Limpiar todos los usuarios escribiendo después de un breve delay
-                    setTimeout(() => {
-                        state.typingUsers.clear();
-                        updateTypingIndicator();
-                    }, 500);
+                state.socket.on('stopTyping', (data) => {
+                    if (data.username === state.username) return;
+                    
+                    state.typingUsers.delete(data.username);
+                    updateTypingIndicator();
+                });
+                
+                state.socket.on('pong', (data) => {
+                    const latency = Date.now() - data.timestamp;
+                    pingValue.textContent = `${latency}ms`;
+                    state.lastPing = latency;
                 });
                 
                 state.socket.on('disconnect', () => {
                     state.connected = false;
                     updateConnectionStatus(false);
-                    addSystemMessage('Desconectado. Reconectando...');
+                    addSystemMessage('Desconectado del servidor. Reconectando...');
                     stopPing();
                 });
                 
                 state.socket.on('connect_error', () => {
-                    addSystemMessage('Error de conexión');
+                    loadingIndicator.style.display = 'none';
+                    addSystemMessage('Error de conexión con el servidor');
+                    updateConnectionStatus(false);
                     stopPing();
                 });
                 
             } catch (error) {
                 console.error('Error conectando al chat:', error);
-                addSystemMessage('Modo local activado (sin conexión al servidor)');
+                loadingIndicator.style.display = 'none';
+                addSystemMessage('Error al conectar con el servidor');
+                updateConnectionStatus(false);
             }
         }
 
@@ -1570,13 +1735,7 @@
             stopPing();
             state.pingInterval = setInterval(() => {
                 if (state.socket && state.socket.connected) {
-                    const start = Date.now();
                     state.socket.emit('ping');
-                    state.socket.once('pong', () => {
-                        const latency = Date.now() - start;
-                        pingValue.textContent = `${latency}ms`;
-                        state.lastPing = latency;
-                    });
                 }
             }, CONFIG.PING_INTERVAL);
         }
@@ -1595,7 +1754,10 @@
                 state.socket.disconnect();
             }
             
-            addSystemMessage('Reconectando...');
+            addSystemMessage('Reconectando al servidor...');
+            state.serverHistoryLoaded = false;
+            loadingIndicator.style.display = 'flex';
+            
             setTimeout(connectToChat, 1000);
         }
 
@@ -1631,7 +1793,7 @@
             if (!text || !state.connected) return;
             
             // Enviar al servidor
-            state.socket.emit('message', text);
+            state.socket.emit('message', { text });
             
             // Limpiar input
             messageInput.value = '';
@@ -1648,25 +1810,35 @@
             messageInput.focus();
         }
 
-        // Agregar mensaje
-        function addMessage(username, text, time) {
-            const isOwn = username === state.username;
+        // Agregar mensaje del servidor
+        function addMessageFromServer(messageData) {
             const message = {
-                id: Date.now(),
-                username,
-                text,
-                time: time || formatTime(new Date()),
-                isOwn,
-                date: new Date().toISOString()
+                id: messageData.id || Date.now().toString() + Math.random().toString(36).substr(2, 9),
+                username: messageData.username,
+                userId: messageData.userId,
+                text: messageData.text,
+                time: messageData.time || formatTime(new Date(messageData.timestamp)),
+                isOwn: messageData.username === state.username,
+                date: new Date(messageData.timestamp || Date.now()).toISOString(),
+                fromServer: true
             };
             
-            state.messages.push(message);
-            if (state.messages.length > CONFIG.MAX_MESSAGES) {
-                state.messages = state.messages.slice(-CONFIG.MAX_MESSAGES);
+            // Evitar duplicados
+            if (!state.messages.some(m => m.id === message.id)) {
+                state.messages.push(message);
+                
+                // Limitar tamaño
+                if (state.messages.length > CONFIG.MAX_MESSAGES) {
+                    state.messages = state.messages.slice(-CONFIG.MAX_MESSAGES);
+                }
+                
+                // Solo guardar en localStorage si no es del servidor
+                if (!message.fromServer) {
+                    saveMessages();
+                }
+                
+                renderMessage(message);
             }
-            
-            saveMessages();
-            renderMessage(message);
         }
 
         // Formatear hora
@@ -1685,8 +1857,14 @@
 
         // Renderizar mensaje
         function renderMessage(message) {
+            // Ocultar loading si es el primer mensaje
+            if (loadingIndicator.style.display !== 'none') {
+                loadingIndicator.style.display = 'none';
+            }
+            
             const div = document.createElement('div');
             div.className = `message ${message.isOwn ? 'own' : ''}`;
+            div.dataset.id = message.id;
             
             // Formatear texto
             let formattedText = escapeHtml(message.text);
@@ -1701,10 +1879,6 @@
             
             // Reemplazar saltos de línea
             formattedText = formattedText.replace(/\n/g, '<br>');
-            
-            // Color de avatar basado en nombre
-            const avatarColor = getAvatarColor(message.username);
-            const avatarLetter = message.username.charAt(0).toUpperCase();
             
             div.innerHTML = `
                 <div class="message-content">
@@ -1736,6 +1910,38 @@
             scrollToBottom();
         }
 
+        // Renderizar todos los mensajes
+        function renderMessages() {
+            // Limpiar contenedor
+            messagesContainer.innerHTML = '';
+            
+            // Agregar mensaje de bienvenida
+            const welcome = document.createElement('div');
+            welcome.className = 'system-message';
+            welcome.innerHTML = '<i class="fas fa-comments"></i> Bienvenido al chat de FoxWeb';
+            messagesContainer.appendChild(welcome);
+            
+            // Agregar separador de fecha si hay mensajes
+            if (state.messages.length > 0) {
+                const today = new Date().toLocaleDateString('es-ES', { 
+                    weekday: 'long', 
+                    year: 'numeric', 
+                    month: 'long', 
+                    day: 'numeric' 
+                });
+                
+                const dateSeparator = document.createElement('div');
+                dateSeparator.className = 'date-separator';
+                dateSeparator.innerHTML = `<span>${today}</span>`;
+                messagesContainer.appendChild(dateSeparator);
+            }
+            
+            // Agregar mensajes
+            state.messages.forEach(msg => renderMessage(msg));
+            
+            scrollToBottom();
+        }
+
         // Actualizar indicador de escritura
         function updateTypingIndicator() {
             if (state.typingUsers.size === 0 || !state.preferences.showTyping) {
@@ -1756,6 +1962,17 @@
             
             typingText.textContent = text;
             typingIndicator.style.display = 'flex';
+            
+            // Limpiar usuarios después de 3 segundos
+            setTimeout(() => {
+                const now = Date.now();
+                for (const [username, timestamp] of state.typingUsers) {
+                    if (now - timestamp > CONFIG.TYPING_TIMEOUT) {
+                        state.typingUsers.delete(username);
+                    }
+                }
+                updateTypingIndicator();
+            }, CONFIG.TYPING_TIMEOUT);
         }
 
         // Actualizar información del usuario
@@ -1771,6 +1988,7 @@
         // Actualizar contador en línea
         function updateOnlineCount() {
             onlineCount.textContent = state.onlineUsers;
+            sidebarStatus.textContent = state.onlineUsers > 0 ? 'En línea' : 'Desconectado';
         }
 
         // Actualizar estado de conexión
@@ -1778,13 +1996,13 @@
             if (connected) {
                 statusDot.className = 'status-dot';
                 statusText.textContent = 'Conectado';
-                connectionStatus.textContent = 'Conectado';
-                connectionStatus.style.color = 'var(--success)';
+                connectionStatus.className = 'connection-status connected';
+                connectionStatus.innerHTML = '<i class="fas fa-circle"></i> Conectado';
             } else {
                 statusDot.className = 'status-dot offline';
                 statusText.textContent = 'Desconectado';
-                connectionStatus.textContent = 'Desconectado';
-                connectionStatus.style.color = 'var(--danger)';
+                connectionStatus.className = 'connection-status disconnected';
+                connectionStatus.innerHTML = '<i class="fas fa-circle"></i> Desconectado';
                 pingValue.textContent = '--';
             }
         }
@@ -1801,22 +2019,22 @@
             updateUserInfo();
             
             if (state.connected && state.socket) {
-                state.socket.emit('join', state.username);
-                addSystemMessage(`Cambiaste tu nombre de ${oldName} a ${state.username}`);
+                state.socket.emit('join', {
+                    username: state.username,
+                    userId: state.userId
+                });
+                addSystemMessage(`Cambiaste tu nombre de "${oldName}" a "${state.username}"`);
             }
         }
 
-        // Limpiar chat
+        // Limpiar chat local
         function clearChat() {
-            if (confirm('¿Limpiar todo el historial de mensajes?')) {
-                state.messages = [];
-                messagesContainer.innerHTML = `
-                    <div class="system-message">
-                        <i class="fas fa-comments"></i> Chat limpio
-                    </div>
-                `;
+            if (confirm('¿Limpiar todo el historial local de mensajes?')) {
+                state.messages = state.messages.filter(m => m.fromServer);
+                messagesContainer.innerHTML = '';
                 saveMessages();
-                addSystemMessage('Historial limpiado');
+                renderMessages();
+                addSystemMessage('Historial local limpiado');
             }
         }
 
@@ -1825,9 +2043,14 @@
             try {
                 const data = {
                     username: state.username,
+                    userId: state.userId,
                     exportDate: new Date().toISOString(),
                     messages: state.messages,
-                    preferences: state.preferences
+                    preferences: state.preferences,
+                    stats: {
+                        totalMessages: state.messages.length,
+                        onlineUsers: state.onlineUsers
+                    }
                 };
                 
                 const blob = new Blob([JSON.stringify(data, null, 2)], {type: 'application/json'});
@@ -1857,9 +2080,11 @@
                     const data = JSON.parse(e.target.result);
                     
                     if (data.messages && Array.isArray(data.messages)) {
-                        // Agregar mensajes importados
+                        // Agregar mensajes importados (solo los que no sean del servidor)
+                        const existingIds = new Set(state.messages.map(m => m.id));
+                        
                         data.messages.forEach(msg => {
-                            if (!state.messages.some(m => m.id === msg.id)) {
+                            if (!msg.fromServer && !existingIds.has(msg.id)) {
                                 state.messages.push(msg);
                             }
                         });
@@ -1883,18 +2108,6 @@
             };
             
             reader.readAsText(file);
-        }
-
-        // Renderizar todos los mensajes
-        function renderMessages() {
-            messagesContainer.innerHTML = `
-                <div class="system-message">
-                    <i class="fas fa-comments"></i> Historial del chat
-                </div>
-            `;
-            
-            state.messages.forEach(msg => renderMessage(msg));
-            scrollToBottom();
         }
 
         // Alternar sidebar
@@ -1949,7 +2162,6 @@
             if (!state.preferences.sounds) return;
             
             try {
-                // Crear sonido simple con Web Audio API
                 const audioContext = new (window.AudioContext || window.webkitAudioContext)();
                 const oscillator = audioContext.createOscillator();
                 const gainNode = audioContext.createGain();
@@ -1985,13 +2197,11 @@
                 'linear-gradient(135deg, #00CED1, #20B2AA)'
             ];
             
-            // Hash simple y consistente
             let hash = 0;
             for (let i = 0; i < username.length; i++) {
                 hash = username.charCodeAt(i) + ((hash << 5) - hash);
             }
             
-            // Siempre devuelve el mismo color para el mismo nombre
             return colors[Math.abs(hash) % colors.length];
         }
 
@@ -2039,18 +2249,23 @@
             try {
                 const saved = localStorage.getItem(CONFIG.STORAGE_KEYS.MESSAGES);
                 if (saved) {
-                    state.messages = JSON.parse(saved);
-                    renderMessages();
+                    const data = JSON.parse(saved);
+                    state.messages = data.messages || [];
                 }
             } catch (e) {
                 console.warn('Error cargando mensajes:', e);
             }
         }
 
-        // Guardar mensajes
+        // Guardar mensajes (solo mensajes locales)
         function saveMessages() {
             try {
-                localStorage.setItem(CONFIG.STORAGE_KEYS.MESSAGES, JSON.stringify(state.messages));
+                const localMessages = state.messages.filter(m => !m.fromServer);
+                const data = {
+                    messages: localMessages,
+                    savedAt: new Date().toISOString()
+                };
+                localStorage.setItem(CONFIG.STORAGE_KEYS.MESSAGES, JSON.stringify(data));
             } catch (e) {
                 console.warn('Error guardando mensajes:', e);
             }
