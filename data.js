@@ -188,7 +188,7 @@ badges: ["SEGURIDAD","CONTRASEÑAS","OPEN SOURCE"]
 name: "CrystalDiskMark",
 icon: "fa-solid fa-hard-drive",
 info: "Benchmark para medir velocidad de lectura/escritura de discos duros y SSD. Simple y efectivo.",
-enlace: "https://crystalmark.info/en/software/crystaldiskmark/",
+enlace: "https://www.mediafire.com/file/4b5plqpogmotpmg",
 modal: null,
 badges: ["BENCHMARK","DISCO","DIAGNÓSTICO"]
 },
@@ -218,6 +218,22 @@ badges: ["TORRENT","DESCARGAS","OPEN SOURCE"]
 }
 ],
 sistemas: [
+{
+name: "OPTIOS 7 ULTIMATE X86",
+icon: "fa-solid fa-compact-disc",
+info: "Windows OptiOS 7 ULTIMATE DE 32 BITS! Una modificacion de Windows. Con mejoras de rendimiento en computadoras de bajos recursos.",
+enlace: "https://www.mediafire.com/file/4dgluhpeq19r2jh",
+modal: null,
+badges: ["WINDOWS 7","SP1","OPTIMIZADO"]
+},
+{
+name: "OPTIOS 7 ULTIMATE X64",
+icon: "fa-solid fa-compact-disc",
+info: "Windows OptiOS 7 ULTIMATE DE 64 BITS! Una modificacion de Windows. Con mejoras de rendimiento en computadoras de bajos recursos. ES LA MISMA EDICION QUE LA DE X86 PERO X64",
+enlace: "https://www.mediafire.com/file/4dgluhpeq19r2jh",
+modal: null,
+badges: ["WINDOWS 7","SP1","OPTIMIZADO"]
+},
 {
 name: "Debian 13",
 icon: "fa-brands fa-linux",
