@@ -1,6 +1,6 @@
 # 🦊 FoxWeb - Tu Centro de Descargas Confiable
 
-![FoxWeb Banner](https://i.imgur.com/qfsMx7V.png)
+![FoxWeb Banner]([https://i.imgur.com/qfsMx7V.png](https://i.imgur.com/PY9NKjr.png))
 
 **Bienvenido a FoxWeb** ✨ Un sitio donde encontrarás programas esenciales, juegos clásicos, sistemas operativos y utilidades para tu computadora. Todo organizado, con enlaces directos y de larga duración.
 
