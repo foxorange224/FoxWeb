@@ -1,6 +1,14 @@
 const FoxWebDB = {
 programas: [
 {
+name: "Bandicam",
+icon: "fa-solid fa-videos",
+info: "Es un grabador de pantalla para Windows que es famoso por ser sumamente ligero. Si tienes una tostadora de PC o no quieres que el Minecraft se te pegue mientras grabas, Bandicam es el que es.",
+enlace: "https://www.mediafire.com/file/qteigczejthm81g",
+modal: null,
+badges: ["GRABADOR","PORTABLE","LIGERO"]
+},
+{
 name: "Office Professional 2016",
 icon: "fa-brands fa-windows",
 info: "Microsoft Office o conocido actualmente como Microsoft 365, es una suite ofimática de aplicaciones para computadoras de escritorio",
