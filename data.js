@@ -230,7 +230,7 @@ badges: ["WINDOWS 7","SP1","OPTIMIZADO"]
 name: "OPTIOS 7 ULTIMATE X64",
 icon: "fa-solid fa-compact-disc",
 info: "Windows OptiOS 7 ULTIMATE DE 64 BITS! Una modificacion de Windows. Con mejoras de rendimiento en computadoras de bajos recursos. ES LA MISMA EDICION QUE LA DE X86 PERO X64",
-enlace: "https://www.mediafire.com/file/4dgluhpeq19r2jh",
+enlace: "https://www.mediafire.com/file/d3902lnsxsdhs5i",
 modal: null,
 badges: ["WINDOWS 7","SP1","OPTIMIZADO"]
 },
