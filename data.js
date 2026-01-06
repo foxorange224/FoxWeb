@@ -237,7 +237,7 @@ badges: ["WINDOWS 7","SP1","OPTIMIZADO"]
 {
 name: "OPTIOS 10 (VERSIONES)",
 icon: "fa-solid fa-compact-disc",
-info: "Bienvenido al Windows OptiOS 10 LTSC X64! Con mejoras de rendimiento en computadoras de bajos recursos. ES LA MISMA EDICION QUE LA DE X86 PERO X64",
+info: "Bienvenido al Windows OptiOS 10 LTSC X64!",
 enlace: "#",
 modal: "OptiOS10Modal",
 badges: ["WINDOWS 10","64 BITS","OPTIMIZADO"]
