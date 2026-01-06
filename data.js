@@ -2,7 +2,7 @@ const FoxWebDB = {
 programas: [
 {
 name: "Bandicam",
-icon: "fa-solid fa-videos",
+icon: "fa-solid fa-video",
 info: "Es un grabador de pantalla para Windows que es famoso por ser sumamente ligero. Si tienes una tostadora de PC o no quieres que el Minecraft se te pegue mientras grabas, Bandicam es el que es.",
 enlace: "https://www.mediafire.com/file/qteigczejthm81g",
 modal: null,
