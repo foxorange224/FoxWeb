@@ -325,6 +325,14 @@ badges: ["USB","MULTI-ISO","HERRAMIENTA"]
 ],
 juegos: [
 {
+name: "GTA: Vice City",
+icon: "fa-solid fa-gamepad",
+info: "Vive la era de los 80s en este clásico de mundo abierto. Coches, crimen y una banda sonora inolvidable.",
+enlace: "https://www.mediafire.com/file/r0x4wcpf0tqiy7v",
+modal: null,
+badges: ["DISPAROS","MUNDO ABIERTO","GTA"]
+},
+{
 name: "Papa's Pizzeria Collection",
 icon: "fa-solid fa-pizza-slice",
 info: "Un pack de juegos de cocina que marcó la infancia. Gestiona tu propio restaurante de pizzas con muchos ingredientes.",
