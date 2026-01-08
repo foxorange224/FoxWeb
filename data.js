@@ -9,6 +9,14 @@ modal: null,
 badges: ["GRABADOR","PORTABLE","LIGERO"]
 },
 {
+name: "Defraggler",
+icon: "fa-solid fa-hard-drive",
+info: "Defraggler es una herramienta de desfragmentación de disco desarrollada por Piriform. Permite desfragmentar unidades de disco duro para mejorar el rendimiento del sistema al reorganizar los datos fragmentados.",
+enlace: "https://www.mediafire.com/file/t8u6857e4aaftez",
+modal: null,
+badges: ["Sistema", "Optimización", "Disco Duro"]
+}
+{
 name: "Office Professional 2016",
 icon: "fa-brands fa-windows",
 info: "Microsoft Office o conocido actualmente como Microsoft 365, es una suite ofimática de aplicaciones para computadoras de escritorio",
