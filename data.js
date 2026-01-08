@@ -1,3 +1,5 @@
+[file name]: data.js
+[file content begin]
 const FoxWebDB = {
 programas: [
 {
@@ -15,7 +17,7 @@ info: "Defraggler es una herramienta de desfragmentación de disco desarrollada 
 enlace: "https://www.mediafire.com/file/t8u6857e4aaftez",
 modal: null,
 badges: ["Sistema", "Optimización", "Disco Duro"]
-}
+},
 {
 name: "Office Professional 2016",
 icon: "fa-brands fa-windows",
@@ -560,3 +562,4 @@ modales: {}
 if (typeof window !== 'undefined') {
   window.FoxWebDB = FoxWebDB;
 }
+[file content end]
