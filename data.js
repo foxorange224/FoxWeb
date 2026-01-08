@@ -1,5 +1,3 @@
-[file name]: data.js
-[file content begin]
 const FoxWebDB = {
 programas: [
 {
@@ -556,10 +554,8 @@ badges: ["SUITE","LIGERO","SIN ANUNCIOS"]
 }
 ],
 modales: {}
-}; // <-- PUNTO Y COMA AQUÍ
+};
 
-// Exportar a window para asegurar acceso global
 if (typeof window !== 'undefined') {
   window.FoxWebDB = FoxWebDB;
 }
-[file content end]
