@@ -4,11 +4,12 @@
 
 const CONFIG = {
     appName: 'FoxWeb',
-    version: '1.0.1',
+    version: '1.0.3',
     defaultTheme: 'dark',
     enableAnimations: false,
     cacheEnabled: true,
-    maxRecentItems: 10
+    maxRecentItems: 10,
+    dbVersionKey: 'foxweb_db_version_1' // Clave única para esta versión de DB
 };
 
 const AppState = {
@@ -23,63 +24,13 @@ const AppState = {
     isOffline: false,
     voiceSearchSupported: false,
     dbData: null,
-    firstVisit: true // Nueva propiedad para controlar primera visita
+    firstVisit: true,
+    lastScrollTop: 0,
+    searchActive: false,
+    dbHash: null, // Para control de cambios en la base de datos
+    lastUpdateCheck: null
 };
 
-// ============================================================================
-// DETECCIÓN DE DISPOSITIVOS TÁCTILES
-// ============================================================================
-
-/**
- * Detecta si el dispositivo es táctil
- */
-function isTouchDevice() {
-    return 'ontouchstart' in window || 
-           navigator.maxTouchPoints > 0 || 
-           navigator.msMaxTouchPoints > 0;
-}
-
-/**
- * Inicializa el cursor personalizado solo en dispositivos no táctiles
- */
-function initCustomCursor() {
-    // Si es un dispositivo táctil, no inicializar el cursor
-    if (isTouchDevice() || window.innerWidth <= 1024) {
-        console.log('📱 Dispositivo táctil detectado - cursor desactivado');
-        
-        // Ocultar el cursor en el DOM
-        const cursor = document.querySelector('.custom-cursor');
-        if (cursor) {
-            cursor.style.display = 'none';
-        }
-        
-        // Remover eventos de cursor
-        document.removeEventListener('mousemove', handleMouseMove);
-        return;
-    }
-    
-    const cursor = document.querySelector('.custom-cursor');
-    if (!cursor) return;
-    
-    // Función para manejar el movimiento del mouse
-    function handleMouseMove(e) {
-        cursor.style.left = e.clientX + 'px';
-        cursor.style.top = e.clientY + 'px';
-    }
-    
-    document.addEventListener('mousemove', handleMouseMove);
-    
-    // Cambiar cursor en elementos interactivos
-    const interactiveElements = document.querySelectorAll('a, button, .content-card');
-    interactiveElements.forEach(el => {
-        el.addEventListener('mouseenter', () => {
-            cursor.classList.add('cursor-hover');
-        });
-        el.addEventListener('mouseleave', () => {
-            cursor.classList.remove('cursor-hover');
-        });
-    });
-}
 // ============================================================================
 // FUNCIONES DE INICIALIZACIÓN
 // ============================================================================
@@ -108,6 +59,9 @@ document.addEventListener('DOMContentLoaded', function() {
     // Inicializar UI
     initUIComponents();
     initAccessibility();
+    
+    // Inicializar scroll para ocultar pestañas gradualmente
+    initScrollHideNav();
     
     // Cargar datos de FoxWebDB
     if (typeof FoxWebDB !== 'undefined') {
@@ -166,11 +120,13 @@ function loadDataScript() {
             AppState.dbData = FoxWebDB;
             initApp();
         } else {
-            showError('No se pudo cargar la base de datos');
+            // MODIFICADO: Mostrar pantalla de error crítica en lugar de toast
+            showErrorScreen('No se pudo cargar la base de datos. Por favor, recarga la página.');
         }
     };
     script.onerror = function() {
-        showError('Error al cargar data.js');
+        // MODIFICADO: Mostrar pantalla de error crítica en lugar de toast
+        showErrorScreen('Error al cargar la Base de Datos. Por favor, recarga la página.');
     };
     document.head.appendChild(script);
 }
@@ -180,6 +136,15 @@ function loadDataScript() {
  */
 function initApp() {
     console.log('🎯 Inicializando aplicación...');
+    
+    // MODIFICADO: Verificar que la base de datos esté cargada
+    if (!AppState.dbData) {
+        showErrorScreen('No se pudo cargar la base de datos. Por favor, recarga la página.');
+        return;
+    }
+    
+    // Verificar si hay contenido nuevo
+    checkForNewContent();
     
     // Ocultar overlay de carga
     hideLoading();
@@ -213,13 +178,230 @@ function initApp() {
 }
 
 /**
+ * Verifica si hay contenido nuevo comparando con la última versión guardada
+ */
+function checkForNewContent() {
+    if (!AppState.dbData) return;
+    
+    // Calcular hash actual de la base de datos
+    const currentHash = calculateDBHash(AppState.dbData);
+    AppState.dbHash = currentHash;
+    
+    // Obtener hash guardado anteriormente
+    const savedHash = localStorage.getItem(CONFIG.dbVersionKey);
+    
+    // Si es primera visita (no hay hash guardado), guardar el hash actual y salir
+    if (!savedHash) {
+        console.log('👋 Usuario nuevo, guardando hash inicial');
+        localStorage.setItem(CONFIG.dbVersionKey, currentHash);
+        return;
+    }
+    
+    // Comparar hashes
+    if (currentHash !== savedHash) {
+        console.log('🆕 ¡Se detectaron cambios en la base de datos!');
+        
+        // Calcular diferencias
+        const oldData = getCachedDBData();
+        const newData = AppState.dbData;
+        const changes = calculateContentChanges(oldData, newData);
+        
+        if (changes.totalNew > 0) {
+            // Crear notificación de contenido nuevo
+            createNewContentNotification(changes);
+            
+            // Mostrar toast informativo
+            if (changes.totalNew === 1) {
+                showToast('¡Se ha agregado 1 nuevo contenido!', 'info');
+            } else {
+                showToast(`¡Se han agregado ${changes.totalNew} nuevos contenidos!`, 'info');
+            }
+        }
+        
+        // Actualizar hash guardado
+        localStorage.setItem(CONFIG.dbVersionKey, currentHash);
+        
+        // Actualizar caché de datos
+        cacheDBData(newData);
+    } else {
+        console.log('✅ La base de datos está actualizada');
+    }
+}
+
+/**
+ * Calcula un hash simple para la base de datos
+ */
+function calculateDBHash(dbData) {
+    if (!dbData) return '';
+    
+    // Crear un objeto simple con solo la información necesaria
+    const hashData = {
+        programas: dbData.programas ? dbData.programas.length : 0,
+        sistemas: dbData.sistemas ? dbData.sistemas.length : 0,
+        juegos: dbData.juegos ? dbData.juegos.length : 0,
+        extras: dbData.extras ? dbData.extras.length : 0,
+        apks: dbData.apks ? dbData.apks.length : 0,
+        timestamp: new Date().toISOString().split('T')[0] // Solo fecha
+    };
+    
+    // Convertir a string y crear hash simple
+    const hashString = JSON.stringify(hashData);
+    return btoa(hashString); // Base64 simple
+}
+
+/**
+ * Obtiene los datos de la base de datos cacheados
+ */
+function getCachedDBData() {
+    try {
+        const cached = localStorage.getItem(`${CONFIG.dbVersionKey}_data`);
+        return cached ? JSON.parse(cached) : null;
+    } catch (error) {
+        console.error('Error obteniendo datos cacheados:', error);
+        return null;
+    }
+}
+
+/**
+ * Guarda los datos de la base de datos en caché
+ */
+function cacheDBData(dbData) {
+    try {
+        // Solo guardar información básica para comparación
+        const cacheData = {
+            programas: dbData.programas ? dbData.programas.map(p => p.name) : [],
+            sistemas: dbData.sistemas ? dbData.sistemas.map(s => s.name) : [],
+            juegos: dbData.juegos ? dbData.juegos.map(j => j.name) : [],
+            extras: dbData.extras ? dbData.extras.map(e => e.name) : [],
+            apks: dbData.apks ? dbData.apks.map(a => a.name) : [],
+            timestamp: new Date().toISOString()
+        };
+        
+        localStorage.setItem(`${CONFIG.dbVersionKey}_data`, JSON.stringify(cacheData));
+    } catch (error) {
+        console.error('Error guardando caché de datos:', error);
+    }
+}
+
+/**
+ * Calcula los cambios entre la versión antigua y nueva de la base de datos
+ */
+function calculateContentChanges(oldData, newData) {
+    const changes = {
+        programas: 0,
+        sistemas: 0,
+        juegos: 0,
+        extras: 0,
+        apks: 0,
+        totalNew: 0
+    };
+    
+    // Si no hay datos antiguos, no hay cambios (es primera vez)
+    if (!oldData) {
+        return changes;
+    }
+    
+    // Verificar cada categoría
+    const categories = ['programas', 'sistemas', 'juegos', 'extras', 'apks'];
+    
+    categories.forEach(category => {
+        if (oldData[category] && newData[category]) {
+            // Obtener nombres de items antiguos
+            const oldNames = oldData[category] || [];
+            // Obtener nombres de items nuevos
+            const newNames = newData[category] ? newData[category].map(item => item.name) : [];
+            
+            // Contar cuántos nombres nuevos hay que no estaban en los antiguos
+            const newItems = newNames.filter(name => !oldNames.includes(name));
+            changes[category] = newItems.length;
+            changes.totalNew += newItems.length;
+            
+            if (newItems.length > 0) {
+                console.log(`📥 ${newItems.length} nuevos en ${category}:`, newItems);
+            }
+        }
+    });
+    
+    return changes;
+}
+
+/**
+ * Crea una notificación de contenido nuevo
+ */
+function createNewContentNotification(changes) {
+    if (changes.totalNew === 0) return;
+    
+    // Crear mensaje según la cantidad de cambios
+    let message = '';
+    let title = '';
+    
+    if (changes.totalNew === 1) {
+        // Encontrar qué categoría tiene el nuevo contenido
+        const categories = ['programas', 'sistemas', 'juegos', 'extras', 'apks'];
+        const categoryWithChange = categories.find(cat => changes[cat] > 0);
+        
+        let categoryName = '';
+        switch(categoryWithChange) {
+            case 'programas': categoryName = 'programa'; break;
+            case 'sistemas': categoryName = 'sistema'; break;
+            case 'juegos': categoryName = 'juego'; break;
+            case 'extras': categoryName = 'extra'; break;
+            case 'apks': categoryName = 'APK'; break;
+            default: categoryName = 'contenido';
+        }
+        
+        title = '¡Nuevo contenido disponible!';
+        message = `Se ha agregado 1 nuevo ${categoryName}. ¡Échale un vistazo!`;
+    } else {
+        title = '¡Nuevos contenidos disponibles!';
+        
+        // Crear lista de cambios por categoría
+        const changeList = [];
+        if (changes.programas > 0) changeList.push(`${changes.programas} programa${changes.programas > 1 ? 's' : ''}`);
+        if (changes.sistemas > 0) changeList.push(`${changes.sistemas} sistema${changes.sistemas > 1 ? 's' : ''}`);
+        if (changes.juegos > 0) changeList.push(`${changes.juegos} juego${changes.juegos > 1 ? 's' : ''}`);
+        if (changes.extras > 0) changeList.push(`${changes.extras} extra${changes.extras > 1 ? 's' : ''}`);
+        if (changes.apks > 0) changeList.push(`${changes.apks} APK${changes.apks > 1 ? 's' : ''}`);
+        
+        if (changeList.length > 0) {
+            message = `Se han agregado ${changeList.join(', ')}.`;
+        } else {
+            message = `Se han agregado ${changes.totalNew} nuevos contenidos.`;
+        }
+    }
+    
+    // Agregar la notificación al sistema
+    const newNotification = {
+        id: Date.now(),
+        type: 'info',
+        title: title,
+        message: message,
+        date: new Date().toISOString(),
+        read: false
+    };
+    
+    // Añadir al inicio del array (más reciente primero)
+    AppState.notifications.unshift(newNotification);
+    
+    // Limitar a 50 notificaciones máximas
+    if (AppState.notifications.length > 50) {
+        AppState.notifications = AppState.notifications.slice(0, 50);
+    }
+    
+    // Guardar notificaciones
+    saveNotifications();
+    
+    // Actualizar badge
+    updateNotificationBadge();
+    
+    console.log('🔔 Notificación creada:', newNotification);
+}
+
+/**
  * Inicializa los componentes de UI
  */
 function initUIComponents() {
-    // Inicializar cursor personalizado SOLO en desktop
-    initCustomCursor();
-    
-    // Inicializar sistema de notificaciones
+    // Sistema de notificaciones funciona normalmente
     updateNotificationBadge();
     
     // Configurar título dinámico
@@ -227,7 +409,7 @@ function initUIComponents() {
 }
 
 // ============================================================================
-// RENDERIZADO DE CONTENIDO
+// RENDERIZADO DE CONTENIDO - MODIFICADO PARA NUEVA ESTRUCTURA DE ETIQUETAS
 // ============================================================================
 
 /**
@@ -236,9 +418,16 @@ function initUIComponents() {
 function renderAllTabs() {
     if (!AppState.dbData) return;
     
-    const tabs = ['Programas', 'Sistemas', 'Juegos', 'Extras', 'APKs'];
-    tabs.forEach(tab => {
-        renderTab(tab, AppState.dbData[tab.toLowerCase()]);
+    const tabs = [
+        { key: 'programas', id: 'Programas' },
+        { key: 'sistemas', id: 'Sistemas' },
+        { key: 'juegos', id: 'Juegos' },
+        { key: 'extras', id: 'Extras' },
+        { key: 'apks', id: 'APKs' }
+    ];
+    
+    tabs.forEach(({ key, id }) => {
+        renderTab(id, AppState.dbData[key]);
     });
 }
 
@@ -293,7 +482,7 @@ function createContentCard(item, category, itemId) {
 }
 
 /**
- * Crea una card usando el template
+ * Crea una card usando el template - MODIFICADO: SIN BOTÓN COPIAR ENLACE PARA MODALES
  */
 function createCardFromTemplate(template, item, category, itemId) {
     const clone = template.content.cloneNode(true);
@@ -312,10 +501,19 @@ function createCardFromTemplate(template, item, category, itemId) {
         icon.className = item.icon;
     }
     
-    // Título
-    const title = card.querySelector('.card-title');
-    if (title) {
-        title.textContent = item.name;
+    // Título con badge principal
+    const titleText = card.querySelector('.card-title-text');
+    const mainBadge = card.querySelector('.main-badge');
+    
+    if (titleText) {
+        titleText.textContent = item.name;
+    }
+    
+    // Mostrar primera etiqueta como badge principal (naranja)
+    if (mainBadge && item.badges && item.badges.length > 0) {
+        mainBadge.textContent = item.badges[0];
+    } else if (mainBadge) {
+        mainBadge.style.display = 'none';
     }
     
     // Descripción
@@ -324,16 +522,17 @@ function createCardFromTemplate(template, item, category, itemId) {
         description.textContent = item.info;
     }
     
-    // Badges
+    // Badges restantes (a partir del segundo)
     const badgesContainer = card.querySelector('.card-badges');
-    if (badgesContainer && item.badges) {
-        item.badges.forEach(badgeText => {
+    if (badgesContainer && item.badges && item.badges.length > 1) {
+        // Empezar desde el segundo badge (índice 1)
+        for (let i = 1; i < item.badges.length; i++) {
             const badge = document.createElement('span');
             badge.className = 'item-badge';
-            badge.textContent = badgeText;
+            badge.textContent = item.badges[i];
             badge.setAttribute('role', 'listitem');
             badgesContainer.appendChild(badge);
-        });
+        }
     }
     
     // Botones de acción
@@ -345,13 +544,18 @@ function createCardFromTemplate(template, item, category, itemId) {
     
     const copyLinkBtn = card.querySelector('.copy-link-btn');
     if (copyLinkBtn) {
-        // Solo mostrar botón de copiar enlace si NO es modal y tiene enlace directo
+        // MODIFICADO: NO mostrar botón de copiar enlace para items que abren modales
+        // Solo mostrar si NO es modal y tiene enlace directo
         if (item.modal && item.modal !== 'null') {
+            // Para modales, ocultar completamente el botón de copiar enlace
             copyLinkBtn.style.display = 'none';
+            // También podemos eliminarlo del DOM para que no ocupe espacio
+            copyLinkBtn.remove();
         } else if (item.enlace && item.enlace !== '#') {
             copyLinkBtn.onclick = () => copyItemLink(itemId);
         } else {
             copyLinkBtn.style.display = 'none';
+            copyLinkBtn.remove();
         }
     }
     
@@ -372,7 +576,7 @@ function createCardFromTemplate(template, item, category, itemId) {
 }
 
 /**
- * Crea una card manualmente (fallback)
+ * Crea una card manualmente (fallback) - MODIFICADO: SIN BOTÓN COPIAR ENLACE PARA MODALES
  */
 function createCardManually(item, category, itemId) {
     const card = document.createElement('div');
@@ -381,17 +585,18 @@ function createCardManually(item, category, itemId) {
     card.dataset.category = category.toLowerCase();
     card.dataset.type = getItemType(item);
     
-    const type = getItemType(item);
-    const typeLabel = getTypeLabel(type);
-    
-    // Determinar si mostrar botón de copiar enlace
+    // MODIFICADO: Determinar si mostrar botón de copiar enlace
+    // NO mostrar para items que abren modales
     const showCopyLink = !(item.modal && item.modal !== 'null') && item.enlace && item.enlace !== '#';
+    
+    // Preparar badges: primera etiqueta para main-badge, resto para card-badges
+    const mainBadge = item.badges && item.badges.length > 0 ? item.badges[0] : null;
+    const remainingBadges = item.badges && item.badges.length > 1 ? item.badges.slice(1) : [];
     
     card.innerHTML = `
         <div class="card-header">
             <div class="card-icon">
                 <i class="${item.icon}" aria-hidden="true"></i>
-                <div class="card-badge ${type}">${typeLabel}</div>
             </div>
             <div class="card-actions">
                 <button class="card-action-btn" 
@@ -411,12 +616,15 @@ function createCardManually(item, category, itemId) {
         </div>
         
         <div class="card-content">
-            <h3 class="card-title">${item.name}</h3>
+            <h3 class="card-title">
+                <span class="card-title-text">${item.name}</span>
+                ${mainBadge ? `<span class="main-badge">${mainBadge}</span>` : ''}
+            </h3>
             <p class="card-description">${item.info}</p>
             
-            ${item.badges ? `
+            ${remainingBadges.length > 0 ? `
             <div class="card-badges" role="list">
-                ${item.badges.map(badge => `<span class="item-badge" role="listitem">${badge}</span>`).join('')}
+                ${remainingBadges.map(badge => `<span class="item-badge" role="listitem">${badge}</span>`).join('')}
             </div>` : ''}
         </div>
         
@@ -489,7 +697,7 @@ function getTypeLabel(type) {
 }
 
 // ============================================================================
-// SISTEMA DE BÚSQUEDA
+// SISTEMA DE BÚSQUEDA - MODIFICADO PARA MEJORAR EXPERIENCIA
 // ============================================================================
 
 /**
@@ -515,8 +723,45 @@ function initSearch() {
     
     // Actualizar botón de limpiar
     searchInput.addEventListener('input', () => {
-        clearBtn.style.display = searchInput.value ? 'flex' : 'none';
+        const hasValue = searchInput.value.trim() !== '';
+        clearBtn.style.display = hasValue ? 'flex' : 'none';
+        
+        // Actualizar estado de búsqueda activa
+        AppState.searchActive = hasValue;
+        updateSearchState();
     });
+    
+    // Enfoque en el input
+    searchInput.addEventListener('focus', () => {
+        AppState.searchActive = true;
+        updateSearchState();
+    });
+    
+    // Perder enfoque
+    searchInput.addEventListener('blur', () => {
+        if (searchInput.value.trim() === '') {
+            AppState.searchActive = false;
+            updateSearchState();
+        }
+    });
+}
+
+/**
+ * Actualiza el estado visual de la búsqueda
+ */
+function updateSearchState() {
+    const searchSection = document.querySelector('.search-section');
+    const nav = document.querySelector('.main-nav');
+    
+    if (!searchSection || !nav) return;
+    
+    if (AppState.searchActive) {
+        searchSection.classList.add('active-search');
+        nav.classList.add('search-active');
+    } else {
+        searchSection.classList.remove('active-search');
+        nav.classList.remove('search-active');
+    }
 }
 
 /**
@@ -536,9 +781,9 @@ function performSearch() {
     let visibleCount = 0;
     
     items.forEach(item => {
-        const title = item.querySelector('.card-title')?.textContent.toLowerCase() || '';
+        const title = item.querySelector('.card-title-text')?.textContent.toLowerCase() || '';
         const description = item.querySelector('.card-description')?.textContent.toLowerCase() || '';
-        const badges = Array.from(item.querySelectorAll('.item-badge'))
+        const badges = Array.from(item.querySelectorAll('.item-badge, .main-badge'))
                           .map(b => b.textContent.toLowerCase())
                           .join(' ');
         
@@ -576,6 +821,9 @@ function clearSearch() {
     if (clearBtn) {
         clearBtn.style.display = 'none';
     }
+    
+    AppState.searchActive = false;
+    updateSearchState();
     
     performSearch();
 }
@@ -657,6 +905,56 @@ function updateUrlHash(tabName) {
     } else {
         window.location.hash = tabName;
     }
+}
+
+// ============================================================================
+// SISTEMA DE SCROLL PARA OCULTAR PESTAÑAS GRADUALMENTE
+// ============================================================================
+
+/**
+ * Inicializa el sistema para ocultar pestañas gradualmente al hacer scroll
+ */
+function initScrollHideNav() {
+    let ticking = false;
+    
+    window.addEventListener('scroll', function() {
+        if (!ticking) {
+            window.requestAnimationFrame(function() {
+                handleScroll();
+                ticking = false;
+            });
+            ticking = true;
+        }
+    });
+}
+
+/**
+ * Maneja el evento de scroll
+ */
+function handleScroll() {
+    const currentScrollTop = window.pageYOffset || document.documentElement.scrollTop;
+    const nav = document.querySelector('.main-nav');
+    const searchSection = document.querySelector('.search-section');
+    
+    if (!nav || !searchSection) return;
+    
+    // Solo aplicar en dispositivos móviles/tablets
+    if (window.innerWidth <= 768) {
+        const scrollDifference = currentScrollTop - AppState.lastScrollTop;
+        
+        // Si está bajando y ha pasado cierto umbral, ocultar
+        if (scrollDifference > 10 && currentScrollTop > 100) {
+            nav.classList.add('hidden-by-search');
+            searchSection.classList.add('hiding-nav');
+        } 
+        // Si está subiendo, mostrar
+        else if (scrollDifference < -10) {
+            nav.classList.remove('hidden-by-search');
+            searchSection.classList.remove('hiding-nav');
+        }
+    }
+    
+    AppState.lastScrollTop = currentScrollTop;
 }
 
 // ============================================================================
@@ -746,12 +1044,6 @@ function initSuggestionForm() {
     if (!form) return;
     
     form.addEventListener('submit', handleSuggestionSubmit);
-    
-    // Añadir icono al botón de enviar
-    const submitBtn = document.getElementById('submitSugerencia');
-    if (submitBtn) {
-        submitBtn.innerHTML = '<i class="fa-solid fa-paper-plane" aria-hidden="true"></i> Enviar Sugerencia a GitHub';
-    }
 }
 
 /**
@@ -1009,11 +1301,12 @@ function copyItemLink(itemId) {
     // Determinar qué enlace copiar
     let urlToCopy = '';
     
-    if (item.enlace && item.enlace !== '#') {
+    // MODIFICADO: No permitir copiar enlace para modales
+    if (item.modal && item.modal !== 'null') {
+        showToast('Este contenido no tiene enlace directo para copiar', 'warning');
+        return;
+    } else if (item.enlace && item.enlace !== '#') {
         urlToCopy = item.enlace;
-    } else if (item.modal && item.modal !== 'null') {
-        // Para modales, copiar la URL de la página actual con hash
-        urlToCopy = window.location.origin + window.location.pathname + '#' + item.modal;
     } else {
         showToast('Este item no tiene enlace para copiar', 'warning');
         return;
@@ -1137,17 +1430,9 @@ function loadNotifications() {
                 {
                     id: 2,
                     type: 'info',
-                    title: 'Nuevo contenido',
-                    message: 'Hemos agregado nuevos programas y juegos.',
-                    date: new Date(Date.now() - 3600000).toISOString(),
-                    read: false
-                },
-                {
-                    id: 3,
-                    type: 'warning',
                     title: 'Contraseña importante',
                     message: 'Recuerda usar la contraseña: foxorange224',
-                    date: new Date(Date.now() - 7200000).toISOString(),
+                    date: new Date(Date.now() - 3600000).toISOString(),
                     read: false
                 }
             ];
@@ -1443,30 +1728,6 @@ function initAccessibility() {
 // ============================================================================
 
 /**
- * Inicializa el cursor personalizado
- */
-function initCustomCursor() {
-    const cursor = document.querySelector('.custom-cursor');
-    if (!cursor) return;
-    
-    document.addEventListener('mousemove', (e) => {
-        cursor.style.left = e.clientX + 'px';
-        cursor.style.top = e.clientY + 'px';
-    });
-    
-    // Cambiar cursor en elementos interactivos
-    const interactiveElements = document.querySelectorAll('a, button, .content-card');
-    interactiveElements.forEach(el => {
-        el.addEventListener('mouseenter', () => {
-            cursor.classList.add('cursor-hover');
-        });
-        el.addEventListener('mouseleave', () => {
-            cursor.classList.remove('cursor-hover');
-        });
-    });
-}
-
-/**
  * Inicializa las partículas de fondo - DESACTIVADO
  */
 function initBackgroundParticles() {
@@ -1482,6 +1743,12 @@ function initBackgroundParticles() {
  */
 function initFloatingButtons() {
     // Los botones ya están configurados en el HTML
+    // Asegurar que el botón de colaboradores flotante esté disponible
+    const collaboratorsBtn = document.querySelector('.collaborators-btn');
+    if (collaboratorsBtn) {
+        // Ya tiene onclick en el HTML
+        console.log('✅ Botón flotante de colaboradores listo');
+    }
 }
 
 /**
@@ -1647,6 +1914,63 @@ function hideLoading() {
 }
 
 // ============================================================================
+// PANTALLA DE ERROR CRÍTICO - NUEVAS FUNCIONES
+// ============================================================================
+
+/**
+ * Muestra la pantalla de error crítica
+ */
+function showErrorScreen(message) {
+    // Ocultar overlay de carga si está visible
+    hideLoading();
+    
+    // Ocultar la interfaz principal (opcional)
+    document.querySelector('.page-container')?.style.setProperty('display', 'none', 'important');
+    
+    // Mostrar pantalla de error
+    const errorScreen = document.getElementById('errorScreen');
+    const errorMessage = document.getElementById('errorMessage');
+    
+    if (errorScreen && errorMessage) {
+        errorMessage.textContent = message;
+        errorScreen.classList.add('show');
+        errorScreen.setAttribute('aria-hidden', 'false');
+        
+        // Configurar botones
+        const retryBtn = document.getElementById('retryBtn');
+        const reportBtn = document.getElementById('reportBtn');
+        
+        if (retryBtn) {
+            retryBtn.onclick = function() {
+                location.reload();
+            };
+        }
+        
+        if (reportBtn) {
+            reportBtn.onclick = function() {
+                // Cerrar pantalla de error y abrir modal de sugerencias
+                closeErrorScreen();
+                openModal('sugerenciaModal');
+            };
+        }
+    }
+}
+
+/**
+ * Cierra la pantalla de error crítica
+ */
+function closeErrorScreen() {
+    const errorScreen = document.getElementById('errorScreen');
+    if (errorScreen) {
+        errorScreen.classList.remove('show');
+        errorScreen.setAttribute('aria-hidden', 'true');
+    }
+    
+    // Restaurar la interfaz principal
+    document.querySelector('.page-container')?.style.removeProperty('display');
+}
+
+// ============================================================================
 // MANEJO DEL ESTADO
 // ============================================================================
 
@@ -1740,6 +2064,10 @@ window.FoxWeb = {
     // Utilidades
     findItemById,
     getItemType,
+    
+    // Funciones de error
+    showErrorScreen,
+    closeErrorScreen,
     
     // Debug
     version: CONFIG.version

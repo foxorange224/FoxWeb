@@ -67,8 +67,29 @@
 <link rel="preload" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" as="style">
 <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" as="style">
 </head>
+<!-- Pantalla de error crítica -->
+<div id="errorScreen" class="error-screen" aria-hidden="true" role="alert" aria-live="assertive">
+<div class="error-content">
+<div class="error-icon">
+<i class="fa-solid fa-triangle-exclamation" aria-hidden="true"></i>
+</div>
+<h2 class="error-title">¡Ups! Hubo un error grave</h2>
+<p class="error-message" id="errorMessage">
+No eres tú, solo tuvimos inconvenientes. No podemos mostrar la página porque fue un error de algo esencial.
+</p>
+<div class="error-note">
+<p>Intenta actualizar la página o esperar un poco, porque puede ser un fallo técnico reciente.</p>
+</div>
+<div class="error-actions">
+<button class="error-btn primary" id="retryBtn">
+<i class="fa-solid fa-rotate-right" aria-hidden="true"></i>
+Actualizar página
+</button>
+</div>
+</div>
+</div>
 <body>
-<div class="custom-cursor" aria-hidden="true"></div>
+<!-- Eliminado el cursor personalizado -->
 <div class="bg-particles" aria-hidden="true"></div>
 <header class="main-header" role="banner">
 <div class="header-content">
@@ -98,10 +119,7 @@
 <span class="notification-badge" aria-hidden="true">3</span>
 <span class="sr-only">Notificaciones</span>
 </button>
-<button class="btn-collaborators" onclick="openModal('collaboratorsModal')" aria-label="Ver colaboradores del proyecto" title="Colaboradores">
-<i class="fa-solid fa-users" aria-hidden="true"></i>
-<span class="sr-only">Colaboradores</span>
-</button>
+<!-- Eliminado botón de colaboradores del header -->
 </div>
 </div>
 <nav class="main-nav" role="navigation" aria-label="Categorías de descargas">
@@ -323,6 +341,10 @@ Sugerir Contenido
 </div>
 </div>
 </footer>
+<!-- Botón flotante de Colaboradores agregado con color naranja -->
+<button class="floating-btn collaborators-btn" onclick="openModal('collaboratorsModal')" aria-label="Ver colaboradores del proyecto" title="Colaboradores">
+<i class="fa-solid fa-users" aria-hidden="true"></i>
+</button>
 <button class="floating-btn chat-btn" onclick="window.open('/chat.html', '_blank')" aria-label="Abrir chat de FoxWeb" title="Chat FoxWeb">
 <i class="fa-solid fa-message" aria-hidden="true"></i>
 </button>
@@ -368,7 +390,10 @@ Sugerir Contenido
 </div>
 </div>
 <div class="card-content">
-<h3 class="card-title"></h3>
+<h3 class="card-title">
+<span class="card-title-text"></span>
+<span class="main-badge"></span>
+</h3>
 <p class="card-description"></p>
 <div class="card-badges" role="list"></div>
 </div>
@@ -422,7 +447,6 @@ Descargar
 </div>
 </div>
 </div>
-<h4>=============================</h4>
 <div class="collaborator-item">
 <div class="collaborator-avatar">
 <i class="fa-solid fa-user" aria-hidden="true"></i>
@@ -739,7 +763,7 @@ Cerrar
 <li>Hardware antiguo y moderno</li>
 </ul>
 <h3>⚠️ Aviso Importante</h3>
-<p>Todos los enlaces proporcionados son a software gratuito, de código abierto, o enlaces oficiales de descarga.</p>
+<p>Todos los enlaces proporcionados son a software gratuitos, de código abierto, o enlaces oficiales de descarga.</p>
 <h3>📞 Contacto y Soporte</h3>
 <p>Puedes contactarnos a través de:</p>
 <ul>
@@ -824,7 +848,7 @@ Donar con PayPal
 <p>Al usar FoxWeb, aceptas estos términos y condiciones.</p>
 <h3>⚖️ Responsabilidad</h3>
 <ul>
-<li>FoxWeb es un directorio de enlaces a software gratuito y de código abierto</li>
+<li>FoxWeb es un directorio de enlaces a software gratuitos y de código abierto</li>
 <li>No somos responsables del contenido enlazado</li>
 <li>Es responsabilidad del usuario verificar la licencia y legalidad del software</li>
 <li>Recomendamos usar antivirus antes de instalar cualquier software</li>
