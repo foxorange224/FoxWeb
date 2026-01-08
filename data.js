@@ -14,7 +14,7 @@ icon: "fa-solid fa-hard-drive",
 info: "Defraggler es una herramienta de desfragmentación de disco desarrollada por Piriform. Permite desfragmentar unidades de disco duro para mejorar el rendimiento del sistema al reorganizar los datos fragmentados.",
 enlace: "https://www.mediafire.com/file/t8u6857e4aaftez",
 modal: null,
-badges: ["Sistema", "Optimización", "Disco Duro"]
+badges: ["DESFRAGMENTAR", "OPTIMIZACIÓN", "DISCOS"]
 },
 {
 name: "Office Professional 2016",
