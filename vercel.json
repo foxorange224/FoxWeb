@@ -1,0 +1,21 @@
+{
+  "headers": [
+    {
+      "source": "/(.*)",
+      "headers": [
+        {
+          "key": "Cloudflare-CDN-Cache-Control",
+          "value": "max-age=31536000"
+        },
+        {
+          "key": "CDN-Cache-Control",
+          "value": "max-age=31536000"
+        },
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=31536000, s-maxage=31536000, immutable"
+        }
+      ]
+    }
+  ]
+}
