@@ -2,7 +2,7 @@
   "version": 2,
   "builds": [
     {
-      "src": "index.html",
+      "src": "*.html",
       "use": "@vercel/static"
     },
     {
@@ -12,45 +12,21 @@
     {
       "src": "*.css",
       "use": "@vercel/static"
-    },
-    {
-      "src": "*.json",
-      "use": "@vercel/static"
     }
   ],
   "routes": [
     {
-      "src": "/[^.]+",
-      "dest": "/",
+      "src": "/_next/static/(.*)",
       "headers": {
-        "Cache-Control": "public, max-age=0, must-revalidate"
+        "Cache-Control": "public, max-age=31536000, immutable"
       }
     },
     {
       "src": "/(.*)",
-      "headers": [
-        {
-          "key": "X-Robots-Tag",
-          "value": "all"
-        },
-        {
-          "key": "X-Content-Type-Options",
-          "value": "nosniff"
-        },
-        {
-          "key": "Access-Control-Allow-Origin",
-          "value": "*"
-        }
-      ]
-    },
-    {
-      "src": "/(index.js|index.css|data.js|sitemap.xml|robots.txt)",
-      "headers": [
-        {
-          "key": "Cache-Control",
-          "value": "public, max-age=0, must-revalidate"
-        }
-      ]
+      "headers": {
+        "X-Robots-Tag": "all",
+        "X-Content-Type-Options": "nosniff"
+      }
     }
   ],
   "rewrites": [
@@ -76,6 +52,10 @@
     },
     {
       "source": "/apps",
+      "destination": "/"
+    },
+    {
+      "source": "/(.*)",
       "destination": "/"
     }
   ]
