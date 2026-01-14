@@ -1892,7 +1892,7 @@ function initDynamicTitle() {
     
     document.addEventListener('visibilitychange', function() {
         if (document.hidden) {
-            document.title = '¡Vuelve! | FoxWeb';
+            document.title = 'FoxWeb';
         } else {
             document.title = originalTitle;
         }
