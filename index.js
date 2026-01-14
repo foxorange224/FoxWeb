@@ -120,12 +120,10 @@ function loadDataScript() {
             AppState.dbData = FoxWebDB;
             initApp();
         } else {
-            // MODIFICADO: Mostrar pantalla de error crítica en lugar de toast
             showErrorScreen('No se pudo cargar la base de datos. Por favor, recarga la página.');
         }
     };
     script.onerror = function() {
-        // MODIFICADO: Mostrar pantalla de error crítica en lugar de toast
         showErrorScreen('Error al cargar la Base de Datos. Por favor, recarga la página.');
     };
     document.head.appendChild(script);
@@ -137,7 +135,7 @@ function loadDataScript() {
 function initApp() {
     console.log('🎯 Inicializando aplicación...');
     
-    // MODIFICADO: Verificar que la base de datos esté cargada
+    // Verificar que la base de datos esté cargada
     if (!AppState.dbData) {
         showErrorScreen('No se pudo cargar la base de datos. Por favor, recarga la página.');
         return;
@@ -211,7 +209,7 @@ function determineInitialTabFromURL() {
             'juegos': 'Juegos',
             'extras': 'Extras',
             'apks': 'APKs',
-            'apps': 'Programas' // Compatibilidad con rewrite de /apps
+            'apps': 'Programas'
         };
         
         if (routeMap[route]) {
@@ -219,7 +217,7 @@ function determineInitialTabFromURL() {
         }
     }
     
-    // Si no hay ruta válida, usar el estado guardado o valor por defecto
+    // Si no hay ruta válida, usar valor por defecto
     if (!AppState.currentTab || !['Programas', 'Sistemas', 'Juegos', 'Extras', 'APKs'].includes(AppState.currentTab)) {
         AppState.currentTab = 'Programas';
     }
@@ -282,19 +280,17 @@ function checkForNewContent() {
 function calculateDBHash(dbData) {
     if (!dbData) return '';
     
-    // Crear un objeto simple con solo la información necesaria
     const hashData = {
         programas: dbData.programas ? dbData.programas.length : 0,
         sistemas: dbData.sistemas ? dbData.sistemas.length : 0,
         juegos: dbData.juegos ? dbData.juegos.length : 0,
         extras: dbData.extras ? dbData.extras.length : 0,
         apks: dbData.apks ? dbData.apks.length : 0,
-        timestamp: new Date().toISOString().split('T')[0] // Solo fecha
+        timestamp: new Date().toISOString().split('T')[0]
     };
     
-    // Convertir a string y crear hash simple
     const hashString = JSON.stringify(hashData);
-    return btoa(hashString); // Base64 simple
+    return btoa(hashString);
 }
 
 /**
@@ -315,7 +311,6 @@ function getCachedDBData() {
  */
 function cacheDBData(dbData) {
     try {
-        // Solo guardar información básica para comparación
         const cacheData = {
             programas: dbData.programas ? dbData.programas.map(p => p.name) : [],
             sistemas: dbData.sistemas ? dbData.sistemas.map(s => s.name) : [],
@@ -344,22 +339,17 @@ function calculateContentChanges(oldData, newData) {
         totalNew: 0
     };
     
-    // Si no hay datos antiguos, no hay cambios (es primera vez)
     if (!oldData) {
         return changes;
     }
     
-    // Verificar cada categoría
     const categories = ['programas', 'sistemas', 'juegos', 'extras', 'apks'];
     
     categories.forEach(category => {
         if (oldData[category] && newData[category]) {
-            // Obtener nombres de items antiguos
             const oldNames = oldData[category] || [];
-            // Obtener nombres de items nuevos
             const newNames = newData[category] ? newData[category].map(item => item.name) : [];
             
-            // Contar cuántos nombres nuevos hay que no estaban en los antiguos
             const newItems = newNames.filter(name => !oldNames.includes(name));
             changes[category] = newItems.length;
             changes.totalNew += newItems.length;
@@ -379,12 +369,10 @@ function calculateContentChanges(oldData, newData) {
 function createNewContentNotification(changes) {
     if (changes.totalNew === 0) return;
     
-    // Crear mensaje según la cantidad de cambios
     let message = '';
     let title = '';
     
     if (changes.totalNew === 1) {
-        // Encontrar qué categoría tiene el nuevo contenido
         const categories = ['programas', 'sistemas', 'juegos', 'extras', 'apks'];
         const categoryWithChange = categories.find(cat => changes[cat] > 0);
         
@@ -403,7 +391,6 @@ function createNewContentNotification(changes) {
     } else {
         title = '¡Nuevos contenidos disponibles!';
         
-        // Crear lista de cambios por categoría
         const changeList = [];
         if (changes.programas > 0) changeList.push(`${changes.programas} programa${changes.programas > 1 ? 's' : ''}`);
         if (changes.sistemas > 0) changeList.push(`${changes.sistemas} sistema${changes.sistemas > 1 ? 's' : ''}`);
@@ -418,7 +405,6 @@ function createNewContentNotification(changes) {
         }
     }
     
-    // Agregar la notificación al sistema
     const newNotification = {
         id: Date.now(),
         type: 'info',
@@ -428,18 +414,13 @@ function createNewContentNotification(changes) {
         read: false
     };
     
-    // Añadir al inicio del array (más reciente primero)
     AppState.notifications.unshift(newNotification);
     
-    // Limitar a 50 notificaciones máximas
     if (AppState.notifications.length > 50) {
         AppState.notifications = AppState.notifications.slice(0, 50);
     }
     
-    // Guardar notificaciones
     saveNotifications();
-    
-    // Actualizar badge
     updateNotificationBadge();
     
     console.log('🔔 Notificación creada:', newNotification);
@@ -449,15 +430,12 @@ function createNewContentNotification(changes) {
  * Inicializa los componentes de UI
  */
 function initUIComponents() {
-    // Sistema de notificaciones funciona normalmente
     updateNotificationBadge();
-    
-    // Configurar título dinámico
     initDynamicTitle();
 }
 
 // ============================================================================
-// RENDERIZADO DE CONTENIDO - MODIFICADO PARA NUEVA ESTRUCTURA DE ETIQUETAS
+// RENDERIZADO DE CONTENIDO
 // ============================================================================
 
 /**
@@ -478,7 +456,6 @@ function renderAllTabs() {
         renderTab(id, AppState.dbData[key]);
     });
     
-    // Activar la pestaña actual después de renderizar
     setTimeout(() => activateCurrentTab(), 50);
 }
 
@@ -486,20 +463,17 @@ function renderAllTabs() {
  * Activa la pestaña actual en la UI
  */
 function activateCurrentTab() {
-    // Ocultar todas las pestañas
     document.querySelectorAll('.tab-content').forEach(tab => {
         tab.classList.remove('active');
         tab.setAttribute('aria-hidden', 'true');
     });
     
-    // Mostrar pestaña activa
     const activeTab = document.getElementById(AppState.currentTab);
     if (activeTab) {
         activeTab.classList.add('active');
         activeTab.setAttribute('aria-hidden', 'false');
     }
     
-    // Actualizar botones de pestañas
     document.querySelectorAll('.tablink').forEach(btn => {
         const tabName = btn.getAttribute('data-tab') || 
                        btn.textContent.trim() ||
@@ -518,7 +492,6 @@ function renderTab(tabId, items) {
     const grid = document.getElementById(`grid-${tabId}`);
     if (!grid) return;
     
-    // Limpiar contenido de carga
     grid.innerHTML = '';
     
     if (!items || items.length === 0) {
@@ -532,7 +505,6 @@ function renderTab(tabId, items) {
         return;
     }
     
-    // Crear fragmento para mejor performance
     const fragment = document.createDocumentFragment();
     
     items.forEach((item, index) => {
@@ -543,7 +515,6 @@ function renderTab(tabId, items) {
     
     grid.appendChild(fragment);
     
-    // Añadir eventos a las cards
     initContentCardsEvents();
 }
 
@@ -551,18 +522,16 @@ function renderTab(tabId, items) {
  * Crea una card de contenido
  */
 function createContentCard(item, category, itemId) {
-    // Usar template si existe
     const template = document.getElementById('contentCardTemplate');
     if (template) {
         return createCardFromTemplate(template, item, category, itemId);
     }
     
-    // Crear manualmente si no hay template
     return createCardManually(item, category, itemId);
 }
 
 /**
- * Crea una card usando el template - MODIFICADO: SIN BOTÓN COPIAR ENLACE PARA MODALES
+ * Crea una card usando el template
  */
 function createCardFromTemplate(template, item, category, itemId) {
     const clone = template.content.cloneNode(true);
@@ -570,18 +539,15 @@ function createCardFromTemplate(template, item, category, itemId) {
     
     if (!card) return createCardManually(item, category, itemId);
     
-    // Configurar card
     card.dataset.id = itemId;
     card.dataset.category = category.toLowerCase();
     card.dataset.type = getItemType(item);
     
-    // Icono
     const icon = card.querySelector('.card-icon i');
     if (icon) {
         icon.className = item.icon;
     }
     
-    // Título con badge principal
     const titleText = card.querySelector('.card-title-text');
     const mainBadge = card.querySelector('.main-badge');
     
@@ -589,23 +555,19 @@ function createCardFromTemplate(template, item, category, itemId) {
         titleText.textContent = item.name;
     }
     
-    // Mostrar primera etiqueta como badge principal (naranja)
     if (mainBadge && item.badges && item.badges.length > 0) {
         mainBadge.textContent = item.badges[0];
     } else if (mainBadge) {
         mainBadge.style.display = 'none';
     }
     
-    // Descripción
     const description = card.querySelector('.card-description');
     if (description) {
         description.textContent = item.info;
     }
     
-    // Badges restantes (a partir del segundo)
     const badgesContainer = card.querySelector('.card-badges');
     if (badgesContainer && item.badges && item.badges.length > 1) {
-        // Empezar desde el segundo badge (índice 1)
         for (let i = 1; i < item.badges.length; i++) {
             const badge = document.createElement('span');
             badge.className = 'item-badge';
@@ -615,7 +577,6 @@ function createCardFromTemplate(template, item, category, itemId) {
         }
     }
     
-    // Botones de acción
     const favoriteBtn = card.querySelector('.card-action-btn:nth-child(1)');
     if (favoriteBtn) {
         favoriteBtn.onclick = () => toggleFavorite(itemId);
@@ -624,12 +585,8 @@ function createCardFromTemplate(template, item, category, itemId) {
     
     const copyLinkBtn = card.querySelector('.copy-link-btn');
     if (copyLinkBtn) {
-        // MODIFICADO: NO mostrar botón de copiar enlace para items que abren modales
-        // Solo mostrar si NO es modal y tiene enlace directo
         if (item.modal && item.modal !== 'null') {
-            // Para modales, ocultar completamente el botón de copiar enlace
             copyLinkBtn.style.display = 'none';
-            // También podemos eliminarlo del DOM para que no ocupe espacio
             copyLinkBtn.remove();
         } else if (item.enlace && item.enlace !== '#') {
             copyLinkBtn.onclick = () => copyItemLink(itemId);
@@ -639,7 +596,6 @@ function createCardFromTemplate(template, item, category, itemId) {
         }
     }
     
-    // Botón de descarga
     const downloadBtn = card.querySelector('.download-btn');
     if (downloadBtn) {
         if (item.modal && item.modal !== 'null') {
@@ -656,7 +612,7 @@ function createCardFromTemplate(template, item, category, itemId) {
 }
 
 /**
- * Crea una card manualmente (fallback) - MODIFICADO: SIN BOTÓN COPIAR ENLACE PARA MODALES
+ * Crea una card manualmente (fallback)
  */
 function createCardManually(item, category, itemId) {
     const card = document.createElement('div');
@@ -665,11 +621,8 @@ function createCardManually(item, category, itemId) {
     card.dataset.category = category.toLowerCase();
     card.dataset.type = getItemType(item);
     
-    // MODIFICADO: Determinar si mostrar botón de copiar enlace
-    // NO mostrar para items que abren modales
     const showCopyLink = !(item.modal && item.modal !== 'null') && item.enlace && item.enlace !== '#';
     
-    // Preparar badges: primera etiqueta para main-badge, resto para card-badges
     const mainBadge = item.badges && item.badges.length > 0 ? item.badges[0] : null;
     const remainingBadges = item.badges && item.badges.length > 1 ? item.badges.slice(1) : [];
     
@@ -762,22 +715,8 @@ function getItemType(item) {
     return 'standard';
 }
 
-/**
- * Devuelve la etiqueta del tipo
- */
-function getTypeLabel(type) {
-    const labels = {
-        portable: 'Portable',
-        light: 'Ligero',
-        opensource: 'Open Source',
-        free: 'Gratis',
-        standard: 'Standard'
-    };
-    return labels[type] || 'Standard';
-}
-
 // ============================================================================
-// SISTEMA DE BÚSQUEDA - MODIFICADO PARA MEJORAR EXPERIENCIA
+// SISTEMA DE BÚSQUEDA
 // ============================================================================
 
 /**
@@ -789,35 +728,27 @@ function initSearch() {
     
     if (!searchInput || !clearBtn) return;
     
-    // Evento de búsqueda con debounce
     searchInput.addEventListener('input', debounce(performSearch, 300));
-    
-    // Limpiar búsqueda
     clearBtn.addEventListener('click', clearSearch);
     
-    // Atajos de teclado
     searchInput.addEventListener('keydown', (e) => {
         if (e.key === 'Escape') clearSearch();
         if (e.key === 'Enter') performSearch();
     });
     
-    // Actualizar botón de limpiar
     searchInput.addEventListener('input', () => {
         const hasValue = searchInput.value.trim() !== '';
         clearBtn.style.display = hasValue ? 'flex' : 'none';
         
-        // Actualizar estado de búsqueda activa
         AppState.searchActive = hasValue;
         updateSearchState();
     });
     
-    // Enfoque en el input
     searchInput.addEventListener('focus', () => {
         AppState.searchActive = true;
         updateSearchState();
     });
     
-    // Perder enfoque
     searchInput.addEventListener('blur', () => {
         if (searchInput.value.trim() === '') {
             AppState.searchActive = false;
@@ -879,10 +810,7 @@ function performSearch() {
         if (matchesSearch && matchesFilter) visibleCount++;
     });
     
-    // Mostrar mensaje si no hay resultados
     showNoResults(visibleCount === 0 && term !== '');
-    
-    // Guardar término de búsqueda
     saveAppState();
 }
 
@@ -940,26 +868,21 @@ function showNoResults(show) {
  * Abre una pestaña específica
  */
 function openTab(tabName) {
-    // Si ya estamos en esta pestaña, no hacer nada
     if (AppState.currentTab === tabName) return;
     
-    // Actualizar estado
     AppState.currentTab = tabName;
     
-    // Ocultar todas las pestañas
     document.querySelectorAll('.tab-content').forEach(tab => {
         tab.classList.remove('active');
         tab.setAttribute('aria-hidden', 'true');
     });
     
-    // Mostrar pestaña activa
     const activeTab = document.getElementById(tabName);
     if (activeTab) {
         activeTab.classList.add('active');
         activeTab.setAttribute('aria-hidden', 'false');
     }
     
-    // Actualizar botones de pestañas
     document.querySelectorAll('.tablink').forEach(btn => {
         const tabNameFromBtn = btn.getAttribute('data-tab') || 
                              btn.textContent.trim() ||
@@ -970,15 +893,12 @@ function openTab(tabName) {
         btn.setAttribute('aria-selected', isActive);
     });
     
-    // Actualizar URL con ruta limpia
     updateCleanURL(tabName);
     
-    // Realizar búsqueda si hay término activo
     if (AppState.currentSearch) {
         setTimeout(performSearch, 50);
     }
     
-    // Guardar estado
     saveAppState();
 }
 
@@ -986,7 +906,6 @@ function openTab(tabName) {
  * Actualiza la URL con ruta limpia (sin hash)
  */
 function updateCleanURL(tabName) {
-    // Mapear nombres de pestaña a rutas URL
     const tabToRoute = {
         'Programas': 'programas',
         'Sistemas': 'sistemas',
@@ -998,20 +917,17 @@ function updateCleanURL(tabName) {
     const route = tabToRoute[tabName] || 'programas';
     const newURL = `/${route}`;
     
-    // Usar History API para cambiar la URL sin recargar la página
     if (history.pushState) {
         history.pushState({ tab: tabName }, '', newURL);
     } else {
-        // Fallback para navegadores antiguos
         window.location = newURL;
     }
     
-    // Actualizar título de la página
     document.title = `${tabName} - ${CONFIG.appName}`;
 }
 
 // ============================================================================
-// SISTEMA DE SCROLL PARA OCULTAR PESTAÑAS GRADUALMENTE
+// SISTEMA DE SCROLL
 // ============================================================================
 
 /**
@@ -1041,17 +957,13 @@ function handleScroll() {
     
     if (!nav || !searchSection) return;
     
-    // Solo aplicar en dispositivos móviles/tablets
     if (window.innerWidth <= 768) {
         const scrollDifference = currentScrollTop - AppState.lastScrollTop;
         
-        // Si está bajando y ha pasado cierto umbral, ocultar
         if (scrollDifference > 10 && currentScrollTop > 100) {
             nav.classList.add('hidden-by-search');
             searchSection.classList.add('hiding-nav');
-        } 
-        // Si está subiendo, mostrar
-        else if (scrollDifference < -10) {
+        } else if (scrollDifference < -10) {
             nav.classList.remove('hidden-by-search');
             searchSection.classList.remove('hiding-nav');
         }
@@ -1068,21 +980,18 @@ function handleScroll() {
  * Inicializa los modales
  */
 function initModals() {
-    // Cerrar modales al hacer clic fuera
     document.addEventListener('click', (e) => {
         if (e.target.classList.contains('modal')) {
             closeModal();
         }
     });
     
-    // Cerrar modales con Escape
     document.addEventListener('keydown', (e) => {
         if (e.key === 'Escape') {
             closeModal();
         }
     });
     
-    // Inicializar formulario de sugerencias
     initSuggestionForm();
 }
 
@@ -1096,18 +1005,14 @@ function openModal(modalId) {
         return;
     }
     
-    // Mostrar modal
     modal.style.display = 'flex';
     modal.setAttribute('aria-hidden', 'false');
     
-    // Bloquear scroll del body
     document.body.style.overflow = 'hidden';
     
-    // Enfocar el modal para accesibilidad
     const focusable = modal.querySelector('button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])');
     if (focusable) focusable.focus();
     
-    // Para modal de sugerencias, resetear formulario
     if (modalId === 'sugerenciaModal') {
         resetSuggestionForm();
     }
@@ -1124,14 +1029,12 @@ function closeModal(modalId) {
             modal.setAttribute('aria-hidden', 'true');
         }
     } else {
-        // Cerrar todos los modales visibles
         document.querySelectorAll('.modal[style*="display: flex"]').forEach(modal => {
             modal.style.display = 'none';
             modal.setAttribute('aria-hidden', 'true');
         });
     }
     
-    // Restaurar scroll del body
     document.body.style.overflow = '';
 }
 
@@ -1155,7 +1058,6 @@ function initSuggestionForm() {
 function handleSuggestionSubmit(e) {
     e.preventDefault();
     
-    // Obtener valores del formulario
     const nombre = document.getElementById('nombreSugerencia').value.trim();
     const descripcion = document.getElementById('descripcionSugerencia').value.trim();
     const categoria = document.getElementById('categoriaSugerencia').value;
@@ -1163,28 +1065,23 @@ function handleSuggestionSubmit(e) {
     const web = document.getElementById('webSugerencia').value.trim();
     const email = document.getElementById('emailSugerencia').value.trim();
     
-    // Validar campos requeridos
     if (!nombre || !descripcion || !categoria || !enlace) {
         showToast('Por favor, completa todos los campos requeridos.', 'error');
         return;
     }
     
-    // Validar URL
     if (!isValidUrl(enlace)) {
         showToast('Por favor, ingresa una URL válida.', 'error');
         return;
     }
     
-    // Validar dominios permitidos
     if (!isAllowedDomain(enlace)) {
         showToast('Solo se aceptan enlaces de MediaFire, Google Drive, MEGA, Dropbox, GitHub, SourceForge o enlaces HTTPS directos.', 'warning');
         return;
     }
     
-    // Mostrar confirmación
     showSuggestionConfirmation();
     
-    // Guardar sugerencia localmente
     saveSuggestionLocal({
         nombre,
         descripcion,
@@ -1196,7 +1093,6 @@ function handleSuggestionSubmit(e) {
         estado: 'pendiente'
     });
     
-    // Abrir GitHub en nueva pestaña
     openGitHubIssue(nombre, descripcion, categoria, enlace, web, email);
 }
 
@@ -1270,7 +1166,6 @@ function saveSuggestionLocal(suggestion) {
         suggestion.id = Date.now();
         suggestions.push(suggestion);
         
-        // Mantener solo las últimas 100 sugerencias
         if (suggestions.length > 100) {
             suggestions = suggestions.slice(-100);
         }
@@ -1357,10 +1252,7 @@ function toggleFavorite(itemId) {
         showToast('Agregado a favoritos', 'success');
     }
     
-    // Actualizar icono
     updateFavoriteIconForItem(itemId);
-    
-    // Guardar cambios
     saveFavorites();
     saveAppState();
 }
@@ -1401,10 +1293,8 @@ function copyItemLink(itemId) {
         return;
     }
     
-    // Determinar qué enlace copiar
     let urlToCopy = '';
     
-    // MODIFICADO: No permitir copiar enlace para modales
     if (item.modal && item.modal !== 'null') {
         showToast('Este contenido no tiene enlace directo para copiar', 'warning');
         return;
@@ -1415,12 +1305,10 @@ function copyItemLink(itemId) {
         return;
     }
     
-    // Copiar al portapapeles
     navigator.clipboard.writeText(urlToCopy)
         .then(() => showToast('Enlace copiado al portapapeles', 'success'))
         .catch(err => {
             console.error('Error copiando al portapapeles:', err);
-            // Fallback para navegadores antiguos
             const textArea = document.createElement('textarea');
             textArea.value = urlToCopy;
             document.body.appendChild(textArea);
@@ -1468,11 +1356,9 @@ function findItemById(itemId) {
  * Inicializa el sistema de temas
  */
 function initTheme() {
-    // Cargar tema guardado
     const savedTheme = localStorage.getItem('foxweb_theme') || CONFIG.defaultTheme;
     setTheme(savedTheme);
     
-    // Configurar botón de cambio de tema
     const themeToggle = document.getElementById('themeToggle');
     if (themeToggle) {
         themeToggle.addEventListener('click', toggleTheme);
@@ -1495,7 +1381,6 @@ function setTheme(theme) {
     document.documentElement.setAttribute('data-theme', theme);
     localStorage.setItem('foxweb_theme', theme);
     
-    // Actualizar icono del botón
     const themeToggle = document.getElementById('themeToggle');
     if (themeToggle) {
         const icons = themeToggle.querySelectorAll('i');
@@ -1503,7 +1388,6 @@ function setTheme(theme) {
         icons[1].style.display = theme === 'dark' ? 'block' : 'none';
     }
     
-    // Guardar estado
     saveAppState();
 }
 
@@ -1520,7 +1404,6 @@ function loadNotifications() {
         if (saved) {
             AppState.notifications = JSON.parse(saved);
         } else {
-            // Notificaciones por defecto
             AppState.notifications = [
                 {
                     id: 1,
@@ -1557,7 +1440,6 @@ function initNotificationCenter() {
     
     notificationBtn.addEventListener('click', toggleNotificationCenter);
     
-    // Cerrar al hacer clic fuera
     document.addEventListener('click', (e) => {
         if (!notificationCenter.contains(e.target) && !notificationBtn.contains(e.target)) {
             closeNotificationCenter();
@@ -1589,10 +1471,7 @@ function openNotificationCenter() {
     center.setAttribute('aria-hidden', 'false');
     center.classList.add('show');
     
-    // Marcar notificaciones como leídas
     markNotificationsAsRead();
-    
-    // Renderizar notificaciones
     renderNotifications();
 }
 
@@ -1650,7 +1529,6 @@ function renderNotifications() {
         return;
     }
     
-    // Ordenar por fecha (más recientes primero)
     const sortedNotifications = [...AppState.notifications].sort((a, b) => 
         new Date(b.date) - new Date(a.date)
     );
@@ -1694,7 +1572,6 @@ function getNotificationIcon(type) {
         warning: { class: 'fa-solid fa-exclamation-triangle', color: '#ffc107' },
         error: { class: 'fa-solid fa-times-circle', color: '#dc3545' }
     };
-    
     return icons[type] || icons.info;
 }
 
@@ -1729,14 +1606,13 @@ function saveNotifications() {
 }
 
 // ============================================================================
-// EVENT LISTENERS Y ACCESIBILIDAD - MODIFICADO PARA RUTAS
+// EVENT LISTENERS Y ACCESIBILIDAD
 // ============================================================================
 
 /**
  * Inicializa los event listeners principales
  */
 function initEventListeners() {
-    // Botón de scroll top
     const scrollTopBtn = document.getElementById('scrollTopBtn');
     if (scrollTopBtn) {
         scrollTopBtn.addEventListener('click', scrollToTop);
@@ -1746,10 +1622,8 @@ function initEventListeners() {
         });
     }
     
-    // Manejo del popstate (navegación con botones atrás/adelante)
     window.addEventListener('popstate', handlePopState);
     
-    // Detectar cambios de conexión
     window.addEventListener('online', () => {
         AppState.isOffline = false;
         showToast('Conexión restablecida', 'success');
@@ -1764,17 +1638,13 @@ function initEventListeners() {
 /**
  * Maneja el evento popstate (navegación con botones atrás/adelante)
  */
-function handlePopState(event) {
-    // Prevenir comportamiento por defecto
-    if (event) event.preventDefault();
-    
+function handlePopState() {
     const path = window.location.pathname;
     const pathSegments = path.split('/').filter(segment => segment);
     
     if (pathSegments.length > 0) {
         const route = pathSegments[0].toLowerCase();
         
-        // Mapear rutas a nombres de pestañas
         const routeMap = {
             'programas': 'Programas',
             'sistemas': 'Sistemas', 
@@ -1789,7 +1659,6 @@ function handlePopState(event) {
             openTab(routeMap[route]);
         }
     } else {
-        // Ruta raíz (/)
         if (AppState.currentTab !== 'Programas') {
             AppState.currentTab = 'Programas';
             openTab('Programas');
@@ -1801,9 +1670,7 @@ function handlePopState(event) {
  * Inicializa la accesibilidad
  */
 function initAccessibility() {
-    // Mejores prácticas de accesibilidad
     document.addEventListener('keydown', (e) => {
-        // Atajo para abrir búsqueda
         if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
             e.preventDefault();
             const searchInput = document.getElementById('mainSearch');
@@ -1813,13 +1680,11 @@ function initAccessibility() {
             }
         }
         
-        // Atajo para abrir sugerencias
         if ((e.ctrlKey || e.metaKey) && e.key === 'n') {
             e.preventDefault();
             openModal('sugerenciaModal');
         }
         
-        // Atajos para cambiar pestañas con Ctrl+1 a Ctrl+5
         if (e.ctrlKey || e.metaKey) {
             const tabKeys = {
                 '1': 'Programas',
@@ -1836,7 +1701,6 @@ function initAccessibility() {
         }
     });
     
-    // Mejorar navegación por teclado
     document.querySelectorAll('[tabindex]').forEach(el => {
         el.addEventListener('keydown', (e) => {
             if (e.key === 'Enter' || e.key === ' ') {
@@ -1855,11 +1719,8 @@ function initAccessibility() {
  * Inicializa los botones flotantes
  */
 function initFloatingButtons() {
-    // Los botones ya están configurados en el HTML
-    // Asegurar que el botón de colaboradores flotante esté disponible
     const collaboratorsBtn = document.querySelector('.collaborators-btn');
     if (collaboratorsBtn) {
-        // Ya tiene onclick en el HTML
         console.log('✅ Botón flotante de colaboradores listo');
     }
 }
@@ -1868,9 +1729,8 @@ function initFloatingButtons() {
  * Inicializa el sidebar
  */
 function initSidebar() {
-    // Añadir eventos a los botones del sidebar
     document.querySelectorAll('.quick-action-btn').forEach(btn => {
-        if (btn.onclick) return; // Si ya tiene evento, no hacer nada
+        if (btn.onclick) return;
         
         if (btn.textContent.includes('Sugerir')) {
             btn.onclick = () => openModal('sugerenciaModal');
@@ -1881,7 +1741,6 @@ function initSidebar() {
         }
     });
     
-    // Inicializar navegación del sidebar
     initSidebarNavigation();
 }
 
@@ -1895,11 +1754,9 @@ function initSidebarNavigation() {
         link.addEventListener('click', function(e) {
             const href = this.getAttribute('href');
             
-            // Si el enlace es interno y comienza con /
             if (href && href.startsWith('/') && !href.startsWith('//')) {
                 e.preventDefault();
                 
-                // Extraer la ruta del enlace
                 const route = href.substring(1).toLowerCase().replace(/\/$/, '');
                 const routeMap = {
                     'programas': 'Programas',
@@ -1907,7 +1764,7 @@ function initSidebarNavigation() {
                     'juegos': 'Juegos',
                     'extras': 'Extras',
                     'apks': 'APKs',
-                    '': 'Programas' // Ruta raíz
+                    '': 'Programas'
                 };
                 
                 if (routeMap[route] && routeMap[route] !== AppState.currentTab) {
@@ -1922,7 +1779,6 @@ function initSidebarNavigation() {
  * Inicializa los contadores animados
  */
 function initCounters() {
-    // Los contadores se actualizan dinámicamente
     updateCounters();
 }
 
@@ -1932,10 +1788,8 @@ function initCounters() {
 function updateCounters() {
     if (!AppState.dbData) return;
     
-    // Contar items totales
     const totalItems = Object.values(AppState.dbData).reduce((sum, arr) => sum + arr.length, 0);
     
-    // Actualizar contadores en la UI si existen
     const counters = {
         'programas': AppState.dbData.programas.length,
         'sistemas': AppState.dbData.sistemas.length,
@@ -1945,7 +1799,6 @@ function updateCounters() {
         'total': totalItems
     };
     
-    // Buscar elementos con data-counter y actualizarlos
     document.querySelectorAll('[data-counter]').forEach(el => {
         const counterType = el.dataset.counter;
         if (counters[counterType] !== undefined) {
@@ -1987,7 +1840,6 @@ function scrollToTop() {
  * Muestra un toast notification
  */
 function showToast(message, type = 'info') {
-    // Crear toast
     const toast = document.createElement('div');
     toast.className = `toast toast-${type}`;
     toast.setAttribute('role', 'alert');
@@ -2003,10 +1855,8 @@ function showToast(message, type = 'info') {
         </button>
     `;
     
-    // Añadir al body
     document.body.appendChild(toast);
     
-    // Auto-eliminar después de 3 segundos
     setTimeout(() => {
         if (toast.parentNode) {
             toast.parentNode.removeChild(toast);
@@ -2025,14 +1875,6 @@ function getToastIcon(type) {
         info: 'fa-solid fa-info-circle'
     };
     return icons[type] || icons.info;
-}
-
-/**
- * Muestra un error
- */
-function showError(message) {
-    showToast(message, 'error');
-    console.error('❌ Error:', message);
 }
 
 /**
@@ -2065,20 +1907,17 @@ function hideLoading() {
 }
 
 // ============================================================================
-// PANTALLA DE ERROR CRÍTICO - NUEVAS FUNCIONES
+// PANTALLA DE ERROR CRÍTICO
 // ============================================================================
 
 /**
  * Muestra la pantalla de error crítica
  */
 function showErrorScreen(message) {
-    // Ocultar overlay de carga si está visible
     hideLoading();
     
-    // Ocultar la interfaz principal (opcional)
     document.querySelector('.page-container')?.style.setProperty('display', 'none', 'important');
     
-    // Mostrar pantalla de error
     const errorScreen = document.getElementById('errorScreen');
     const errorMessage = document.getElementById('errorMessage');
     
@@ -2087,7 +1926,6 @@ function showErrorScreen(message) {
         errorScreen.classList.add('show');
         errorScreen.setAttribute('aria-hidden', 'false');
         
-        // Configurar botones
         const retryBtn = document.getElementById('retryBtn');
         const reportBtn = document.getElementById('reportBtn');
         
@@ -2099,7 +1937,6 @@ function showErrorScreen(message) {
         
         if (reportBtn) {
             reportBtn.onclick = function() {
-                // Cerrar pantalla de error y abrir modal de sugerencias
                 closeErrorScreen();
                 openModal('sugerenciaModal');
             };
@@ -2117,16 +1954,15 @@ function closeErrorScreen() {
         errorScreen.setAttribute('aria-hidden', 'true');
     }
     
-    // Restaurar la interfaz principal
     document.querySelector('.page-container')?.style.removeProperty('display');
 }
 
 // ============================================================================
-// MANEJO DEL ESTADO - MODIFICADO
+// MANEJO DEL ESTADO
 // ============================================================================
 
 /**
- * Carga el estado de la aplicación - MODIFICADO
+ * Carga el estado de la aplicación
  */
 function loadAppState() {
     try {
@@ -2134,19 +1970,13 @@ function loadAppState() {
         if (saved) {
             const state = JSON.parse(saved);
             
-            // Restaurar propiedades seguras
             AppState.currentSearch = state.currentSearch || '';
             AppState.currentFilter = state.currentFilter || 'all';
             AppState.theme = state.theme || CONFIG.defaultTheme;
             AppState.recentItems = state.recentItems || [];
             
-            // Aplicar tema
             setTheme(AppState.theme);
             
-            // IMPORTANTE: NO aplicar pestaña aquí, se determinará desde la URL
-            // en determineInitialTabFromURL()
-            
-            // Aplicar búsqueda si existe
             if (AppState.currentSearch) {
                 const searchInput = document.getElementById('mainSearch');
                 if (searchInput) {
@@ -2188,7 +2018,6 @@ function saveAppState() {
  */
 function initContentCardsEvents() {
     // Los eventos ya están configurados en createContentCard
-    // Esta función es para futuras expansiones
 }
 
 // ============================================================================
@@ -2197,11 +2026,8 @@ function initContentCardsEvents() {
 
 // Hacer funciones disponibles globalmente
 window.FoxWeb = {
-    // Estado
     state: AppState,
     config: CONFIG,
-    
-    // Funciones principales
     openTab,
     openModal,
     closeModal,
@@ -2209,19 +2035,11 @@ window.FoxWeb = {
     showToast,
     copyItemLink,
     toggleFavorite,
-    
-    // Utilidades
     findItemById,
     getItemType,
-    
-    // Funciones de error
     showErrorScreen,
     closeErrorScreen,
-    
-    // Funciones de navegación
     updateCleanURL,
-    
-    // Debug
     version: CONFIG.version
 };
 
@@ -2229,7 +2047,6 @@ console.log('✅ FoxWeb v' + CONFIG.version + ' listo con rutas limpias');
 
 // Manejar navegación inicial basada en URL
 window.addEventListener('load', function() {
-    // Si ya se inicializó la app, asegurar que la pestaña correcta esté activa
     if (!AppState.isLoading && AppState.dbData) {
         determineInitialTabFromURL();
         activateCurrentTab();
