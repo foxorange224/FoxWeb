@@ -149,6 +149,9 @@ function initApp() {
     // Ocultar overlay de carga
     hideLoading();
     
+    // Determinar la pestaña inicial desde la URL
+    determineInitialTabFromURL();
+    
     // Renderizar contenido
     renderAllTabs();
     
@@ -175,6 +178,51 @@ function initApp() {
     saveAppState();
     
     console.log('✅ Aplicación inicializada correctamente');
+}
+
+/**
+ * Determina la pestaña inicial desde la URL
+ */
+function determineInitialTabFromURL() {
+    const path = window.location.pathname;
+    const hash = window.location.hash.substring(1);
+    
+    // Primero verificar hash (para compatibilidad hacia atrás)
+    if (hash) {
+        const validHashTabs = ['Programas', 'Sistemas', 'Juegos', 'Extras', 'APKs'];
+        if (validHashTabs.includes(hash)) {
+            AppState.currentTab = hash;
+            // Actualizar URL a ruta limpia
+            setTimeout(() => updateCleanURL(hash), 100);
+            return;
+        }
+    }
+    
+    // Verificar pathname
+    const pathSegments = path.split('/').filter(segment => segment);
+    
+    if (pathSegments.length > 0) {
+        const route = pathSegments[0].toLowerCase();
+        
+        // Mapear rutas a nombres de pestañas
+        const routeMap = {
+            'programas': 'Programas',
+            'sistemas': 'Sistemas', 
+            'juegos': 'Juegos',
+            'extras': 'Extras',
+            'apks': 'APKs',
+            'apps': 'Programas' // Compatibilidad con rewrite de /apps
+        };
+        
+        if (routeMap[route]) {
+            AppState.currentTab = routeMap[route];
+        }
+    }
+    
+    // Si no hay ruta válida, usar el estado guardado o valor por defecto
+    if (!AppState.currentTab || !['Programas', 'Sistemas', 'Juegos', 'Extras', 'APKs'].includes(AppState.currentTab)) {
+        AppState.currentTab = 'Programas';
+    }
 }
 
 /**
@@ -428,6 +476,38 @@ function renderAllTabs() {
     
     tabs.forEach(({ key, id }) => {
         renderTab(id, AppState.dbData[key]);
+    });
+    
+    // Activar la pestaña actual después de renderizar
+    setTimeout(() => activateCurrentTab(), 50);
+}
+
+/**
+ * Activa la pestaña actual en la UI
+ */
+function activateCurrentTab() {
+    // Ocultar todas las pestañas
+    document.querySelectorAll('.tab-content').forEach(tab => {
+        tab.classList.remove('active');
+        tab.setAttribute('aria-hidden', 'true');
+    });
+    
+    // Mostrar pestaña activa
+    const activeTab = document.getElementById(AppState.currentTab);
+    if (activeTab) {
+        activeTab.classList.add('active');
+        activeTab.setAttribute('aria-hidden', 'false');
+    }
+    
+    // Actualizar botones de pestañas
+    document.querySelectorAll('.tablink').forEach(btn => {
+        const tabName = btn.getAttribute('data-tab') || 
+                       btn.textContent.trim() ||
+                       btn.getAttribute('onclick')?.match(/'([^']+)'/)?.[1];
+        
+        const isActive = tabName === AppState.currentTab;
+        btn.classList.toggle('active', isActive);
+        btn.setAttribute('aria-selected', isActive);
     });
 }
 
@@ -853,13 +933,16 @@ function showNoResults(show) {
 }
 
 // ============================================================================
-// SISTEMA DE PESTAÑAS
+// SISTEMA DE PESTAÑAS - MODIFICADO PARA RUTAS LIMPIAS
 // ============================================================================
 
 /**
  * Abre una pestaña específica
  */
 function openTab(tabName) {
+    // Si ya estamos en esta pestaña, no hacer nada
+    if (AppState.currentTab === tabName) return;
+    
     // Actualizar estado
     AppState.currentTab = tabName;
     
@@ -878,14 +961,17 @@ function openTab(tabName) {
     
     // Actualizar botones de pestañas
     document.querySelectorAll('.tablink').forEach(btn => {
-        const isActive = btn.textContent.includes(tabName) || 
-                        btn.getAttribute('onclick')?.includes(`'${tabName}'`);
+        const tabNameFromBtn = btn.getAttribute('data-tab') || 
+                             btn.textContent.trim() ||
+                             btn.getAttribute('onclick')?.match(/'([^']+)'/)?.[1];
+        
+        const isActive = tabNameFromBtn === tabName;
         btn.classList.toggle('active', isActive);
         btn.setAttribute('aria-selected', isActive);
     });
     
-    // Actualizar URL
-    updateUrlHash(tabName);
+    // Actualizar URL con ruta limpia
+    updateCleanURL(tabName);
     
     // Realizar búsqueda si hay término activo
     if (AppState.currentSearch) {
@@ -897,14 +983,31 @@ function openTab(tabName) {
 }
 
 /**
- * Actualiza el hash de la URL
+ * Actualiza la URL con ruta limpia (sin hash)
  */
-function updateUrlHash(tabName) {
+function updateCleanURL(tabName) {
+    // Mapear nombres de pestaña a rutas URL
+    const tabToRoute = {
+        'Programas': 'programas',
+        'Sistemas': 'sistemas',
+        'Juegos': 'juegos',
+        'Extras': 'extras',
+        'APKs': 'apks'
+    };
+    
+    const route = tabToRoute[tabName] || 'programas';
+    const newURL = `/${route}`;
+    
+    // Usar History API para cambiar la URL sin recargar la página
     if (history.pushState) {
-        history.pushState(null, null, `#${tabName}`);
+        history.pushState({ tab: tabName }, '', newURL);
     } else {
-        window.location.hash = tabName;
+        // Fallback para navegadores antiguos
+        window.location = newURL;
     }
+    
+    // Actualizar título de la página
+    document.title = `${tabName} - ${CONFIG.appName}`;
 }
 
 // ============================================================================
@@ -1626,7 +1729,7 @@ function saveNotifications() {
 }
 
 // ============================================================================
-// EVENT LISTENERS Y ACCESIBILIDAD
+// EVENT LISTENERS Y ACCESIBILIDAD - MODIFICADO PARA RUTAS
 // ============================================================================
 
 /**
@@ -1643,9 +1746,8 @@ function initEventListeners() {
         });
     }
     
-    // Manejo del hash de la URL
-    window.addEventListener('hashchange', handleUrlHash);
-    window.addEventListener('load', handleUrlHash);
+    // Manejo del popstate (navegación con botones atrás/adelante)
+    window.addEventListener('popstate', handlePopState);
     
     // Detectar cambios de conexión
     window.addEventListener('online', () => {
@@ -1660,30 +1762,36 @@ function initEventListeners() {
 }
 
 /**
- * Maneja el hash de la URL - MODIFICADO PARA MANTENER PESTAÑA ACTIVA
+ * Maneja el evento popstate (navegación con botones atrás/adelante)
  */
-function handleUrlHash() {
-    const hash = window.location.hash.substring(1);
-    const validTabs = ['Programas', 'Sistemas', 'Juegos', 'Extras', 'APKs'];
+function handlePopState(event) {
+    // Prevenir comportamiento por defecto
+    if (event) event.preventDefault();
     
-    // Si hay hash y es una pestaña válida, abrir esa pestaña
-    if (validTabs.includes(hash)) {
-        openTab(hash);
-    } else if (hash) {
-        // Intentar encontrar contenido por ID
-        const item = findItemById(hash);
-        if (item) {
-            // Para modales, abrirlos
-            if (item.modal && item.modal !== 'null') {
-                openModal(item.modal);
-            }
+    const path = window.location.pathname;
+    const pathSegments = path.split('/').filter(segment => segment);
+    
+    if (pathSegments.length > 0) {
+        const route = pathSegments[0].toLowerCase();
+        
+        // Mapear rutas a nombres de pestañas
+        const routeMap = {
+            'programas': 'Programas',
+            'sistemas': 'Sistemas', 
+            'juegos': 'Juegos',
+            'extras': 'Extras',
+            'apks': 'APKs',
+            'apps': 'Programas'
+        };
+        
+        if (routeMap[route] && routeMap[route] !== AppState.currentTab) {
+            AppState.currentTab = routeMap[route];
+            openTab(routeMap[route]);
         }
     } else {
-        // Si no hay hash, verificar si hay una pestaña guardada en el estado
-        if (AppState.currentTab && validTabs.includes(AppState.currentTab)) {
-            openTab(AppState.currentTab);
-        } else {
-            // Por defecto, abrir Programas
+        // Ruta raíz (/)
+        if (AppState.currentTab !== 'Programas') {
+            AppState.currentTab = 'Programas';
             openTab('Programas');
         }
     }
@@ -1710,6 +1818,22 @@ function initAccessibility() {
             e.preventDefault();
             openModal('sugerenciaModal');
         }
+        
+        // Atajos para cambiar pestañas con Ctrl+1 a Ctrl+5
+        if (e.ctrlKey || e.metaKey) {
+            const tabKeys = {
+                '1': 'Programas',
+                '2': 'Sistemas',
+                '3': 'Juegos',
+                '4': 'Extras',
+                '5': 'APKs'
+            };
+            
+            if (tabKeys[e.key] && tabKeys[e.key] !== AppState.currentTab) {
+                e.preventDefault();
+                openTab(tabKeys[e.key]);
+            }
+        }
     });
     
     // Mejorar navegación por teclado
@@ -1726,17 +1850,6 @@ function initAccessibility() {
 // ============================================================================
 // COMPONENTES DE UI
 // ============================================================================
-
-/**
- * Inicializa las partículas de fondo - DESACTIVADO
- */
-function initBackgroundParticles() {
-    // Desactivado completamente
-    const container = document.querySelector('.bg-particles');
-    if (container) {
-        container.style.display = 'none';
-    }
-}
 
 /**
  * Inicializa los botones flotantes
@@ -1763,7 +1876,45 @@ function initSidebar() {
             btn.onclick = () => openModal('sugerenciaModal');
         } else if (btn.textContent.includes('Donar')) {
             btn.onclick = () => openModal('donateModal');
+        } else if (btn.textContent.includes('Colaboradores')) {
+            btn.onclick = () => openModal('collaboratorsModal');
         }
+    });
+    
+    // Inicializar navegación del sidebar
+    initSidebarNavigation();
+}
+
+/**
+ * Inicializa la navegación del sidebar
+ */
+function initSidebarNavigation() {
+    const sidebarLinks = document.querySelectorAll('.sidebar-nav a, .sidebar-link');
+    
+    sidebarLinks.forEach(link => {
+        link.addEventListener('click', function(e) {
+            const href = this.getAttribute('href');
+            
+            // Si el enlace es interno y comienza con /
+            if (href && href.startsWith('/') && !href.startsWith('//')) {
+                e.preventDefault();
+                
+                // Extraer la ruta del enlace
+                const route = href.substring(1).toLowerCase().replace(/\/$/, '');
+                const routeMap = {
+                    'programas': 'Programas',
+                    'sistemas': 'Sistemas', 
+                    'juegos': 'Juegos',
+                    'extras': 'Extras',
+                    'apks': 'APKs',
+                    '': 'Programas' // Ruta raíz
+                };
+                
+                if (routeMap[route] && routeMap[route] !== AppState.currentTab) {
+                    openTab(routeMap[route]);
+                }
+            }
+        });
     });
 }
 
@@ -1892,7 +2043,7 @@ function initDynamicTitle() {
     
     document.addEventListener('visibilitychange', function() {
         if (document.hidden) {
-            document.title = 'FoxWeb';
+            document.title = '¡Vuelve! | FoxWeb';
         } else {
             document.title = originalTitle;
         }
@@ -1971,7 +2122,7 @@ function closeErrorScreen() {
 }
 
 // ============================================================================
-// MANEJO DEL ESTADO
+// MANEJO DEL ESTADO - MODIFICADO
 // ============================================================================
 
 /**
@@ -1984,7 +2135,6 @@ function loadAppState() {
             const state = JSON.parse(saved);
             
             // Restaurar propiedades seguras
-            AppState.currentTab = state.currentTab || 'Programas';
             AppState.currentSearch = state.currentSearch || '';
             AppState.currentFilter = state.currentFilter || 'all';
             AppState.theme = state.theme || CONFIG.defaultTheme;
@@ -1993,15 +2143,14 @@ function loadAppState() {
             // Aplicar tema
             setTheme(AppState.theme);
             
-            // IMPORTANTE: NO aplicar pestaña aquí, se hará en handleUrlHash
-            // para respetar el hash de la URL
+            // IMPORTANTE: NO aplicar pestaña aquí, se determinará desde la URL
+            // en determineInitialTabFromURL()
             
             // Aplicar búsqueda si existe
             if (AppState.currentSearch) {
                 const searchInput = document.getElementById('mainSearch');
                 if (searchInput) {
                     searchInput.value = AppState.currentSearch;
-                    // La búsqueda se realizará después de renderizar
                 }
             }
         }
@@ -2069,8 +2218,20 @@ window.FoxWeb = {
     showErrorScreen,
     closeErrorScreen,
     
+    // Funciones de navegación
+    updateCleanURL,
+    
     // Debug
     version: CONFIG.version
 };
 
-console.log('✅ FoxWeb v' + CONFIG.version + ' listo');
+console.log('✅ FoxWeb v' + CONFIG.version + ' listo con rutas limpias');
+
+// Manejar navegación inicial basada en URL
+window.addEventListener('load', function() {
+    // Si ya se inicializó la app, asegurar que la pestaña correcta esté activa
+    if (!AppState.isLoading && AppState.dbData) {
+        determineInitialTabFromURL();
+        activateCurrentTab();
+    }
+});
