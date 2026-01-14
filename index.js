@@ -32,6 +32,172 @@ const AppState = {
 };
 
 // ============================================================================
+// MANEJO DE RUTAS SPA - AGREGAR AL INICIO DEL ARCHIVO
+// ============================================================================
+
+/**
+ * Configura el manejo de rutas para SPA
+ */
+function initSPARouting() {
+    // Interceptar clics en enlaces internos
+    document.addEventListener('click', function(e) {
+        const link = e.target.closest('a');
+        if (!link) return;
+        
+        const href = link.getAttribute('href');
+        const isInternal = href && href.startsWith('/') && !href.startsWith('//');
+        const isSameOrigin = link.hostname === window.location.hostname;
+        
+        if (isInternal && isSameOrigin) {
+            e.preventDefault();
+            navigateTo(href);
+        }
+    });
+    
+    // Manejar navegación con botones atrás/adelante
+    window.addEventListener('popstate', function() {
+        handleRouteChange();
+    });
+    
+    // Manejar carga inicial
+    window.addEventListener('load', function() {
+        handleRouteChange();
+    });
+}
+
+/**
+ * Navega a una ruta específica
+ */
+function navigateTo(path) {
+    const route = path.replace(/^\//, '').split('/')[0] || '';
+    const routeMap = {
+        'programas': 'Programas',
+        'sistemas': 'Sistemas',
+        'juegos': 'Juegos',
+        'extras': 'Extras',
+        'apks': 'APKs',
+        'apps': 'Programas',
+        '': 'Programas'
+    };
+    
+    const tabName = routeMap[route] || 'Programas';
+    
+    if (AppState.currentTab !== tabName) {
+        openTab(tabName);
+    }
+    
+    // Actualizar URL sin recargar
+    if (history.pushState) {
+        const newUrl = path === '/' ? '/' : path;
+        history.pushState({ tab: tabName }, '', newUrl);
+    }
+}
+
+/**
+ * Maneja el cambio de ruta
+ */
+function handleRouteChange() {
+    const path = window.location.pathname;
+    const route = path.replace(/^\//, '').split('/')[0] || '';
+    
+    const routeMap = {
+        'programas': 'Programas',
+        'sistemas': 'Sistemas',
+        'juegos': 'Juegos',
+        'extras': 'Extras',
+        'apks': 'APKs',
+        'apps': 'Programas',
+        '': 'Programas'
+    };
+    
+    const tabName = routeMap[route] || 'Programas';
+    
+    if (AppState.currentTab !== tabName) {
+        AppState.currentTab = tabName;
+        
+        // Si la app ya está inicializada, cambiar de pestaña
+        if (!AppState.isLoading && AppState.dbData) {
+            openTab(tabName);
+        }
+    }
+}
+
+/**
+ * Actualiza la función openTab para usar rutas limpias
+ */
+function openTab(tabName) {
+    if (AppState.currentTab === tabName) return;
+    
+    AppState.currentTab = tabName;
+    
+    // Ocultar todas las pestañas
+    document.querySelectorAll('.tab-content').forEach(tab => {
+        tab.classList.remove('active');
+        tab.setAttribute('aria-hidden', 'true');
+    });
+    
+    // Mostrar pestaña activa
+    const activeTab = document.getElementById(tabName);
+    if (activeTab) {
+        activeTab.classList.add('active');
+        activeTab.setAttribute('aria-hidden', 'false');
+    }
+    
+    // Actualizar botones de pestañas
+    document.querySelectorAll('.tablink').forEach(btn => {
+        const tabNameFromBtn = btn.getAttribute('data-tab') || 
+                             btn.textContent.trim() ||
+                             btn.getAttribute('onclick')?.match(/'([^']+)'/)?.[1];
+        
+        const isActive = tabNameFromBtn === tabName;
+        btn.classList.toggle('active', isActive);
+        btn.setAttribute('aria-selected', isActive);
+    });
+    
+    // Actualizar URL
+    updateCleanURL(tabName);
+    
+    // Realizar búsqueda si hay término activo
+    if (AppState.currentSearch) {
+        setTimeout(performSearch, 50);
+    }
+    
+    // Guardar estado
+    saveAppState();
+}
+
+/**
+ * Actualiza la URL con ruta limpia
+ */
+function updateCleanURL(tabName) {
+    const tabToRoute = {
+        'Programas': 'programas',
+        'Sistemas': 'sistemas',
+        'Juegos': 'juegos',
+        'Extras': 'extras',
+        'APKs': 'apks'
+    };
+    
+    const route = tabToRoute[tabName] || 'programas';
+    const newURL = route === 'programas' ? '/' : `/${route}`;
+    
+    if (history.pushState) {
+        history.pushState({ tab: tabName }, '', newURL);
+    }
+    
+    // Actualizar título
+    const tabTitles = {
+        'Programas': 'Programas',
+        'Sistemas': 'Sistemas Operativos',
+        'Juegos': 'Juegos',
+        'Extras': 'Extras y Herramientas',
+        'APKs': 'APKs para Android'
+    };
+    
+    document.title = `${tabTitles[tabName] || tabName} - ${CONFIG.appName}`;
+}
+
+// ============================================================================
 // FUNCIONES DE INICIALIZACIÓN
 // ============================================================================
 

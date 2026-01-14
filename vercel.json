@@ -1,8 +1,33 @@
 {
   "version": 2,
-  "headers": [
+  "builds": [
     {
-      "source": "/(.*)",
+      "src": "index.html",
+      "use": "@vercel/static"
+    },
+    {
+      "src": "*.js",
+      "use": "@vercel/static"
+    },
+    {
+      "src": "*.css",
+      "use": "@vercel/static"
+    },
+    {
+      "src": "*.json",
+      "use": "@vercel/static"
+    }
+  ],
+  "routes": [
+    {
+      "src": "/[^.]+",
+      "dest": "/",
+      "headers": {
+        "Cache-Control": "public, max-age=0, must-revalidate"
+      }
+    },
+    {
+      "src": "/(.*)",
       "headers": [
         {
           "key": "X-Robots-Tag",
@@ -19,7 +44,7 @@
       ]
     },
     {
-      "source": "/(index.js|index.css|data.js)",
+      "src": "/(index.js|index.css|data.js|sitemap.xml|robots.txt)",
       "headers": [
         {
           "key": "Cache-Control",
@@ -31,19 +56,27 @@
   "rewrites": [
     {
       "source": "/programas",
-      "destination": "/index.html"
-    },
-    {
-      "source": "/apps",
-      "destination": "/index.html"
+      "destination": "/"
     },
     {
       "source": "/sistemas",
-      "destination": "/index.html"
+      "destination": "/"
     },
     {
       "source": "/juegos",
-      "destination": "/index.html"
+      "destination": "/"
+    },
+    {
+      "source": "/extras",
+      "destination": "/"
+    },
+    {
+      "source": "/apks",
+      "destination": "/"
+    },
+    {
+      "source": "/apps",
+      "destination": "/"
     }
   ]
 }
