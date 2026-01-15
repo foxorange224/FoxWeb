@@ -113,6 +113,7 @@ body {
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     cursor: default !important; /* Desactivar cursor personalizado */
+    zoom: 80%;
 }
 
 /* Imágenes responsivas */
