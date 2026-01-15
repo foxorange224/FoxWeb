@@ -25,7 +25,7 @@
 | **Autor** | FoxOrange224 |
 | **Tipo de Licencia** | CC0 1.0 Universal |
 | **Fecha de Aplicación** | 2026 |
-| **Repositorio** | [foxorange224.github.io](https://github.com/foxorange224/foxorange224.github.io) |
+| **Repositorio** | [FoxWeb](https://github.com/foxorange224/FoxWeb) |
 
 ## 🎯 Declaración de Propósito
 
