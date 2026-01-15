@@ -10,7 +10,7 @@
 *Documento oficial adaptado para el proyecto FoxWeb*
 
 [🌐 Sitio Web](https://foxweb.pages.dev) | 
-[📖 Documentación](about.html) | 
+[📖 Documentación](/about) | 
 [💻 GitHub](https://github.com/foxorange224/)
 
 </div>
