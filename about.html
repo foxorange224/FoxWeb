@@ -1,34 +1,1253 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="es" data-theme="dark">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Acerca de FoxWeb</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
+    <title>Acerca de FoxWeb | Documentación Completa</title>
+    <meta name="description" content="Documentación completa de FoxWeb: características, tecnología, equipo, estadísticas y guías de uso del centro de descargas confiable.">
+    <meta name="theme-color" content="#FF4500">
+    <meta name="author" content="FoxOrange224">
+    <meta name="robots" content="index, follow">
     <link rel="icon" type="image/png" href="/favicon-96x96.png" sizes="96x96" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <script type="module" src="https://cdn.jsdelivr.net/npm/zero-md@3?register"></script>
-
+    <link rel="shortcut icon" href="/favicon.ico" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <style>
-        body {
-            background-color: #0d1117; /* Fondo oscuro de GitHub */
+        /* ============================================================================
+           VARIABLES Y RESET
+           ============================================================================ */
+
+        :root {
+            /* Paleta de colores principal */
+            --primary: #FF4500;
+            --primary-hover: #CC3700;
+            --primary-light: rgba(255, 69, 0, 0.1);
+            --primary-dark: #8B2500;
+
+            /* Fondos */
+            --bg-body: #0a0a0a;
+            --bg-card: #121212;
+            --bg-tab: #1a1a1a;
+            --bg-header: rgba(18, 18, 18, 0.95);
+            --bg-footer: #080808;
+
+            /* Textos */
+            --text-main: #f0f0f0;
+            --text-dim: #888;
+            --text-muted: #666;
+            --text-secondary: #aaaaaa;
+
+            /* Bordes */
+            --border: #2a2a2a;
+            --border-light: #333;
+            --border-dark: #222;
+
+            /* Estados */
+            --success: #2ea44f;
+            --warning: #ffc107;
+            --error: #dc3545;
+            --info: #17a2b8;
+
+            /* Sombras */
+            --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.3);
+            --shadow-md: 0 4px 8px rgba(0, 0, 0, 0.4);
+            --shadow-lg: 0 8px 16px rgba(0, 0, 0, 0.5);
+            --shadow-xl: 0 12px 24px rgba(0, 0, 0, 0.6);
+
+            /* Radios */
+            --radius-sm: 4px;
+            --radius-md: 8px;
+            --radius-lg: 12px;
+            --radius-xl: 16px;
+            --radius-full: 9999px;
+
+            /* Espaciados */
+            --space-xs: 4px;
+            --space-sm: 8px;
+            --space-md: 16px;
+            --space-lg: 24px;
+            --space-xl: 32px;
+            --space-2xl: 48px;
+        }
+
+        /* Tema claro */
+        [data-theme="light"] {
+            --bg-body: #f8f9fa;
+            --bg-card: #ffffff;
+            --bg-tab: #f1f3f5;
+            --bg-header: rgba(255, 255, 255, 0.95);
+            --bg-footer: #e9ecef;
+
+            --text-main: #212529;
+            --text-dim: #6c757d;
+            --text-muted: #adb5bd;
+            --text-secondary: #666666;
+
+            --border: #dee2e6;
+            --border-light: #e9ecef;
+            --border-dark: #ced4da;
+
+            --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.05);
+            --shadow-md: 0 4px 8px rgba(0, 0, 0, 0.1);
+            --shadow-lg: 0 8px 16px rgba(0, 0, 0, 0.15);
+            --shadow-xl: 0 12px 24px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Reset */
+        * {
             margin: 0;
-            padding: 20px;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+            font-size: 16px;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background-color: var(--bg-body);
+            color: var(--text-main);
+            line-height: 1.6;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* ============================================================================
+           HEADER
+           ============================================================================ */
+
+        .about-header {
+            background: var(--bg-header);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--border);
+            padding: var(--space-md) 0;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .header-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 var(--space-md);
             display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: var(--space-lg);
+        }
+
+        .logo-link {
+            display: flex;
+            align-items: center;
+            gap: var(--space-md);
+            text-decoration: none;
+            color: inherit;
+        }
+
+        /* Logo sin cuadro de fondo */
+        .logo-icon {
+            display: flex;
+            align-items: center;
             justify-content: center;
         }
-        zero-md {
-            max-width: 900px;
+
+        .logo-icon img {
+            width: 50px;
+            height: 50px;
+            display: block;
+        }
+
+        .logo-text h1 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            line-height: 1.2;
+        }
+
+        .logo-text h1 span {
+            color: var(--primary);
+        }
+
+        .logo-text p {
+            font-size: 0.875rem;
+            color: var(--text-dim);
+            margin-top: 2px;
+        }
+
+        .nav-controls {
+            display: flex;
+            align-items: center;
+            gap: var(--space-sm);
+        }
+
+        .nav-btn {
+            width: 40px;
+            height: 40px;
+            border-radius: var(--radius-full);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: transparent;
+            border: 1px solid var(--border);
+            color: var(--text-dim);
+            cursor: pointer;
+        }
+
+        .nav-btn:hover {
+            background: var(--primary-light);
+            border-color: var(--primary);
+            color: var(--primary);
+        }
+
+        .back-btn {
+            display: flex;
+            align-items: center;
+            gap: var(--space-sm);
+            padding: var(--space-sm) var(--space-md);
+            background: var(--bg-tab);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            color: var(--text-main);
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .back-btn:hover {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+
+        /* ============================================================================
+           CONTENIDO PRINCIPAL
+           ============================================================================ */
+
+        .wiki-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: var(--space-xl) var(--space-md);
+        }
+
+        /* Encabezado del artículo */
+        .wiki-header {
+            text-align: center;
+            margin-bottom: var(--space-2xl);
+            padding-bottom: var(--space-lg);
+            border-bottom: 2px solid var(--primary);
+        }
+
+        .wiki-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: var(--space-sm);
+        }
+
+        .wiki-subtitle {
+            font-size: 1.125rem;
+            color: var(--text-dim);
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        /* Layout de dos columnas */
+        .wiki-layout {
+            display: grid;
+            grid-template-columns: 250px 1fr;
+            gap: var(--space-xl);
+            margin-top: var(--space-xl);
+        }
+
+        /* Tabla de contenidos (sidebar) */
+        .wiki-toc {
+            position: sticky;
+            top: 100px;
+            height: fit-content;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            padding: var(--space-lg);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .toc-title {
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--text-main);
+            margin-bottom: var(--space-md);
+            display: flex;
+            align-items: center;
+            gap: var(--space-sm);
+            padding-bottom: var(--space-sm);
+            border-bottom: 1px solid var(--border);
+        }
+
+        .toc-list {
+            list-style: none;
+        }
+
+        .toc-item {
+            margin-bottom: var(--space-sm);
+        }
+
+        .toc-link {
+            display: flex;
+            align-items: center;
+            gap: var(--space-sm);
+            padding: var(--space-sm);
+            color: var(--text-dim);
+            text-decoration: none;
+            border-radius: var(--radius-sm);
+            font-size: 0.9375rem;
+        }
+
+        .toc-link:hover {
+            background: var(--primary-light);
+            color: var(--primary);
+        }
+
+        .toc-link.active {
+            background: var(--primary-light);
+            color: var(--primary);
+            font-weight: 500;
+        }
+
+        .toc-link i {
+            font-size: 0.875rem;
+            width: 16px;
+        }
+
+        /* Contenido principal */
+        .wiki-content {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            padding: var(--space-2xl);
+            box-shadow: var(--shadow-sm);
+        }
+
+        /* Secciones del contenido */
+        .wiki-section {
+            margin-bottom: var(--space-2xl);
+            scroll-margin-top: 20px;
+        }
+
+        .wiki-section:last-child {
+            margin-bottom: 0;
+        }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            gap: var(--space-sm);
+            margin-bottom: var(--space-lg);
+            padding-bottom: var(--space-sm);
+            border-bottom: 1px solid var(--border);
+        }
+
+        .section-header h2 {
+            font-size: 1.75rem;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        .section-icon {
+            color: var(--primary);
+            font-size: 1.5rem;
+        }
+
+        /* Estilo de párrafos */
+        .wiki-text {
+            color: var(--text-main);
+            line-height: 1.7;
+            margin-bottom: var(--space-lg);
+        }
+
+        .wiki-text p {
+            margin-bottom: var(--space-md);
+        }
+
+        /* Listas */
+        .wiki-list {
+            margin: var(--space-lg) 0;
+            padding-left: var(--space-lg);
+        }
+
+        .wiki-list li {
+            margin-bottom: var(--space-sm);
+            color: var(--text-secondary);
+            position: relative;
+        }
+
+        .wiki-list li::before {
+            content: "•";
+            color: var(--primary);
+            font-weight: bold;
+            position: absolute;
+            left: -1em;
+        }
+
+        /* Tablas */
+        .wiki-table {
             width: 100%;
+            margin: var(--space-lg) 0;
+            border-collapse: collapse;
+            font-size: 0.9375rem;
+            border: 1px solid var(--border);
+        }
+
+        .wiki-table th {
+            background: var(--bg-tab);
+            font-weight: 600;
+            text-align: left;
+            padding: var(--space-md);
+            border: 1px solid var(--border);
+        }
+
+        .wiki-table td {
+            padding: var(--space-md);
+            border: 1px solid var(--border);
+        }
+
+        .wiki-table tr:nth-child(even) {
+            background: var(--bg-tab);
+        }
+
+        /* Código y ejemplos */
+        .wiki-code {
+            background: var(--bg-body);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            padding: var(--space-lg);
+            margin: var(--space-lg) 0;
+            font-family: 'Courier New', monospace;
+            font-size: 0.875rem;
+            overflow-x: auto;
+        }
+
+        .code-comment {
+            color: var(--text-dim);
+        }
+
+        .code-keyword {
+            color: var(--primary);
+        }
+
+        .code-string {
+            color: var(--success);
+        }
+
+        /* Notas importantes */
+        .wiki-note {
+            background: var(--primary-light);
+            border: 1px solid var(--primary);
+            border-radius: var(--radius-md);
+            padding: var(--space-lg);
+            margin: var(--space-lg) 0;
+            color: var(--text-main);
+        }
+
+        .wiki-note i {
+            color: var(--primary);
+            margin-right: var(--space-sm);
+        }
+
+        /* Equipo */
+        .team-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: var(--space-lg);
+            margin: var(--space-lg) 0;
+        }
+
+        .team-member {
+            background: var(--bg-tab);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            padding: var(--space-lg);
+            text-align: center;
+        }
+
+        .member-avatar {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto var(--space-md);
+            background: var(--primary-light);
+            border-radius: var(--radius-full);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            color: var(--primary);
+        }
+
+        .member-name {
+            font-size: 1.125rem;
+            font-weight: 600;
+            color: var(--primary);
+            margin-bottom: var(--space-xs);
+        }
+
+        .member-role {
+            color: var(--text-dim);
+            font-size: 0.875rem;
+            margin-bottom: var(--space-md);
+        }
+
+        .member-links {
+            display: flex;
+            justify-content: center;
+            gap: var(--space-sm);
+        }
+
+        .member-link {
+            width: 36px;
+            height: 36px;
+            border-radius: var(--radius-full);
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-dim);
+            text-decoration: none;
+        }
+
+        .member-link:hover {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+
+        /* Botones de acción */
+        .action-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            gap: var(--space-md);
+            margin: var(--space-xl) 0;
+        }
+
+        .action-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: var(--space-sm);
+            padding: var(--space-md) var(--space-lg);
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: var(--radius-md);
+            font-weight: 600;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        .action-btn:hover {
+            background: var(--primary-hover);
+        }
+
+        .action-btn.secondary {
+            background: var(--bg-tab);
+            color: var(--text-main);
+            border: 1px solid var(--border);
+        }
+
+        .action-btn.secondary:hover {
+            background: var(--border);
+        }
+
+        /* ============================================================================
+           FOOTER
+           ============================================================================ */
+
+        .about-footer {
+            background: var(--bg-footer);
+            border-top: 1px solid var(--border);
+            margin-top: var(--space-2xl);
+            padding: var(--space-2xl) 0;
+        }
+
+        .footer-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 var(--space-md);
+        }
+
+        .footer-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: var(--space-xl);
+            margin-bottom: var(--space-xl);
+        }
+
+        .footer-section h4 {
+            font-size: 1.125rem;
+            font-weight: 600;
+            color: var(--text-main);
+            margin-bottom: var(--space-lg);
+            padding-bottom: var(--space-sm);
+            border-bottom: 2px solid var(--primary);
+        }
+
+        .footer-links {
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-sm);
+        }
+
+        .footer-link {
+            display: flex;
+            align-items: center;
+            gap: var(--space-sm);
+            color: var(--text-dim);
+            text-decoration: none;
+            font-size: 0.875rem;
+        }
+
+        .footer-link:hover {
+            color: var(--primary);
+        }
+
+        .footer-bottom {
+            text-align: center;
+            padding-top: var(--space-lg);
+            border-top: 1px solid var(--border);
+            color: var(--text-muted);
+            font-size: 0.875rem;
+        }
+
+        /* ============================================================================
+           RESPONSIVE
+           ============================================================================ */
+
+        @media (max-width: 1024px) {
+            .wiki-layout {
+                grid-template-columns: 1fr;
+            }
+
+            .wiki-toc {
+                position: static;
+                order: 2;
+            }
+
+            .wiki-content {
+                order: 1;
+            }
+
+            .wiki-title {
+                font-size: 2rem;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .header-container {
+                flex-direction: column;
+                gap: var(--space-md);
+                text-align: center;
+            }
+
+            .nav-controls {
+                width: 100%;
+                justify-content: center;
+            }
+
+            .wiki-title {
+                font-size: 1.75rem;
+            }
+
+            .wiki-content {
+                padding: var(--space-lg);
+            }
+
+            .action-buttons {
+                flex-direction: column;
+            }
+
+            .action-btn {
+                width: 100%;
+                justify-content: center;
+            }
+
+            .team-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .wiki-title {
+                font-size: 1.5rem;
+            }
+
+            .section-header h2 {
+                font-size: 1.5rem;
+            }
+
+            .wiki-table {
+                font-size: 0.875rem;
+            }
+
+            .wiki-table th,
+            .wiki-table td {
+                padding: var(--space-sm);
+            }
+        }
+
+        /* ============================================================================
+           ESTILOS ADICIONALES
+           ============================================================================ */
+
+        .highlight {
+            background: var(--primary-light);
+            padding: var(--space-xs) var(--space-sm);
+            border-radius: var(--radius-sm);
+            color: var(--primary);
+            font-weight: 600;
         }
     </style>
 </head>
 <body>
+<!-- Header -->
+<header class="about-header">
+    <div class="header-container">
+        <a href="index.html" class="logo-link">
+            <div class="logo-icon">
+                <!-- Tu logo personalizado sin cuadro de fondo -->
+                <img src="/assets/icon.png" alt="FoxWeb" width="50" height="50" loading="lazy">
+            </div>
+            <div class="logo-text">
+                <h1>Fox<span>Web</span></h1>
+                <p>Documentación completa</p>
+            </div>
+        </a>
 
-    <zero-md src="https://foxweb.pages.dev/README.md">
-        <template>
-            <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@5/github-markdown-dark.css" />
-        </template>
-    </zero-md>
+        <div class="nav-controls">
+            <button class="nav-btn" id="themeToggle" aria-label="Cambiar tema">
+                <i class="fa-solid fa-moon"></i>
+            </button>
+            <a href="index.html" class="back-btn">
+                <i class="fa-solid fa-arrow-left"></i>
+                Volver al inicio
+            </a>
+        </div>
+    </div>
+</header>
 
+    <!-- Contenido principal -->
+    <main class="wiki-container">
+        <!-- Encabezado -->
+        <header class="wiki-header">
+            <h1 class="wiki-title">Documentación de FoxWeb</h1>
+            <p class="wiki-subtitle">Guía completa del proyecto, características técnicas, equipo y guías de uso del centro de descargas confiable</p>
+        </header>
+
+        <div class="wiki-layout">
+            <!-- Tabla de contenidos -->
+            <nav class="wiki-toc">
+                <h3 class="toc-title">
+                    <i class="fa-solid fa-list"></i>
+                    Contenido
+                </h3>
+                <ul class="toc-list">
+                    <li class="toc-item">
+                        <a href="#introduccion" class="toc-link active">
+                            <i class="fa-solid fa-book"></i>
+                            Introducción
+                        </a>
+                    </li>
+                    <li class="toc-item">
+                        <a href="#caracteristicas" class="toc-link">
+                            <i class="fa-solid fa-star"></i>
+                            Características
+                        </a>
+                    </li>
+                    <li class="toc-item">
+                        <a href="#tecnologia" class="toc-link">
+                            <i class="fa-solid fa-microchip"></i>
+                            Tecnología
+                        </a>
+                    </li>
+                    <li class="toc-item">
+                        <a href="#arquitectura" class="toc-link">
+                            <i class="fa-solid fa-diagram-project"></i>
+                            Arquitectura
+                        </a>
+                    </li>
+                    <li class="toc-item">
+                        <a href="#equipo" class="toc-link">
+                            <i class="fa-solid fa-users"></i>
+                            Equipo
+                        </a>
+                    </li>
+                    <li class="toc-item">
+                        <a href="#desarrollo" class="toc-link">
+                            <i class="fa-solid fa-code"></i>
+                            Desarrollo
+                        </a>
+                    </li>
+                    <li class="toc-item">
+                        <a href="#contribuir" class="toc-link">
+                            <i class="fa-solid fa-handshake"></i>
+                            Contribuir
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+
+            <!-- Contenido principal -->
+            <article class="wiki-content">
+                <!-- Introducción -->
+                <section id="introduccion" class="wiki-section">
+                    <div class="section-header">
+                        <i class="fa-solid fa-book section-icon"></i>
+                        <h2>Introducción</h2>
+                    </div>
+
+                    <div class="wiki-text">
+                        <p><strong>FoxWeb</strong> es un proyecto creado por <span class="highlight">FoxOrange224</span> con el objetivo de proporcionar un centro de descargas confiable, rápido y seguro para todo tipo de software esencial, sistemas operativos, juegos y utilidades.</p>
+
+                        <p>Nacido en 2023 como una iniciativa personal, el proyecto ha crecido gracias a la comunidad, ofreciendo enlaces directos y verificados, con la garantía de que todo el contenido es seguro y funcional.</p>
+
+                        <div class="wiki-note">
+                            <i class="fa-solid fa-lightbulb"></i>
+                            <strong>Objetivo principal:</strong> Democratizar el acceso a software útil y eliminar las barreras que impiden a las personas encontrar herramientas confiables para sus computadoras.
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Características -->
+                <section id="caracteristicas" class="wiki-section">
+                    <div class="section-header">
+                        <i class="fa-solid fa-star section-icon"></i>
+                        <h2>Características Principales</h2>
+                    </div>
+
+                    <div class="wiki-text">
+                        <p>FoxWeb se distingue por ofrecer una experiencia de usuario completa y optimizada:</p>
+
+                        <ul class="wiki-list">
+                            <li><strong>Interfaz moderna y responsiva:</strong> Diseño adaptable a todos los dispositivos</li>
+                            <li><strong>Búsqueda en tiempo real:</strong> Encuentra rápidamente lo que necesitas</li>
+                            <li><strong>Sistema de categorías:</strong> Organizado en Programas, Sistemas, Juegos, Extras y APKs</li>
+                            <li><strong>Enlaces verificados:</strong> Cada enlace es comprobado antes de ser publicado</li>
+                            <li><strong>Contenido gratuito:</strong> Todo el software es gratuitoo de código abierto</li>
+                            <li><strong>Sistema de sugerencias:</strong> Los usuarios pueden proponer nuevo contenido</li>
+                            <li><strong>Tema claro/oscuro:</strong> Adaptado a tus preferencias visuales</li>
+                            <li><strong>Notificaciones push:</strong> Mantente informado sobre actualizaciones</li>
+                            <li><strong>Sistema de favoritos:</strong> Guarda tus programas preferidos</li>
+                        </ul>
+                    </div>
+                </section>
+
+                <!-- Tecnología -->
+                <section id="tecnologia" class="wiki-section">
+                    <div class="section-header">
+                        <i class="fa-solid fa-microchip section-icon"></i>
+                        <h2>Tecnología Utilizada</h2>
+                    </div>
+
+                    <div class="wiki-text">
+                        <p>FoxWeb está construido con tecnologías web modernas que garantizan rendimiento y escalabilidad:</p>
+
+                        <table class="wiki-table">
+                            <thead>
+                                <tr>
+                                    <th>Tecnología</th>
+                                    <th>Versión</th>
+                                    <th>Propósito</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><strong>HTML5</strong></td>
+                                    <td>5.3</td>
+                                    <td>Estructura semántica del contenido</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>CSS3</strong></td>
+                                    <td>3.0</td>
+                                    <td>Estilos y diseño responsivo</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>JavaScript</strong></td>
+                                    <td>ES6+</td>
+                                    <td>Interactividad y lógica de negocio</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Font Awesome</strong></td>
+                                    <td>6.5.1</td>
+                                    <td>Iconos vectoriales</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Google Fonts</strong></td>
+                                    <td>Inter</td>
+                                    <td>Tipografía moderna y legible</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Cloudflare</strong></td>
+                                    <td>Pages</td>
+                                    <td>Hosting y distribución global</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+
+                <!-- Arquitectura -->
+                <section id="arquitectura" class="wiki-section">
+                    <div class="section-header">
+                        <i class="fa-solid fa-diagram-project section-icon"></i>
+                        <h2>Arquitectura del Proyecto</h2>
+                    </div>
+
+                    <div class="wiki-text">
+                        <p>La arquitectura de FoxWeb está diseñada para ser escalable y de fácil mantenimiento:</p>
+
+                        <div class="wiki-code">
+                            <span class="code-comment">// Estructura del proyecto FoxWeb</span><br>
+                            foxweb/<br>
+                            ├── <span class="code-keyword">index.html</span>          <span class="code-comment"># Página principal</span><br>
+                            ├── <span class="code-keyword">about.html</span>          <span class="code-comment"># Esta documentación</span><br>
+                            ├── <span class="code-keyword">index.css</span>           <span class="code-comment"># Estilos principales</span><br>
+                            ├── <span class="code-keyword">index.js</span>            <span class="code-comment"># Lógica de la aplicación</span><br>
+                            ├── <span class="code-keyword">data.js</span>             <span class="code-comment"># Base de datos de contenido</span><br>
+                            ├── <span class="code-keyword">assets/</span>             <span class="code-comment"># Imágenes y recursos</span><br>
+                            │   ├── <span class="code-keyword">icon.png</span><br>
+                            │   ├── <span class="code-keyword">logo.png</span><br>
+                            │   └── <span class="code-keyword">favicon.ico</span><br>
+                            └── <span class="code-keyword">README.md</span>           <span class="code-comment"># Documentación del proyecto</span>
+                        </div>
+
+                        <p>El proyecto utiliza una arquitectura <span class="highlight">SPA-like</span> (Single Page Application) donde toda la lógica se ejecuta en el cliente, reduciendo la carga del servidor y mejorando la experiencia del usuario.</p>
+                    </div>
+                </section>
+
+                <!-- Equipo -->
+                <section id="equipo" class="wiki-section">
+                    <div class="section-header">
+                        <i class="fa-solid fa-users section-icon"></i>
+                        <h2>Equipo y Colaboradores</h2>
+                    </div>
+
+                    <div class="team-grid">
+                        <div class="team-member">
+                            <div class="member-avatar">
+                                <i class="fa-solid fa-user"></i>
+                            </div>
+                            <h3 class="member-name">FoxOrange224</h3>
+                            <p class="member-role">Fundador y Desarrollador Principal</p>
+                            <p>Creador del proyecto, desarrollador web y mantenedor principal.</p>
+                            <div class="member-links">
+                                <a href="https://github.com/foxorange224" class="member-link" target="_blank" aria-label="GitHub">
+                                    <i class="fa-brands fa-github"></i>
+                                </a>
+                                <a href="https://www.youtube.com/@FoxOrange224" class="member-link" target="_blank" aria-label="YouTube">
+                                    <i class="fa-brands fa-youtube"></i>
+                                </a>
+                            </div>
+                        </div>
+
+                        <div class="team-member">
+                            <div class="member-avatar">
+                                <i class="fa-solid fa-user"></i>
+                            </div>
+                            <h3 class="member-name">Firulais Gaming</h3>
+                            <p class="member-role">Promocionador del Proyecto</p>
+                            <p>Ayuda a difundir el proyecto y colabora con contenido y promoción.</p>
+                            <div class="member-links">
+                                <a href="https://github.com/LeoPYDevel" class="member-link" target="_blank" aria-label="GitHub">
+                                    <i class="fa-brands fa-github"></i>
+                                </a>
+                                <a href="https://www.youtube.com/@firulais.gaming" class="member-link" target="_blank" aria-label="YouTube">
+                                    <i class="fa-brands fa-youtube"></i>
+                                </a>
+                            </div>
+                        </div>
+
+                        <div class="team-member">
+                            <div class="member-avatar">
+                                <i class="fa-solid fa-users"></i>
+                            </div>
+                            <h3 class="member-name">Comunidad</h3>
+                            <p class="member-role">Colaboradores y Usuarios</p>
+                            <p>Personas que reportan errores, sugieren contenido y ayudan a mejorar el proyecto.</p>
+                            <div class="member-links">
+                                <a href="https://discord.gg/r9v67gFRcp" class="member-link" target="_blank" aria-label="Discord">
+                                    <i class="fa-brands fa-discord"></i>
+                                </a>
+                                <a href="https://github.com/foxorange224/foxorange224.github.io/issues" class="member-link" target="_blank" aria-label="Issues">
+                                    <i class="fa-solid fa-bug"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Desarrollo -->
+                <section id="desarrollo" class="wiki-section">
+                    <div class="section-header">
+                        <i class="fa-solid fa-code section-icon"></i>
+                        <h2>Desarrollo y Mantenimiento</h2>
+                    </div>
+
+                    <div class="wiki-text">
+                        <p>FoxWeb sigue un ciclo de desarrollo activo con las siguientes prácticas:</p>
+
+                        <ul class="wiki-list">
+                            <li><strong>Control de versiones:</strong> Git con GitHub para el código fuente</li>
+                            <li><strong>CI/CD:</strong> Despliegue automático en Cloudflare Pages</li>
+                            <li><strong>Testing:</strong> Pruebas manuales y feedback de la comunidad</li>
+                            <li><strong>Documentación:</strong> Comentarios en código y documentación externa</li>
+                            <li><strong>Actualizaciones:</strong> Mejoras continuas cada 2-4 semanas</li>
+                        </ul>
+
+                        <div class="wiki-note">
+                            <i class="fa-solid fa-code-branch"></i>
+                            <strong>Ramas principales:</strong>
+                            <code>main</code> (producción),
+                            <code>develop</code> (desarrollo),
+                            <code>feature/*</code> (nuevas características)
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Contribuir -->
+                <section id="contribuir" class="wiki-section">
+                    <div class="section-header">
+                        <i class="fa-solid fa-handshake section-icon"></i>
+                        <h2>Cómo Contribuir al Proyecto</h2>
+                    </div>
+
+                    <div class="wiki-text">
+                        <p>FoxWeb es un proyecto comunitario y tu ayuda es invaluable. Hay muchas formas de contribuir:</p>
+
+                        <div class="action-buttons">
+                            <a href="https://github.com/foxorange224/foxorange224.github.io" class="action-btn" target="_blank">
+                                <i class="fa-brands fa-github"></i>
+                                Ver código en GitHub
+                            </a>
+                            <a href="https://github.com/foxorange224/foxorange224.github.io/issues" class="action-btn secondary" target="_blank">
+                                <i class="fa-solid fa-bug"></i>
+                                Reportar un problema
+                            </a>
+                            <a href="index.html" class="action-btn secondary">
+                                <i class="fa-solid fa-plus-circle"></i>
+                                Sugerir contenido
+                            </a>
+                        </div>
+
+                        <ul class="wiki-list">
+                            <li><strong>Desarrollo:</strong> Mejora el código en GitHub con pull requests</li>
+                            <li><strong>Testing:</strong> Prueba nuevas funciones y reporta bugs</li>
+                            <li><strong>Documentación:</strong> Mejora la documentación del proyecto</li>
+                            <li><strong>Traducciones:</strong> Ayuda a traducir a otros idiomas</li>
+                            <li><strong>Difusión:</strong> Comparte FoxWeb en redes sociales</li>
+                            <li><strong>Donaciones:</strong> Apoya económicamente el proyecto</li>
+                        </ul>
+
+                        <div class="wiki-note">
+                            <i class="fa-solid fa-heart"></i>
+                            <strong>¡Gracias por tu interés en contribuir!</strong> Cada aporte, por pequeño que sea, hace crecer el proyecto y beneficia a toda la comunidad.
+                        </div>
+                    </div>
+                </section>
+            </article>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="about-footer">
+        <div class="footer-container">
+            <div class="footer-grid">
+                <div class="footer-section">
+                    <h4>FoxWeb</h4>
+                    <div class="footer-links">
+                        <a href="index.html" class="footer-link">
+                            <i class="fa-solid fa-home"></i>
+                            Inicio
+                        </a>
+                        <a href="#introduccion" class="footer-link">
+                            <i class="fa-solid fa-book"></i>
+                            Documentación
+                        </a>
+                        <a href="#equipo" class="footer-link">
+                            <i class="fa-solid fa-users"></i>
+                            Equipo
+                        </a>
+                        <a href="#contribuir" class="footer-link">
+                            <i class="fa-solid fa-handshake"></i>
+                            Contribuir
+                        </a>
+                    </div>
+                </div>
+
+                <div class="footer-section">
+                    <h4>Recursos</h4>
+                    <div class="footer-links">
+                        <a href="https://github.com/foxorange224/foxorange224.github.io" class="footer-link" target="_blank">
+                            <i class="fa-brands fa-github"></i>
+                            Código fuente
+                        </a>
+                        <a href="https://github.com/foxorange224/foxorange224.github.io/issues" class="footer-link" target="_blank">
+                            <i class="fa-solid fa-bug"></i>
+                            Issues
+                        </a>
+                        <a href="https://discord.gg/r9v67gFRcp" class="footer-link" target="_blank">
+                            <i class="fa-brands fa-discord"></i>
+                            Discord
+                        </a>
+                        <a href="https://www.youtube.com/@FoxOrange224" class="footer-link" target="_blank">
+                            <i class="fa-brands fa-youtube"></i>
+                            YouTube
+                        </a>
+                    </div>
+                </div>
+
+                <div class="footer-section">
+                    <h4>Legal</h4>
+                    <div class="footer-links">
+                        <a href="#" class="footer-link" onclick="showModal('privacy')">
+                            <i class="fa-solid fa-shield-alt"></i>
+                            Privacidad
+                        </a>
+                        <a href="#" class="footer-link" onclick="showModal('terms')">
+                            <i class="fa-solid fa-file-contract"></i>
+                            Términos
+                        </a>
+                        <a href="#" class="footer-link" onclick="showModal('cookies')">
+                            <i class="fa-solid fa-cookie"></i>
+                            Cookies
+                        </a>
+                        <a href="/lincense" class="footer-link">
+                            <i class="fa-solid fa-scale-balanced"></i>
+                            Licencia
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="footer-bottom">
+                <p>© 2026 FoxOrange224 | FoxWeb - Centro de Descargas Confiable</p>
+                <p style="margin-top: var(--space-sm); font-size: 0.75rem; color: var(--text-muted);">
+                    <i class="fa-solid fa-code"></i>
+                    Hecho con
+                    <i class="fa-solid fa-heart" style="color: var(--primary);"></i>
+                    por la comunidad
+                </p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // ============================================================================
+        // SISTEMA DE TEMAS
+        // ============================================================================
+
+        document.addEventListener('DOMContentLoaded', function() {
+            // Cargar tema guardado
+            const savedTheme = localStorage.getItem('foxweb_theme') || 'dark';
+            setTheme(savedTheme);
+
+            // Botón de cambio de tema
+            const themeToggle = document.getElementById('themeToggle');
+            if (themeToggle) {
+                themeToggle.addEventListener('click', toggleTheme);
+                updateThemeIcon(savedTheme);
+            }
+
+            // Scroll suave para enlaces internos
+            document.querySelectorAll('.toc-link').forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const targetId = this.getAttribute('href');
+                    const targetElement = document.querySelector(targetId);
+
+                    if (targetElement) {
+                        // Actualizar TOC activo
+                        document.querySelectorAll('.toc-link').forEach(l => {
+                            l.classList.remove('active');
+                        });
+                        this.classList.add('active');
+
+                        // Scroll suave
+                        window.scrollTo({
+                            top: targetElement.offsetTop - 100,
+                            behavior: 'smooth'
+                        });
+                    }
+                });
+            });
+
+            // Actualizar TOC activo al hacer scroll
+            window.addEventListener('scroll', function() {
+                const sections = document.querySelectorAll('.wiki-section');
+                let currentSection = '';
+
+                sections.forEach(section => {
+                    const sectionTop = section.offsetTop;
+                    const sectionHeight = section.clientHeight;
+
+                    if (window.scrollY >= sectionTop - 150) {
+                        currentSection = '#' + section.id;
+                    }
+                });
+
+                if (currentSection) {
+                    document.querySelectorAll('.toc-link').forEach(link => {
+                        link.classList.remove('active');
+                        if (link.getAttribute('href') === currentSection) {
+                            link.classList.add('active');
+                        }
+                    });
+                }
+            });
+
+            // Año actual en footer
+            const yearSpan = document.querySelector('.footer-bottom p');
+            if (yearSpan) {
+                const currentYear = new Date().getFullYear();
+                yearSpan.innerHTML = yearSpan.innerHTML.replace('2026', currentYear);
+            }
+
+            console.log('✅ FoxWeb Documentation loaded');
+        });
+
+        function setTheme(theme) {
+            document.documentElement.setAttribute('data-theme', theme);
+            localStorage.setItem('foxweb_theme', theme);
+        }
+
+        function toggleTheme() {
+            const currentTheme = document.documentElement.getAttribute('data-theme');
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            setTheme(newTheme);
+            updateThemeIcon(newTheme);
+        }
+
+        function updateThemeIcon(theme) {
+            const themeToggle = document.getElementById('themeToggle');
+            if (themeToggle) {
+                const icon = themeToggle.querySelector('i');
+                if (theme === 'dark') {
+                    icon.className = 'fa-solid fa-moon';
+                } else {
+                    icon.className = 'fa-solid fa-sun';
+                }
+            }
+        }
+
+        // Modal placeholder
+        function showModal(type) {
+            const messages = {
+                privacy: 'Política de Privacidad',
+                terms: 'Términos de Uso',
+                cookies: 'Política de Cookies',
+                license: 'Licencia MIT'
+            };
+
+            alert(`Esta funcionalidad está disponible en la página principal.\n\n${messages[type]}: Visita la página de inicio para ver los detalles.`);
+        }
+    </script>
 </body>
 </html>
