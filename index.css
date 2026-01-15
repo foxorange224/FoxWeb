@@ -1091,7 +1091,7 @@ input:focus, textarea:focus, select:focus {
 }
 
 /* ============================================================================
-   BOTONES FLOTANTES - AGREGADO BOTÓN COLABORADORES NARANJA
+   BOTONES FLOTANTES - CORREGIDO (SIN CHAT)
    ============================================================================ */
 
 .floating-btn {
@@ -1112,10 +1112,10 @@ input:focus, textarea:focus, select:focus {
     transition: transform 0.2s ease, opacity 0.2s ease;
 }
 
-/* NUEVO: Botón de colaboradores naranja */
+/* Botón de colaboradores naranja */
 .collaborators-btn {
     background-color: var(--primary) !important; /* Naranja */
-    bottom: 260px; /* Encima de "sugerir contenido" */
+    bottom: 160px;
     right: var(--space-md);
 }
 
@@ -1125,7 +1125,7 @@ input:focus, textarea:focus, select:focus {
 
 .upload-btn {
     background-color: var(--primary);
-    bottom: 120px;
+    bottom: 90px;
     right: var(--space-md);
 }
 
@@ -1957,7 +1957,7 @@ input:focus, textarea:focus, select:focus {
     }
     
     .collaborators-btn {
-        bottom: 220px;
+        bottom: 140px;
     }
     
     .upload-btn {
@@ -2086,12 +2086,12 @@ input:focus, textarea:focus, select:focus {
     }
     
     .collaborators-btn {
-        bottom: 200px;
+        bottom: 120px;
         right: var(--space-sm);
     }
     
     .upload-btn {
-        bottom: 80px;
+        bottom: 70px;
         right: var(--space-sm);
     }
     
@@ -2168,6 +2168,15 @@ input:focus, textarea:focus, select:focus {
         left: var(--space-sm);
         right: var(--space-sm);
         max-width: none;
+    }
+    
+    /* Ajustes adicionales para botones flotantes en móviles */
+    .collaborators-btn {
+        bottom: 100px;
+    }
+    
+    .upload-btn {
+        bottom: 60px;
     }
 }
 
@@ -2783,21 +2792,6 @@ html {
 }
 
 /* ============================================================================
-   VERIFICACIÓN Y DEBUG (puedes eliminar después)
-   ============================================================================ */
-
-/* Descomenta para ver qué elementos tienen overflow */
-/*
-* {
-    outline: 1px solid red !important;
-}
-
-*:hover {
-    outline: 1px solid blue !important;
-}
-*/
-
-/* ============================================================================
    MEDIA QUERIES PARA RESPONSIVE
    ============================================================================ */
 
@@ -2818,36 +2812,8 @@ html {
     html::-webkit-scrollbar {
         width: 6px;
     }
-    
-    /* Ocultar barras en móviles si prefieres */
-    /*
-    html {
-        scrollbar-width: none;
-    }
-    
-    html::-webkit-scrollbar {
-        display: none;
-    }
-    */
 }
 
-/* ============================================================================
-   SOLUCIÓN ALTERNATIVA: FORZAR UNA SOLA BARRA
-   ============================================================================ */
-
-/* Si el problema persiste, prueba esta solución más agresiva */
-
-.single-scroll-solution {
-    overflow: hidden; /* Ocultar overflow en body */
-}
-
-.single-scroll-solution .main-wrapper {
-    height: 100vh;
-    overflow-y: auto; /* Solo este elemento tendrá scroll */
-}
-
-/* Si usas la solución anterior, añade esta clase al body */
-<body class="single-scroll-solution">
 /* ============================================================================
    CORRECCIÓN DE ICONOS EN FORMULARIO DE SUGERENCIAS
    ============================================================================ */
@@ -3058,4 +3024,55 @@ html {
   html {
     font-size: 100%;
   }
+}
+
+/* ============================================================================
+   SOLUCIÓN DE EMERGENCIA - ELIMINAR CUALQUIER RASTRO DE CHAT-BTN
+   ============================================================================ */
+
+/* Eliminar cualquier referencia residual a chat-btn */
+.chat-btn,
+[class*="chat-btn"],
+[class^="chat-btn"] {
+    display: none !important;
+    width: 0 !important;
+    height: 0 !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    opacity: 0 !important;
+    visibility: hidden !important;
+    position: absolute !important;
+    top: -9999px !important;
+    left: -9999px !important;
+}
+
+/* Asegurar que no haya espacios en blanco causados por elementos ocultos */
+.floating-btn:empty,
+.floating-btn[style*="display: none"] {
+    display: none !important;
+}
+
+/* Garantizar que los botones flotantes estén bien espaciados */
+.collaborators-btn + .upload-btn,
+.upload-btn + .scroll-top {
+    margin-top: 0 !important;
+}
+
+/* Corrección para la visualización en dispositivos móviles */
+@media (max-width: 768px) {
+    .floating-btn {
+        margin: 0 !important;
+    }
+    
+    .collaborators-btn {
+        bottom: 120px !important;
+    }
+    
+    .upload-btn {
+        bottom: 70px !important;
+    }
+    
+    .scroll-top {
+        bottom: 20px !important;
+    }
 }
