@@ -1,6 +1,6 @@
 google.com, pub-9082337258272819, DIRECT, f08c47fec0942fa0
 google.com, pub-9082337258272819, RESELLER, f08c47fec0942fa0
 # Ads.txt for FoxWeb
-# Domain: foxweb.vercel.app
+# Domain: foxweb.pages.dev
 # Contact: foxorange224
-# Updated: 2024-01-01
+# Updated: 2026-01-15
