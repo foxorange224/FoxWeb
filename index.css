@@ -1123,12 +1123,6 @@ input:focus, textarea:focus, select:focus {
     background-color: var(--primary-hover) !important;
 }
 
-.chat-btn {
-    background-color: #25D366;
-    bottom: 190px;
-    right: var(--space-md);
-}
-
 .upload-btn {
     background-color: var(--primary);
     bottom: 120px;
