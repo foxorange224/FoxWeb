@@ -9,7 +9,7 @@
 **Licencia CC0 1.0 Universal**  
 *Documento oficial adaptado para el proyecto FoxWeb*
 
-[🌐 Sitio Web](https://foxorange224.github.io) | 
+[🌐 Sitio Web](https://foxweb.pages.dev) | 
 [📖 Documentación](about.html) | 
 [💻 GitHub](https://github.com/foxorange224/foxorange224.github.io)
 
