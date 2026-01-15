@@ -6,7 +6,7 @@
 
 ## 🔗 Accede al Sitio
 
-🌐 **Sitio oficial:** [https://foxweb.vercel.app](https://foxweb.vercel.app)
+🌐 **Sitio oficial:** [https://foxweb.pages.dev/](https://foxweb.pages.dev/)
 
 > 💡 **Tip:** Si llegaste a GitHub, el sitio real está en el enlace de arriba. ¡Es más rápido y tiene todas las funciones!
 
@@ -52,7 +52,7 @@
 
 ## 🚀 Cómo usar FoxWeb
 
-1. **Visita** [https://foxweb.vercel.app](https://foxweb.vercel.app)
+1. **Visita** [https://foxweb.pages.dev/](https://foxweb.pages.dev/)
 2. **Explora** las categorías (pestañas en la parte superior)
 3. **Busca** con palabras clave si sabes qué quieres
 4. **Haz clic** en "Descargar" para obtener el archivo
