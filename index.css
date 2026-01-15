@@ -1115,7 +1115,7 @@ input:focus, textarea:focus, select:focus {
 /* Botón de colaboradores naranja */
 .collaborators-btn {
     background-color: var(--primary) !important;
-    bottom: 200px; /* Cambiado de 160px a 200px (más arriba) */
+    bottom: 230px; /* Cambiado de 200px a 230px (30px más arriba) */
     right: var(--space-md);
 }
 
@@ -1125,7 +1125,7 @@ input:focus, textarea:focus, select:focus {
 
 .upload-btn {
     background-color: var(--primary);
-    bottom: 130px; /* Cambiado de 90px a 130px (más arriba) */
+    bottom: 160px; /* Cambiado de 130px a 160px (30px más arriba) */
     right: var(--space-md);
 }
 
