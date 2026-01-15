@@ -113,7 +113,6 @@ body {
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     cursor: default !important; /* Desactivar cursor personalizado */
-    zoom: 80%;
 }
 
 /* Imágenes responsivas */
@@ -3063,4 +3062,15 @@ i[class*="fa-"] {
     .error-note {
         padding: var(--space-md);
     }
+}
+/* Configuración para PC (80%) */
+html {
+  font-size: 80%; 
+}
+
+/* Configuración para Móvil (100%) */
+@media (max-width: 768px) {
+  html {
+    font-size: 100%;
+  }
 }
