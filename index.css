@@ -1960,10 +1960,6 @@ input:focus, textarea:focus, select:focus {
         bottom: 220px;
     }
     
-    .chat-btn {
-        bottom: 150px;
-    }
-    
     .upload-btn {
         bottom: 80px;
     }
@@ -2091,11 +2087,6 @@ input:focus, textarea:focus, select:focus {
     
     .collaborators-btn {
         bottom: 200px;
-        right: var(--space-sm);
-    }
-    
-    .chat-btn {
-        bottom: 140px;
         right: var(--space-sm);
     }
     
