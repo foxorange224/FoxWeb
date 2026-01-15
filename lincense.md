@@ -11,7 +11,7 @@
 
 [🌐 Sitio Web](https://foxweb.pages.dev) | 
 [📖 Documentación](about.html) | 
-[💻 GitHub](https://github.com/foxorange224/foxorange224.github.io)
+[💻 GitHub](https://github.com/foxorange224/)
 
 </div>
 
