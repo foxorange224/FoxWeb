@@ -1114,8 +1114,8 @@ input:focus, textarea:focus, select:focus {
 
 /* Botón de colaboradores naranja */
 .collaborators-btn {
-    background-color: var(--primary) !important; /* Naranja */
-    bottom: 160px;
+    background-color: var(--primary) !important;
+    bottom: 200px; /* Cambiado de 160px a 200px (más arriba) */
     right: var(--space-md);
 }
 
@@ -1125,7 +1125,7 @@ input:focus, textarea:focus, select:focus {
 
 .upload-btn {
     background-color: var(--primary);
-    bottom: 90px;
+    bottom: 130px; /* Cambiado de 90px a 130px (más arriba) */
     right: var(--space-md);
 }
 
@@ -1957,11 +1957,11 @@ input:focus, textarea:focus, select:focus {
     }
     
     .collaborators-btn {
-        bottom: 140px;
+        bottom: 160px; /* Cambiado de 140px a 160px */
     }
     
     .upload-btn {
-        bottom: 80px;
+        bottom: 100px; /* Cambiado de 80px a 100px */
     }
 }
 
