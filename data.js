@@ -25,6 +25,38 @@ modal: null,
 badges: ["OFIMÁTICA","ESTUDIO","SUITE"]
 },
 {
+name: "Java para Windows",
+icon: "fa-brands fa-java",
+info: "Entorno de ejecución necesario para aplicaciones y juegos desarrollados en Java. Selecciona tu versión.",
+enlace: "#",
+modal: "javaModal",
+badges: ["RUNTIME","ESENCIAL","WINDOWS"]
+},
+{
+name: "Instalador de Dependecias",
+icon: "fa-solid fa-puzzle-piece",
+info: "Instala automáticamente todos los requisitos (.NET, Visual C++, XNA, DirectX) para que programas y juegos funcionen.",
+enlace: "https://www.mediafire.com/file/nii3ncqlxe1mezx/Instalador+de+Dependecias.7z/file",
+modal: null,
+badges: ["RUNTIME","ESENCIAL","WINDOWS"]
+},
+{
+name: "3DP Chip",
+icon: "fa-solid fa-gears",
+info: "Identifica automáticamente el hardware de tu PC y descarga los controladores necesarios de forma rápida y sencilla.",
+enlace: "https://www.3dpchip.com/",
+modal: null,
+badges: ["DRIVERS","DETECCIÓN","AUTOMÁTICO"]
+},
+{
+name: "Rufus (Portable)",
+icon: "fa-brands fa-usb",
+info: "Herramienta ligera y rápida para crear unidades USB de arranque desde imágenes ISO. No requiere instalación.",
+enlace: "https://rufus.ie/downloads/",
+modal: null,
+badges: ["USB","HERRAMIENTA","PORTABLE"]
+},
+{
 name: "Krita",
 icon: "fa-solid fa-paintbrush",
 info: "Software de pintura digital y animación de código abierto. Alternativa gratuita a Photoshop para artistas digitales.",
@@ -127,6 +159,38 @@ info: "Software profesional de edición de video, colorización y postproducció
 enlace: "https://www.blackmagicdesign.com/products/davinciresolve/",
 modal: null,
 badges: ["VIDEO","EDICIÓN","PROFESIONAL"]
+},
+{
+name: "CPU-Z",
+icon: "fa-solid fa-microchip",
+info: "Muestra información detallada sobre los componentes de tu sistema: procesador, placa base, memoria RAM y gráficos.",
+enlace: "https://www.cpuid.com/softwares/cpu-z.html",
+modal: null,
+badges: ["DIAGNÓSTICO","HARDWARE","INFORMACIÓN"]
+},
+{
+name: "CrystalDiskInfo",
+icon: "fa-solid fa-hard-drive",
+info: "Monitoriza la salud de tus discos duros y SSD. Muestra temperatura, horas de uso y alerta de posibles fallos.",
+enlace: "https://crystalmark.info/en/software/crystaldiskinfo/",
+modal: null,
+badges: ["MONITOREO","DISCO","SALUD"]
+},
+{
+name: "Driver Booster (Versión 10.3)",
+icon: "fa-solid fa-gears",
+info: "Herramienta especial para actualizar controladores en sistemas antiguos. Compatible con Windows XP y hardware difícil.",
+enlace: "#",
+modal: "driverBoosterModal",
+badges: ["DRIVERS","WINDOWS XP","COMPATIBILIDAD"]
+},
+{
+name: "Smart Defrag (Versión 11)",
+icon: "fa-solid fa-gears",
+info: "Herramienta especial para optimizar y defragmentar el disco. Compatible con Windows XP hasta el actual.",
+enlace: "https://www.mediafire.com/file/1su7mvz3z97s4bc/Smart+Defrag+11.1.0.466.zip/file",
+modal: null,
+badges: ["DISCOS","DESFRAGMENTAR","HDD"]
 },
 {
 name: "OBS Studio",
@@ -415,28 +479,12 @@ badges: ["LAUNCHER","MINECRAFT"]
 ],
 extras: [
 {
-name: "Java para Windows",
-icon: "fa-brands fa-java",
-info: "Entorno de ejecución necesario para aplicaciones y juegos desarrollados en Java. Selecciona tu versión.",
-enlace: "#",
-modal: "javaModal",
-badges: ["RUNTIME","ESENCIAL","WINDOWS"]
-},
-{
-name: "Instalador de Dependecias",
-icon: "fa-solid fa-puzzle-piece",
-info: "Instala automáticamente todos los requisitos (.NET, Visual C++, XNA, DirectX) para que programas y juegos funcionen.",
-enlace: "https://www.mediafire.com/file/nii3ncqlxe1mezx/Instalador+de+Dependecias.7z/file",
-modal: null,
-badges: ["RUNTIME","ESENCIAL","WINDOWS"]
-},
-{
-name: "Rufus (Portable)",
-icon: "fa-brands fa-usb",
-info: "Herramienta ligera y rápida para crear unidades USB de arranque desde imágenes ISO. No requiere instalación.",
-enlace: "https://rufus.ie/downloads/",
-modal: null,
-badges: ["USB","HERRAMIENTA","PORTABLE"]
+name: "Optimizar Youtube",
+icon: "fa-brands fa-youtube",
+info: "Cambia el modo de la interfaz de Youtube magicamente",
+enlace: "/",
+modal: youtubeModal,
+badges: ["MODOS","OPTIMIZACION","YOUTUBE"]
 },
 {
 name: "Tema Windows 10 para 7",
@@ -453,46 +501,6 @@ info: "Paquete completo de controladores para hardware difícil de encontrar en 
 enlace: "https://www.mediafire.com/file/65acrgovcx0ypkt/DriverPack_XP_%2528x86%2529.rar/file",
 modal: null,
 badges: ["DRIVERS","WINDOWS XP","COMPATIBILIDAD"]
-},
-{
-name: "3DP Chip",
-icon: "fa-solid fa-gears",
-info: "Identifica automáticamente el hardware de tu PC y descarga los controladores necesarios de forma rápida y sencilla.",
-enlace: "https://www.3dpchip.com/",
-modal: null,
-badges: ["DRIVERS","DETECCIÓN","AUTOMÁTICO"]
-},
-{
-name: "CPU-Z",
-icon: "fa-solid fa-microchip",
-info: "Muestra información detallada sobre los componentes de tu sistema: procesador, placa base, memoria RAM y gráficos.",
-enlace: "https://www.cpuid.com/softwares/cpu-z.html",
-modal: null,
-badges: ["DIAGNÓSTICO","HARDWARE","INFORMACIÓN"]
-},
-{
-name: "CrystalDiskInfo",
-icon: "fa-solid fa-hard-drive",
-info: "Monitoriza la salud de tus discos duros y SSD. Muestra temperatura, horas de uso y alerta de posibles fallos.",
-enlace: "https://crystalmark.info/en/software/crystaldiskinfo/",
-modal: null,
-badges: ["MONITOREO","DISCO","SALUD"]
-},
-{
-name: "Driver Booster (Versión 10.3)",
-icon: "fa-solid fa-gears",
-info: "Herramienta especial para actualizar controladores en sistemas antiguos. Compatible con Windows XP y hardware difícil.",
-enlace: "#",
-modal: "driverBoosterModal",
-badges: ["DRIVERS","WINDOWS XP","COMPATIBILIDAD"]
-},
-{
-name: "Smart Defrag (Versión 11)",
-icon: "fa-solid fa-gears",
-info: "Herramienta especial para optimizar y defragmentar el disco. Compatible con Windows XP hasta el actual.",
-enlace: "https://www.mediafire.com/file/1su7mvz3z97s4bc/Smart+Defrag+11.1.0.466.zip/file",
-modal: null,
-badges: ["DISCOS","DESFRAGMENTAR","HDD"]
 }
 ],
 apks: [
@@ -513,6 +521,14 @@ modal: null,
 badges: ["JUEGO","RITMO","MOD"]
 },
 {
+name: "SuperTuxKart",
+icon: "fa-solid fa-car-side",
+info: "SuperTuxKart es un videojuego libre de carreras tipo arcade en 3D basado en Mario Kart",
+enlace: "https://github.com/supertuxkart/stk-code/releases/download/1.5/SuperTuxKart-1.5.apk",
+modal: null,
+badges: ["CARRERAS", "MULTIPLATAFORMA", "OPEN SOURCE"]
+},
+{
 name: "PPSSPP",
 icon: "fa-solid fa-gamepad",
 info: "Emulador de PSP (PlayStation Portable) para Android. Juega tus títulos favoritos de PSP en tu móvil con alta compatibilidad.",
@@ -527,6 +543,14 @@ info: "Emulador de terminal y entorno Linux para Android. Ejecuta comandos, inst
 enlace: "https://f-droid.org/repo/com.termux_1002.apk",
 modal: null,
 badges: ["TERMINAL","LINUX","DESARROLLO"]
+},
+{
+name: "Aurora Store",
+icon: "fa-solid fa-bag-shopping",
+info: "Cliente alternativo de Google Play Store para descargar APKs de forma privada y sin servicios de Google.",
+enlace: "https://f-droid.org/es/packages/com.aurora.store/",
+modal: null,
+badges: ["APKS", "ANDROID", "TIENDA"]
 },
 {
 name: "F-Droid",
