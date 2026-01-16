@@ -483,7 +483,7 @@ name: "Optimizar Youtube",
 icon: "fa-brands fa-youtube",
 info: "Cambia el modo de la interfaz de Youtube magicamente",
 enlace: "#",
-modal: youtubeModal,
+modal: "youtubeModal",
 badges: ["MODOS","OPTIMIZACION","YOUTUBE"]
 },
 {
