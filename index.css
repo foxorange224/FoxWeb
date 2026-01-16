@@ -4,7 +4,7 @@
 
 :root {
     /* Paleta de colores principal */
-    --primary: #000000;
+    --primary: #dc6a00;
     --primary-hover: #CC3700;
     --primary-light: rgba(255, 69, 0, 0.1);
     --primary-dark: #8B2500;
