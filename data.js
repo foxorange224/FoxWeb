@@ -1,22 +1,6 @@
 const FoxWebDB = {
 programas: [
 {
-name: "Bandicam",
-icon: "fa-solid fa-video",
-info: "Es un grabador de pantalla para Windows que es famoso por ser sumamente ligero. Si tienes una tostadora de PC o no quieres que el Minecraft se te pegue mientras grabas, Bandicam es el que es.",
-enlace: "https://www.mediafire.com/file/qteigczejthm81g",
-modal: null,
-badges: ["GRABADOR","PORTABLE","LIGERO"]
-},
-{
-name: "Defraggler",
-icon: "fa-solid fa-hard-drive",
-info: "Defraggler es una herramienta de desfragmentación de disco desarrollada por Piriform. Permite desfragmentar unidades de disco duro para mejorar el rendimiento del sistema al reorganizar los datos fragmentados.",
-enlace: "https://www.mediafire.com/file/t8u6857e4aaftez",
-modal: null,
-badges: ["DESFRAGMENTAR", "OPTIMIZACIÓN", "DISCOS"]
-},
-{
 name: "Office Professional 2016",
 icon: "fa-brands fa-windows",
 info: "Microsoft Office o conocido actualmente como Microsoft 365, es una suite ofimática de aplicaciones para computadoras de escritorio",
@@ -46,15 +30,31 @@ icon: "fa-solid fa-gears",
 info: "Identifica automáticamente el hardware de tu PC y descarga los controladores necesarios de forma rápida y sencilla.",
 enlace: "https://www.3dpchip.com/",
 modal: null,
-badges: ["DRIVERS","DETECCIÓN","AUTOMÁTICO"]
+badges: ["DRIVERS","DETECCIÓN","WINDOWS"]
 },
 {
-name: "Rufus (Portable)",
+name: "Rufus (Windows)",
 icon: "fa-brands fa-usb",
 info: "Herramienta ligera y rápida para crear unidades USB de arranque desde imágenes ISO. No requiere instalación.",
 enlace: "https://rufus.ie/downloads/",
 modal: null,
 badges: ["USB","HERRAMIENTA","PORTABLE"]
+},
+{
+name: "Bandicam",
+icon: "fa-solid fa-video",
+info: "Es un grabador de pantalla para Windows que es famoso por ser sumamente ligero. Si tienes una tostadora de PC o no quieres que el Minecraft se te pegue mientras grabas, Bandicam es el que es.",
+enlace: "https://www.mediafire.com/file/qteigczejthm81g",
+modal: null,
+badges: ["GRABADOR","PORTABLE","LIGERO"]
+},
+{
+name: "Defraggler",
+icon: "fa-solid fa-hard-drive",
+info: "Defraggler es una herramienta de desfragmentación de disco desarrollada por Piriform. Permite desfragmentar unidades de disco duro para mejorar el rendimiento del sistema al reorganizar los datos fragmentados.",
+enlace: "https://www.mediafire.com/file/t8u6857e4aaftez",
+modal: null,
+badges: ["DESFRAGMENTAR", "OPTIMIZACIÓN", "DISCOS"]
 },
 {
 name: "Krita",
@@ -86,7 +86,7 @@ icon: "fa-solid fa-file-code",
 info: "Editor de texto y código fuente potente y ligero. Ideal para programadores, con soporte para múltiples lenguajes y plugins.",
 enlace: "https://github.com/notepad-plus-plus/notepad-plus-plus/releases/latest",
 modal: null,
-badges: ["EDITOR","PROGRAMACIÓN"]
+badges: ["EDITOR","PROGRAMACIÓN","WINDOWS"]
 },
 {
 name: "BalenaEtcher",
@@ -103,14 +103,6 @@ info: "Suite de captura de pantalla y grabación avanzada. Captura, anota, graba
 enlace: "https://getsharex.com/",
 modal: null,
 badges: ["CAPTURA","PRODUCTIVIDAD"]
-},
-{
-name: "Java Runtime",
-icon: "fa-brands fa-java",
-info: "Entorno de ejecución necesario para usar aplicaciones y juegos desarrollados en Java. Selecciona tu versión.",
-enlace: "#",
-modal: "javaModal",
-badges: ["RUNTIME","ESENCIAL"]
 },
 {
 name: "LibreOffice",
@@ -172,7 +164,7 @@ badges: ["DIAGNÓSTICO","HARDWARE","INFORMACIÓN"]
 name: "CrystalDiskInfo",
 icon: "fa-solid fa-hard-drive",
 info: "Monitoriza la salud de tus discos duros y SSD. Muestra temperatura, horas de uso y alerta de posibles fallos.",
-enlace: "https://crystalmark.info/en/software/crystaldiskinfo/",
+enlace: "https://www.mediafire.com/file/4b5plqpogmotpmg",
 modal: null,
 badges: ["MONITOREO","DISCO","SALUD"]
 },
@@ -347,7 +339,7 @@ modal: "locosModal",
 badges: ["LINUX","LIGERO","HARDWARE ANTIGUO"]
 },
 {
-name: "Linux Mint 22.2",
+name: "Linux Mint 22.3",
 icon: "fa-brands fa-linux",
 info: "Sistema operativo de escritorio amigable y completamente equipado. Perfecto para usuarios que vienen de Windows.",
 enlace: "https://linuxmint.com/download.php",
@@ -361,6 +353,14 @@ info: "Sistema operativo de código abierto compatible con programas y controlad
 enlace: "https://reactos.org/",
 modal: null,
 badges: ["OPEN SOURCE","COMPATIBLE WINDOWS"]
+},
+{
+name: "OptiOS 8.1 ENTERPRISE X64",
+icon: "fa-solid fa-compact-disc",
+info: "Bienvenido al Windows OptiOS 8.1 ENTERPRISE X64! Una modificacion de Windows. Con mejoras de rendimiento en computadoras de bajos recursos",
+enlace: "http://mediafire.com/file/833yhkjaqle6zat",
+modal: null,
+badges: ["OPTIOS","OPTIMIZADO","WINDOWS 8"]
 },
 {
 name: "Ubuntu MATE",
@@ -399,7 +399,7 @@ badges: ["DISPAROS","MUNDO ABIERTO","GTA"]
 {
 name: "Papa's Pizzeria Collection",
 icon: "fa-solid fa-pizza-slice",
-info: "Un pack de juegos de cocina que marcó la infancia. Gestiona tu propio restaurante de pizzas con muchos ingredientes.",
+info: "Un pack de juegos de cocina que marcó la infancia. Gestiona tus propios restaurantes",
 enlace: "https://www.mediafire.com/file/cpcxasi9cbernjs",
 modal: null,
 badges: ["COCINA","CLÁSICO","GESTIÓN"]
@@ -427,6 +427,14 @@ info: "El revolucionario shooter en primera persona que cambió los videojuegos.
 enlace: "https://www.mediafire.com/file/fpam0fdospuupxb/HL.zip/file",
 modal: null,
 badges: ["FPS","CIENCIA FICCIÓN","CLÁSICO"]
+},
+{
+name: "Among Us 9.22s",
+icon: "fa-solid fa-user-astronaut",
+info: "Juego de deducción social. Encuentra al impostor antes de que sea tarde.",
+enlace: "https://www.mediafire.com/file/yt0yti8x2dfl9th",
+modal: null,
+badges: ["JUEGOS", "ONLINE", "SOCIAL"]
 },
 {
 name: "Steam",
@@ -505,7 +513,7 @@ badges: ["DRIVERS","WINDOWS XP","COMPATIBILIDAD"]
 ],
 apks: [
 {
-name: "Minecraft Bedrock",
+name: "Minecraft Bedrock 1.21.130",
 icon: "fa-solid fa-cube",
 info: "La versión oficial de Minecraft para móviles. Construye, explora y sobrevive en mundos infinitos con todas las características.",
 enlace: "https://www.mediafire.com/file/xc2yuu97tbyclf7/mc-be-1.21.130.apk/file",
@@ -513,7 +521,7 @@ modal: null,
 badges: ["JUEGO","SANDBOX","OFICIAL"]
 },
 {
-name: "Geometry Dash (2.207)",
+name: "Geometry Dash 2.207",
 icon: "fa-solid fa-gear",
 info: "Versión modificada con Geode Mod Loader. Salta y vuela al ritmo de la música en este desafío de plataformas y ritmo.",
 enlace: "https://bruhzstudios.itch.io/free-gd-geode-breeze-apks-mobile-only",
@@ -529,7 +537,7 @@ modal: null,
 badges: ["CARRERAS", "MULTIPLATAFORMA", "OPEN SOURCE"]
 },
 {
-name: "PPSSPP",
+name: "PPSSPP 1.19.3",
 icon: "fa-solid fa-gamepad",
 info: "Emulador de PSP (PlayStation Portable) para Android. Juega tus títulos favoritos de PSP en tu móvil con alta compatibilidad.",
 enlace: "https://www.ppsspp.org/files/1_19_3/ppsspp.apk",
