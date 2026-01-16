@@ -1325,6 +1325,7 @@ input:focus, textarea:focus, select:focus {
 .modal-btn .fa-folder-open,
 .modal-btn .fa-windows,
 .modal-btn .fa-linux,
+.modal-btn .fa-mobile-alt,
 .modal-btn .fa-compact-disc,
 .modal-btn .fa-desktop {
     margin: 0 !important;
