@@ -389,6 +389,29 @@ badges: ["USB","MULTI-ISO","HERRAMIENTA"]
 ],
 juegos: [
 {
+name: "Hollow Knight Silksong",
+icon: "fa-solid fa-gamepad",
+info: "Hollow Knight: Silksong es un videojuego metroidvania desarrollado por el estudio independiente australiano Team Cherry.",
+modal: null,
+badges: ["64 BITS","ESTRATEGIA","PLATAFORMA"]
+},
+{
+name: "Hollow Knight",
+icon: "fa-solid fa-gamepad",
+info: "Hollow Knight es una aventura de acción clásica en 2D ambientada en un vasto mundo interconectado. Explora cavernas tortuosas, ciudades antiguas y páramos mortales.",
+enlace: "https://www.mediafire.com/file/e5mm2clivttvxgk",
+modal: null,
+badges: ["64 BITS","ESTRATEGIA","PLATAFORMA"]
+},
+{
+name: "Cuphead LITE",
+icon: "fa-solid fa-gamepad",
+info: "Cuphead es un videojuego perteneciente al género de corre y dispara",
+enlace: "https://www.mediafire.com/file/n023i97wiob8jih",
+modal: null,
+badges: ["PLATAFORMA","ESTRATEGIA","CAFE XD"]
+},
+{
 name: "GTA: Vice City",
 icon: "fa-solid fa-gamepad",
 info: "Vive la era de los 80s en este clásico de mundo abierto. Coches, crimen y una banda sonora inolvidable.",
