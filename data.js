@@ -392,6 +392,7 @@ juegos: [
 name: "Hollow Knight Silksong",
 icon: "fa-solid fa-gamepad",
 info: "Hollow Knight: Silksong es un videojuego metroidvania desarrollado por el estudio independiente australiano Team Cherry.",
+enlace: "https://www.mediafire.com/file/7duqlgl7a8i0xn4",
 modal: null,
 badges: ["64 BITS","ESTRATEGIA","PLATAFORMA"]
 },
