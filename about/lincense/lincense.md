@@ -140,10 +140,9 @@ d. El Afirmante entiende y reconoce que Creative Commons no es parte de este doc
 
 Para preguntas sobre esta licencia o el proyecto FoxWeb:
 
-- **GitHub Issues**: [Reportar problemas](https://github.com/foxorange224/foxorange224.github.io/issues)
+- **GitHub Issues**: [Reportar problemas](https://github.com/foxorange224/FoxWeb/issues)
 - **Discord**: [Comunidad FoxWeb](https://discord.gg/r9v67gFRcp)
 - **YouTube**: [FoxOrange224](https://www.youtube.com/@FoxOrange224)
-
 ---
 
 <div align="center">
