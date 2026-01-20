@@ -1,234 +1,266 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="robots" content="noindex, follow">
-<title>Error 404</title>
-<meta name="description" content="La página que buscas no existe en FoxWeb">
-<link rel="icon" href="/assets/icon.png" type="image/png">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-<style>
-:root {
---primary: #FF4500;
---primary-hover: #CC3700;
---bg-body: #0c0c0c;
---bg-card: #161616;
---text-main: #E0E0E0;
---text-dim: #999;
-}
-* {
-box-sizing: border-box;
-margin: 0;
-padding: 0;
-}
-body {
-font-family: 'Inter', sans-serif;
-background-color: var(--bg-body);
-color: var(--text-main);
-min-height: 100vh;
-display: flex;
-flex-direction: column;
-justify-content: center;
-align-items: center;
-padding: 20px;
-text-align: center;
-}
-.error-container {
-max-width: 600px;
-width: 100%;
-}
-.logo-container {
-margin-bottom: 30px;
-}
-.main-logo {
-max-width: 250px;
-filter: drop-shadow(0 0 10px rgba(255, 69, 0, 0.2));
-}
-.error-code {
-font-size: 8em;
-font-weight: 800;
-color: var(--primary);
-margin-bottom: 10px;
-line-height: 1;
-}
-.error-title {
-font-size: 2em;
-color: var(--text-main);
-margin-bottom: 20px;
-}
-.error-message {
-color: var(--text-dim);
-font-size: 1.1em;
-margin-bottom: 40px;
-line-height: 1.6;
-padding: 0 20px;
-}
-.error-actions {
-display: flex;
-flex-wrap: wrap;
-gap: 15px;
-justify-content: center;
-margin-bottom: 40px;
-}
-.error-btn {
-display: inline-flex;
-align-items: center;
-gap: 10px;
-background: var(--primary);
-color: white;
-padding: 14px 28px;
-border-radius: 8px;
-text-decoration: none;
-font-weight: 600;
-font-size: 1em;
-border: none;
-cursor: pointer;
-}
-.error-btn:hover {
-background: var(--primary-hover);
-}
-.error-btn.secondary {
-background: #333;
-color: var(--text-main);
-}
-.error-btn.secondary:hover {
-background: #444;
-}
-.error-tips {
-background: rgba(255, 69, 0, 0.05);
-border-radius: 10px;
-padding: 25px;
-margin-top: 30px;
-text-align: left;
-border: 1px solid rgba(255, 69, 0, 0.1);
-}
-.error-tips h3 {
-color: var(--primary);
-margin-bottom: 15px;
-font-size: 1.2em;
-display: flex;
-align-items: center;
-gap: 10px;
-}
-.error-tips ul {
-list-style: none;
-padding-left: 0;
-}
-.error-tips li {
-margin-bottom: 12px;
-color: var(--text-dim);
-display: flex;
-align-items: flex-start;
-}
-.error-tips li i {
-color: var(--primary);
-margin-right: 10px;
-min-width: 20px;
-margin-top: 2px;
-}
-.footer-note {
-margin-top: 40px;
-color: #555;
-font-size: 0.9em;
-padding-top: 20px;
-border-top: 1px solid #222;
-width: 100%;
-max-width: 600px;
-}
-.current-url {
-background: rgba(255, 69, 0, 0.1);
-padding: 10px 15px;
-border-radius: 6px;
-margin: 20px 0;
-word-break: break-all;
-font-family: monospace;
-color: #FFA500;
-}
-@media (max-width: 768px) {
-.error-code {
-font-size: 6em;
-}
-.error-title {
-font-size: 1.6em;
-}
-.error-actions {
-flex-direction: column;
-align-items: center;
-}
-.error-btn {
-width: 100%;
-max-width: 300px;
-justify-content: center;
-}
-.error-tips {
-padding: 20px;
-}
-}
-@media (max-width: 480px) {
-.error-code {
-font-size: 4em;
-}
-.error-title {
-font-size: 1.3em;
-}
-.main-logo {
-max-width: 200px;
-}
-}
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex, follow">
+    <title>Error 404</title>
+    <meta name="description" content="La página que buscas no existe en FoxWeb">
+    <link rel="icon" href="/assets/foxweb/icon.png" type="image/png">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        :root {
+            --primary: #FF4500;
+            --primary-hover: #CC3700;
+            --bg-body: #0c0c0c;
+            --bg-card: #161616;
+            --text-main: #E0E0E0;
+            --text-dim: #999;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-body);
+            color: var(--text-main);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .error-container {
+            max-width: 600px;
+            width: 100%;
+        }
+
+        .logo-container {
+            margin-bottom: 30px;
+        }
+
+        .main-logo {
+            max-width: 250px;
+            filter: drop-shadow(0 0 10px rgba(255, 69, 0, 0.2));
+        }
+
+        .error-code {
+            font-size: 8em;
+            font-weight: 800;
+            color: var(--primary);
+            margin-bottom: 10px;
+            line-height: 1;
+        }
+
+        .error-title {
+            font-size: 2em;
+            color: var(--text-main);
+            margin-bottom: 20px;
+        }
+
+        .error-message {
+            color: var(--text-dim);
+            font-size: 1.1em;
+            margin-bottom: 40px;
+            line-height: 1.6;
+            padding: 0 20px;
+        }
+
+        .error-actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            justify-content: center;
+            margin-bottom: 40px;
+        }
+
+        .error-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            background: var(--primary);
+            color: white;
+            padding: 14px 28px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1em;
+            border: none;
+            cursor: pointer;
+        }
+
+        .error-btn:hover {
+            background: var(--primary-hover);
+        }
+
+        .error-btn.secondary {
+            background: #333;
+            color: var(--text-main);
+        }
+
+        .error-btn.secondary:hover {
+            background: #444;
+        }
+
+        .error-tips {
+            background: rgba(255, 69, 0, 0.05);
+            border-radius: 10px;
+            padding: 25px;
+            margin-top: 30px;
+            text-align: left;
+            border: 1px solid rgba(255, 69, 0, 0.1);
+        }
+
+        .error-tips h3 {
+            color: var(--primary);
+            margin-bottom: 15px;
+            font-size: 1.2em;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .error-tips ul {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .error-tips li {
+            margin-bottom: 12px;
+            color: var(--text-dim);
+            display: flex;
+            align-items: flex-start;
+        }
+
+        .error-tips li i {
+            color: var(--primary);
+            margin-right: 10px;
+            min-width: 20px;
+            margin-top: 2px;
+        }
+
+        .footer-note {
+            margin-top: 40px;
+            color: #555;
+            font-size: 0.9em;
+            padding-top: 20px;
+            border-top: 1px solid #222;
+            width: 100%;
+            max-width: 600px;
+        }
+
+        .current-url {
+            background: rgba(255, 69, 0, 0.1);
+            padding: 10px 15px;
+            border-radius: 6px;
+            margin: 20px 0;
+            word-break: break-all;
+            font-family: monospace;
+            color: #FFA500;
+        }
+
+        @media (max-width: 768px) {
+            .error-code {
+                font-size: 6em;
+            }
+
+            .error-title {
+                font-size: 1.6em;
+            }
+
+            .error-actions {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .error-btn {
+                width: 100%;
+                max-width: 300px;
+                justify-content: center;
+            }
+
+            .error-tips {
+                padding: 20px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .error-code {
+                font-size: 4em;
+            }
+
+            .error-title {
+                font-size: 1.3em;
+            }
+
+            .main-logo {
+                max-width: 200px;
+            }
+        }
+    </style>
 </head>
+
 <body>
-<div class="error-container">
-<div class="logo-container">
-<img src="/assets/logo.png" alt="FoxWeb Logo" class="main-logo">
-</div>
-<div class="error-code">404</div>
-<h1 class="error-title">¡Ups! Página no encontrada</h1>
-<div class="current-url" id="currentUrl"></div>
-<p class="error-message">
-La página que estás buscando no existe en FoxWeb.<br>
-Puede que la URL sea incorrecta o que la página haya sido movida.
-</p>
-<div class="error-actions">
-<a href="/" class="error-btn">
-<i class="fa-solid fa-house"></i>
-Ir al Inicio
-</a>
-<a href="javascript:history.back()" class="error-btn secondary">
-<i class="fa-solid fa-arrow-left"></i>
-Volver Atrás
-</a>
-<a href="https://github.com/foxorange224/foxorange224.github.io/issues" class="error-btn secondary" target="_blank">
-<i class="fa-solid fa-flag"></i>
-Reportar Problema
-</a>
-</div>
-<div class="error-tips">
-<h3><i class="fa-solid fa-lightbulb"></i> ¿Qué puedes hacer?</h3>
-<ul>
-<li><i class="fa-solid fa-check"></i> Verifica que la URL sea correcta</li>
-<li><i class="fa-solid fa-magnifying-glass"></i> Usa el buscador en la página principal</li>
-<li><i class="fa-solid fa-folder"></i> Revisa las categorías en la barra superior</li>
-<li><i class="fa-solid fa-flag"></i> Si crees que es un error, usa el botón "Reportar Problema"</li>
-</ul>
-</div>
-<div class="footer-note">
-<p>© Copyright 2026 FoxOrange224 | FoxWeb</p>
-</div>
-</div>
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-const currentUrl = window.location.href;
-const urlElement = document.getElementById('currentUrl');
-if (currentUrl && !currentUrl.endsWith('/404.html') && currentUrl !== window.location.origin + '/') {
-urlElement.innerHTML = `<i class="fa-solid fa-link"></i> URL: ${currentUrl}`;
-urlElement.style.display = 'block';
-} else {
-urlElement.style.display = 'none';
-}
-});
-</script>
+    <div class="error-container">
+        <div class="logo-container">
+            <img src="/assets/logo.png" alt="FoxWeb Logo" class="main-logo">
+        </div>
+        <div class="error-code">404</div>
+        <h1 class="error-title">¡Ups! Página no encontrada</h1>
+        <div class="current-url" id="currentUrl"></div>
+        <p class="error-message">
+            La página que estás buscando no existe en FoxWeb.<br>
+            Puede que la URL sea incorrecta o que la página haya sido movida.
+        </p>
+        <div class="error-actions">
+            <a href="/" class="error-btn">
+                <i class="fa-solid fa-house"></i>
+                Ir al Inicio
+            </a>
+            <a href="javascript:history.back()" class="error-btn secondary">
+                <i class="fa-solid fa-arrow-left"></i>
+                Volver Atrás
+            </a>
+            <a href="https://github.com/foxorange224/foxorange224.github.io/issues" class="error-btn secondary"
+                target="_blank">
+                <i class="fa-solid fa-flag"></i>
+                Reportar Problema
+            </a>
+        </div>
+        <div class="error-tips">
+            <h3><i class="fa-solid fa-lightbulb"></i> ¿Qué puedes hacer?</h3>
+            <ul>
+                <li><i class="fa-solid fa-check"></i> Verifica que la URL sea correcta</li>
+                <li><i class="fa-solid fa-magnifying-glass"></i> Usa el buscador en la página principal</li>
+                <li><i class="fa-solid fa-folder"></i> Revisa las categorías en la barra superior</li>
+                <li><i class="fa-solid fa-flag"></i> Si crees que es un error, usa el botón "Reportar Problema"</li>
+            </ul>
+        </div>
+        <div class="footer-note">
+            <p>© Copyright 2026 FoxOrange224 | FoxWeb</p>
+        </div>
+    </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const currentUrl = window.location.href;
+            const urlElement = document.getElementById('currentUrl');
+            if (currentUrl && !currentUrl.endsWith('/404.html') && currentUrl !== window.location.origin + '/') {
+                urlElement.innerHTML = `<i class="fa-solid fa-link"></i> URL: ${currentUrl}`;
+                urlElement.style.display = 'block';
+            } else {
+                urlElement.style.display = 'none';
+            }
+        });
+    </script>
 </body>
+
 </html>
