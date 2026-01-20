@@ -2,7 +2,7 @@
 
 <div align="center">
 
-![FoxWeb Logo](/assets/icon.png)
+![FoxWeb Logo](/assets/foxweb/icon.png)
 
 ## FoxWeb - Centro de Descargas Confiable
 
