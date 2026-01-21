@@ -389,6 +389,14 @@ badges: ["USB","MULTI-ISO","HERRAMIENTA"]
 ],
 juegos: [
 {
+name: "Litecraft 1.18",
+icon: "fa-solid fa-cube",
+info: "Esta es una modificacion de OptiCraft Bedrock 1.18.31 para agregarle mayor contenido y mejorar el rendimiento.",
+enlace: "https://www.mediafire.com/file/9ith69mi5mlsd84",
+modal: null,
+badges: ["TOMEX & OPTI","BEDROCK","OPTICRAFT"]
+},
+{
 name: "Hollow Knight Silksong",
 icon: "fa-solid fa-gamepad",
 info: "Hollow Knight: Silksong es un videojuego metroidvania desarrollado por el estudio independiente australiano Team Cherry.",
@@ -536,6 +544,14 @@ badges: ["DRIVERS","WINDOWS XP","COMPATIBILIDAD"]
 }
 ],
 apks: [
+{
+name: "Litecraft PE 1.18.32",
+icon: "fa-solid fa-cube",
+info: "Esta es una modificacion de OptiCraft Bedrock 1.18.31 para agregarle mayor contenido y mejorar el rendimiento.",
+enlace: "https://www.mediafire.com/file/364tionsjyudyfj",
+modal: null,
+badges: ["TOMEX & OPTI","BEDROCK","OPTICRAFT"]
+},
 {
 name: "Minecraft Bedrock 1.21.130",
 icon: "fa-solid fa-cube",
