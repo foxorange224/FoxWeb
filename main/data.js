@@ -318,7 +318,7 @@ badges: ["WINDOWS 10","64 BITS","OPTIMIZADO"]
 name: "Debian 13",
 icon: "fa-brands fa-linux",
 info: "Instalador por red de la versión estable de Debian para PCs de 64 bits. Sistema Linux robusto y confiable.",
-enlace: "https://cdimage.debian.org/debian-cd/current/amd64/iso-cd/debian-13.2.0-amd64-netinst.iso",
+enlace: "https://cdimage.debian.org/debian-cd/current/amd64/iso-cd/",
 modal: null,
 badges: ["LINUX","ESTABLE","OFICIAL"]
 },
