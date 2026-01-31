@@ -561,6 +561,14 @@ modal: null,
 badges: ["JUEGO","SANDBOX","OFICIAL"]
 },
 {
+name: "PojavLauncher (Java)",
+icon: "fa-solid fa-cube",
+info: "PojavLauncher es una aplicación de código abierto que permite jugar Minecraft: Java Edition en dispositivos móviles Android",
+enlace: "https://github.com/PojavLauncherTeam/PojavLauncher/releases",
+modal: null,
+badges: ["LAUNCHER","MINECRAFT","GITHUB"]
+},
+{
 name: "Geometry Dash 2.207",
 icon: "fa-solid fa-gear",
 info: "Versión modificada con Geode Mod Loader. Salta y vuela al ritmo de la música en este desafío de plataformas y ritmo.",
