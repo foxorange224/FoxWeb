@@ -1,5 +1,6 @@
 <!doctype html>
 <html lang="es" data-theme="dark">
+
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
@@ -9,7 +10,7 @@
     <link rel="canonical" href="https://foxweb.pages.dev/blog" />
     <link rel=icon type=image/png href=/assets/favicon-96x96.png sizes=96x96>
     <link rel=icon type=image/svg+xml href=/assets/favicon.svg>
-    <link rel="shortcut icon" href=/assets/favicon.ico>   
+    <link rel="shortcut icon" href=/assets/favicon.ico>
 
     <style>
         /* RESET DE ANIMACIONES Y AJUSTES FIJOS */
@@ -68,12 +69,14 @@
         .main-container {
             display: flex;
             flex-direction: column;
-            align-items: flex-start; /* Alineación izquierda absoluta */
+            align-items: flex-start;
+            /* Alineación izquierda absoluta */
             padding: 110px 5% 60px 5%;
         }
 
         .blog-content-area {
-            max-width: 800px; /* Ancho de lectura normal */
+            max-width: 800px;
+            /* Ancho de lectura normal */
             width: 100%;
         }
 
@@ -136,6 +139,7 @@
         }
     </style>
 </head>
+
 <body>
 
     <header class="header-blog">
@@ -147,6 +151,10 @@
             </div>
             <div class="nav-links-blog">
                 <a href="/main/">Inicio</a>
+                <button id="theme-toggle"
+                    style="background: none; border: 1px solid var(--border); color: var(--text-main); cursor: pointer; padding: 5px 10px; border-radius: 5px; margin-left: 15px;">
+                    <i class="fa-solid fa-moon" id="theme-icon"></i>
+                </button>
             </div>
         </nav>
     </header>
@@ -154,60 +162,94 @@
     <main class="main-container">
 
         <div class="blog-content-area">
-    <h1 style="color: var(--primary); font-size: 2rem; margin-bottom: 20px;">Índice de Artículos</h1>
-    <p style="color: var(--text-dim); margin: 5px 0 20px 0;">Este es toda la lista de todos los blogs de la pagina.</p>
-    <ul id="blog-index" style="list-style: none; padding: 0; border-top: 1px solid var(--border);">
-        </ul>
-</div>
+            <h1 style="color: var(--primary); font-size: 2rem; margin-bottom: 20px;">Índice de Artículos</h1>
+            <p style="color: var(--text-dim); margin: 5px 0 20px 0;">Este es toda la lista de todos los blogs de la
+                pagina.</p>
+            <ul id="blog-index" style="list-style: none; padding: 0; border-top: 1px solid var(--border);">
+            </ul>
+        </div>
 
-<script>
-    fetch('posts.json')
-        .then(response => response.json())
-        .then(posts => {
-            const lista = document.getElementById('blog-index');
-            
-            posts.forEach(post => {
-                const item = document.createElement('li');
-                
-                // Estilos para que parezca una lista de archivos limpia
-                item.style.borderBottom = "1px solid var(--border)";
-                item.style.padding = "15px 10px";
-                item.style.display = "flex";
-                item.style.alignItems = "center";
-                
-                // Icono + Enlace
-                item.innerHTML = `
+        <script>
+            fetch('posts.json')
+                .then(response => response.json())
+                .then(posts => {
+                    const lista = document.getElementById('blog-index');
+
+                    posts.forEach(post => {
+                        const item = document.createElement('li');
+
+                        // Estilos para que parezca una lista de archivos limpia
+                        item.style.borderBottom = "1px solid var(--border)";
+                        item.style.padding = "15px 10px";
+                        item.style.display = "flex";
+                        item.style.alignItems = "center";
+
+                        // Icono + Enlace
+                        item.innerHTML = `
                     <i class="fa-solid fa-file-lines" style="color: var(--text-dim); margin-right: 15px;"></i>
                     <a href="${post.url}" style="color: var(--text-main); text-decoration: none; font-size: 1.1rem; flex-grow: 1;">
                         ${post.title}
                     </a>
                     <i class="fa-solid fa-angle-right" style="color: var(--primary); font-size: 0.8rem;"></i>
                 `;
-                
-                // Efecto Hover simple con JS
-                item.onmouseover = () => { item.style.backgroundColor = "rgba(255,255,255,0.05)"; };
-                item.onmouseout = () => { item.style.backgroundColor = "transparent"; };
 
-                lista.appendChild(item);
+                        // Efecto Hover simple con JS
+                        item.onmouseover = () => { item.style.backgroundColor = "rgba(255,255,255,0.05)"; };
+                        item.onmouseout = () => { item.style.backgroundColor = "transparent"; };
+
+                        lista.appendChild(item);
+                    });
+                })
+                .catch(err => console.error('Error cargando índice:', err));
+        </script>
+        <script>
+            // Funcionalidad básica de cambio de tema
+            const themeToggle = document.getElementById('themeToggle');
+            const savedTheme = localStorage.getItem('foxweb_theme') || 'dark';
+
+            // Establecer tema inicial
+            document.documentElement.setAttribute('data-theme', savedTheme);
+
+            // Actualizar iconos del toggle
+            function updateThemeIcons() {
+                const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+                const icons = themeToggle.querySelectorAll('i');
+                icons[0].style.display = isDark ? 'none' : 'block';
+                icons[1].style.display = isDark ? 'block' : 'none';
+            }
+
+            // Inicializar iconos
+            updateThemeIcons();
+
+            // Alternar tema al hacer clic
+            themeToggle.addEventListener('click', function () {
+                const currentTheme = document.documentElement.getAttribute('data-theme');
+                const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+
+                document.documentElement.setAttribute('data-theme', newTheme);
+                localStorage.setItem('foxweb_theme', newTheme);
+                updateThemeIcons();
             });
-        })
-        .catch(err => console.error('Error cargando índice:', err));
-</script>
+        </script>
 
         <footer class="footer-blog">
             <strong style="color: var(--text-main); font-size: 0.9rem;">ENLACES RÁPIDOS</strong>
             <ul class="quick-links">
                 <li><a href="/main/"><i class="fa-solid fa-house"></i> Inicio</a></li>
                 <li><a href="/main/#Juegos"><i class="fa-solid fa-gamepad"></i> Juegos</a></li>
-                <li><a href="https://www.youtube.com/@FoxOrange224"><i class="fa-brands fa-youtube"></i> YouTube</a></li>
-                <li><a href="https://github.com/foxorange224/FoxWeb/issues"><i class="fa-brands fa-github"></i> Soporte</a></li>
+                <li><a href="https://www.youtube.com/@FoxOrange224"><i class="fa-brands fa-youtube"></i> YouTube</a>
+                </li>
+                <li><a href="https://github.com/foxorange224/FoxWeb/issues"><i class="fa-brands fa-github"></i>
+                        Soporte</a></li>
             </ul>
             <div class="copyright">
-                © 2025 - 2026 FoxWeb | Todos los derechos reservados. Los logos y marcas son propiedad de sus respectivos dueños.
+                © 2025 - 2026 FoxWeb | Todos los derechos reservados. Los logos y marcas son propiedad de sus
+                respectivos dueños.
             </div>
         </footer>
 
     </main>
 
 </body>
+
 </html>

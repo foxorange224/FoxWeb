@@ -1,5 +1,6 @@
 <!doctype html>
 <html lang="es" data-theme="dark">
+
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
@@ -9,7 +10,7 @@
     <link rel="canonical" href="https://foxweb.pages.dev/blog/como-es-linux" />
     <link rel=icon type=image/png href=/assets/favicon-96x96.png sizes=96x96>
     <link rel=icon type=image/svg+xml href=/assets/favicon.svg>
-    <link rel="shortcut icon" href=/assets/favicon.ico>  
+    <link rel="shortcut icon" href=/assets/favicon.ico>
     <style>
         /* RESET DE ANIMACIONES Y AJUSTES FIJOS */
         * {
@@ -67,12 +68,14 @@
         .main-container {
             display: flex;
             flex-direction: column;
-            align-items: flex-start; /* Alineación izquierda absoluta */
+            align-items: flex-start;
+            /* Alineación izquierda absoluta */
             padding: 110px 5% 60px 5%;
         }
 
         .blog-content-area {
-            max-width: 800px; /* Ancho de lectura normal */
+            max-width: 800px;
+            /* Ancho de lectura normal */
             width: 100%;
         }
 
@@ -96,7 +99,8 @@
             margin-top: 20px;
         }
 
-        .post-card p, .post-card ul li {
+        .post-card p,
+        .post-card ul li {
             color: var(--text-secondary);
             line-height: 1.6;
             margin-bottom: 15px;
@@ -107,14 +111,17 @@
         }
 
         .post-img {
-            width: 30%; /* Ajustado un poco para mejor visualización */
+            width: 30%;
+            /* Ajustado un poco para mejor visualización */
             border-radius: var(--radius-sm);
             margin: 15px 0;
             border: 1px solid var(--border);
             display: block;
         }
+
         .post-img2 {
-            width: 60%; /* Ajustado un poco para mejor visualización */
+            width: 60%;
+            /* Ajustado un poco para mejor visualización */
             border-radius: var(--radius-sm);
             margin: 15px 0;
             border: 1px solid var(--border);
@@ -129,7 +136,8 @@
             border: 1px solid var(--border);
         }
 
-        .comparison-table th, .comparison-table td {
+        .comparison-table th,
+        .comparison-table td {
             border: 1px solid var(--border);
             padding: 12px 15px;
             text-align: left;
@@ -142,7 +150,7 @@
         }
 
         .comparison-table tr:nth-child(even) {
-            background-color: rgba(255,255,255,0.03);
+            background-color: rgba(255, 255, 255, 0.03);
         }
 
         /* Código de terminal */
@@ -227,6 +235,7 @@
         }
     </style>
 </head>
+
 <body>
 
     <header class="header-blog">
@@ -239,6 +248,10 @@
             <div class="nav-links-blog">
                 <a href="/main/">Inicio</a>
                 <a href="/blog/" class="active">Blog</a>
+                <button id="theme-toggle"
+                    style="background: none; border: 1px solid var(--border); color: var(--text-main); cursor: pointer; padding: 5px 10px; border-radius: 5px; margin-left: 15px;">
+                    <i class="fa-solid fa-moon" id="theme-icon"></i>
+                </button>
             </div>
         </nav>
     </header>
@@ -247,7 +260,8 @@
 
         <div class="blog-content-area">
             <h1 style="color: var(--primary); font-size: 2.5rem; margin: 0;">Linux: El Sistema que Mueve al Mundo</h1>
-            <p style="color: var(--text-dim); margin: 5px 0 20px 0;">Publicado el 31 de Enero, 2026 | Por El Equipo de FoxWeb</p>
+            <p style="color: var(--text-dim); margin: 5px 0 20px 0;">Publicado el 31 de Enero, 2026 | Por El Equipo de
+                FoxWeb</p>
 
             <!-- Índice del contenido -->
             <div class="content-index">
@@ -268,21 +282,31 @@
             <article id="que-es-linux" class="post-card">
                 <h2>¿Qué es realmente Linux?</h2>
                 <p>
-                    Linux es mucho más que un sistema operativo alternativo. Técnicamente, <strong>Linux es solo el Kernel</strong> (el núcleo) - el software que gestiona los recursos del hardware y permite que otros programas se ejecuten. Sin embargo, cuando la gente habla de "Linux", generalmente se refiere a un sistema operativo completo basado en este kernel.
+                    Linux es mucho más que un sistema operativo alternativo. Técnicamente, <strong>Linux es solo el
+                        Kernel</strong> (el núcleo) - el software que gestiona los recursos del hardware y permite que
+                    otros programas se ejecuten. Sin embargo, cuando la gente habla de "Linux", generalmente se refiere
+                    a un sistema operativo completo basado en este kernel.
                 </p>
                 <p>
-                    El proyecto Linux fue iniciado en 1991 por <strong>Linus Torvalds</strong>, entonces un estudiante finlandés de 21 años. Lo que empezó como un hobby se convirtió en uno de los proyectos colaborativos más grandes y exitosos de la historia de la informática.
+                    El proyecto Linux fue iniciado en 1991 por <strong>Linus Torvalds</strong>, entonces un estudiante
+                    finlandés de 21 años. Lo que empezó como un hobby se convirtió en uno de los proyectos colaborativos
+                    más grandes y exitosos de la historia de la informática.
                 </p>
                 <p>
-                    La filosofía central de Linux es la libertad: libertad para usar, estudiar, modificar y distribuir el software. Esto es posible gracias a su licencia <strong>GPL (Licencia Pública General)</strong>, que garantiza estas libertades a todos los usuarios.
+                    La filosofía central de Linux es la libertad: libertad para usar, estudiar, modificar y distribuir
+                    el software. Esto es posible gracias a su licencia <strong>GPL (Licencia Pública General)</strong>,
+                    que garantiza estas libertades a todos los usuarios.
                 </p>
-                <img src="https://cdn-icons-png.flaticon.com/512/6124/6124995.png" alt="Linux Tux Logo" class="post-img">
+                <img src="https://cdn-icons-png.flaticon.com/512/6124/6124995.png" alt="Linux Tux Logo"
+                    class="post-img">
             </article>
 
             <article id="historia" class="post-card">
                 <h2>Breve historia de Linux</h2>
                 <p>
-                    La historia de Linux comienza con <strong>GNU</strong>, un proyecto iniciado por Richard Stallman en 1983 para crear un sistema operativo completamente libre. Cuando Torvalds lanzó el kernel Linux en 1991, combinado con las herramientas GNU, nació el primer sistema operativo libre completo.
+                    La historia de Linux comienza con <strong>GNU</strong>, un proyecto iniciado por Richard Stallman en
+                    1983 para crear un sistema operativo completamente libre. Cuando Torvalds lanzó el kernel Linux en
+                    1991, combinado con las herramientas GNU, nació el primer sistema operativo libre completo.
                 </p>
 
                 <h3>Hitos importantes:</h3>
@@ -300,7 +324,9 @@
             <article id="distros" class="post-card">
                 <h2>Las "Distros": Un sabor para cada uno</h2>
                 <p>
-                    La magia de Linux está en su diversidad. Las <strong>Distribuciones (Distros)</strong> son versiones completas del sistema operativo que incluyen el kernel Linux, herramientas GNU y software adicional. Cada una tiene su propia personalidad y objetivos.
+                    La magia de Linux está en su diversidad. Las <strong>Distribuciones (Distros)</strong> son versiones
+                    completas del sistema operativo que incluyen el kernel Linux, herramientas GNU y software adicional.
+                    Cada una tiene su propia personalidad y objetivos.
                 </p>
 
                 <h3>🐧 Para Principiantes</h3>
@@ -308,7 +334,8 @@
                     <li><strong>Ubuntu:</strong> La distribución más popular, con excelente soporte y comunidad</li>
                     <li><strong>Linux Mint:</strong> Basada en Ubuntu, enfocada en simplicidad y elegancia</li>
                     <li><strong>Zorin OS:</strong> Diseñada específicamente para usuarios que vienen de Windows</li>
-                    <li><strong>Pop!_OS:</strong> Orientada a desarrolladores y creativos, con herramientas especiales</li>
+                    <li><strong>Pop!_OS:</strong> Orientada a desarrolladores y creativos, con herramientas especiales
+                    </li>
                 </ul>
 
                 <h3>⚙️ Para Usuarios Avanzados</h3>
@@ -316,12 +343,14 @@
                     <li><strong>Arch Linux:</strong> Sistema rolling-release donde tú construyes todo desde cero</li>
                     <li><strong>Fedora:</strong> Vanguardista, con las últimas tecnologías y muy estable</li>
                     <li><strong>Debian:</strong> La "distro madre" de muchas otras, famosa por su estabilidad</li>
-                    <li><strong>openSUSE:</strong> Potente herramienta de administración (YaST) y excelente para servidores</li>
+                    <li><strong>openSUSE:</strong> Potente herramienta de administración (YaST) y excelente para
+                        servidores</li>
                 </ul>
 
                 <h3>🚀 Para propósitos especiales</h3>
                 <ul>
-                    <li><strong>Kali Linux:</strong> Especializada en seguridad informática y pruebas de penetración</li>
+                    <li><strong>Kali Linux:</strong> Especializada en seguridad informática y pruebas de penetración
+                    </li>
                     <li><strong>Tails:</strong> Enfocada en privacidad y anonimato (se ejecuta desde USB)</li>
                     <li><strong>SteamOS:</strong> Optimizada para gaming en la plataforma Steam</li>
                 </ul>
@@ -334,7 +363,8 @@
             <article id="arquitectura" class="post-card">
                 <h2>Arquitectura del sistema Linux</h2>
                 <p>
-                    Linux sigue una arquitectura modular que permite una gran flexibilidad. Estas son las capas principales:
+                    Linux sigue una arquitectura modular que permite una gran flexibilidad. Estas son las capas
+                    principales:
                 </p>
 
                 <h3>1. Hardware</h3>
@@ -418,18 +448,19 @@
             <article id="terminal" class="post-card">
                 <h2>La terminal: Tu superpoder</h2>
                 <p>
-                    A diferencia de otros sistemas, en Linux la terminal no es algo aterrador, sino una herramienta poderosa que te da control total sobre tu sistema.
+                    A diferencia de otros sistemas, en Linux la terminal no es algo aterrador, sino una herramienta
+                    poderosa que te da control total sobre tu sistema.
                 </p>
 
                 <h3>Comandos esenciales para empezar:</h3>
 
                 <div class="terminal">
-                    <span class="prompt">$</span> pwd                 # Muestra tu ubicación actual<br>
-                    <span class="prompt">$</span> ls                  # Lista archivos y directorios<br>
+                    <span class="prompt">$</span> pwd # Muestra tu ubicación actual<br>
+                    <span class="prompt">$</span> ls # Lista archivos y directorios<br>
                     <span class="prompt">$</span> cd nombre_directorio # Cambia de directorio<br>
                     <span class="prompt">$</span> mkdir nuevo_directorio # Crea un directorio<br>
-                    <span class="prompt">$</span> cp archivo1 archivo2  # Copia archivos<br>
-                    <span class="prompt">$</span> sudo apt update     # Actualiza lista de paquetes (en Debian y Ubuntu)<br>
+                    <span class="prompt">$</span> cp archivo1 archivo2 # Copia archivos<br>
+                    <span class="prompt">$</span> sudo apt update # Actualiza lista de paquetes (en Debian y Ubuntu)<br>
                     <span class="prompt">$</span> sudo apt install programa # Instala un programa<br>
                 </div>
 
@@ -450,10 +481,12 @@
                 <p>Para principiantes recomendamos <strong>Ubuntu</strong> o <strong>Linux Mint</strong>.</p>
 
                 <h3>2. Crea un USB de instalación</h3>
-                <p>Necesitarás una memoria USB de al menos 4GB y el programa <strong>Rufus</strong> (Windows) o <strong>BalenaEtcher</strong> (multiplataforma).</p>
+                <p>Necesitarás una memoria USB de al menos 4GB y el programa <strong>Rufus</strong> (Windows) o
+                    <strong>BalenaEtcher</strong> (multiplataforma).</p>
 
                 <h3>3. Prueba sin instalar</h3>
-                <p>Arranca desde el USB y selecciona "Probar Ubuntu". Así puedes experimentar sin modificar tu equipo.</p>
+                <p>Arranca desde el USB y selecciona "Probar Ubuntu". Así puedes experimentar sin modificar tu equipo.
+                </p>
 
                 <h3>4. Instalación real</h3>
                 <p>El asistente de instalación guiará todo el proceso. Es seguro e intuitivo.</p>
@@ -470,16 +503,24 @@
                     Linux ya no es solo para expertos. Hoy es una alternativa viable para cualquier usuario:
                 </p>
                 <ul>
-                    <li><strong>Revive tu PC viejo:</strong> Con distribuciones ligeras como Xubuntu o Lubuntu, equipos de hace 10 años funcionan como nuevos.</li>
-                    <li><strong>Privacidad Total:</strong> Linux no te espía. No recopila tus datos para vender anuncios. Tú eres el dueño de tu máquina.</li>
-                    <li><strong>Personalización Extrema:</strong> Puedes cambiar absolutamente todo. Desde los iconos hasta cómo se comportan las ventanas.</li>
-                    <li><strong>Sin costo oculto:</strong> Es completamente gratis, sin suscripciones, sin versiones "premium" limitadas.</li>
-                    <li><strong>Gran seguridad:</strong> La arquitectura de permisos y el modelo de código abierto hacen que Linux sea extremadamente seguro.</li>
-                    <li><strong>Software libre de calidad:</strong> Alternativas gratuitas a programas de pago: LibreOffice (Office), GIMP (Photoshop), Inkscape (Illustrator).</li>
-                    <li><strong>Aprender habilidades valiosas:</strong> El conocimiento de Linux es muy valorado en el mundo laboral IT.</li>
+                    <li><strong>Revive tu PC viejo:</strong> Con distribuciones ligeras como Xubuntu o Lubuntu, equipos
+                        de hace 10 años funcionan como nuevos.</li>
+                    <li><strong>Privacidad Total:</strong> Linux no te espía. No recopila tus datos para vender
+                        anuncios. Tú eres el dueño de tu máquina.</li>
+                    <li><strong>Personalización Extrema:</strong> Puedes cambiar absolutamente todo. Desde los iconos
+                        hasta cómo se comportan las ventanas.</li>
+                    <li><strong>Sin costo oculto:</strong> Es completamente gratis, sin suscripciones, sin versiones
+                        "premium" limitadas.</li>
+                    <li><strong>Gran seguridad:</strong> La arquitectura de permisos y el modelo de código abierto hacen
+                        que Linux sea extremadamente seguro.</li>
+                    <li><strong>Software libre de calidad:</strong> Alternativas gratuitas a programas de pago:
+                        LibreOffice (Office), GIMP (Photoshop), Inkscape (Illustrator).</li>
+                    <li><strong>Aprender habilidades valiosas:</strong> El conocimiento de Linux es muy valorado en el
+                        mundo laboral IT.</li>
                 </ul>
                 <p>
-                    Si buscas libertad, seguridad, velocidad y control sobre tu computadora, Linux es el camino a seguir.
+                    Si buscas libertad, seguridad, velocidad y control sobre tu computadora, Linux es el camino a
+                    seguir.
                 </p>
             </article>
 
@@ -490,13 +531,16 @@
                 </p>
 
                 <h3>🌐 En todas partes</h3>
-                <p>Linux ya está en el 100% de supercomputadores, 96% de servidores web, 85% de smartphones (Android), y crece en el escritorio.</p>
+                <p>Linux ya está en el 100% de supercomputadores, 96% de servidores web, 85% de smartphones (Android), y
+                    crece en el escritorio.</p>
 
                 <h3>🎮 Gaming en Linux</h3>
-                <p>Con Proton (de Steam) y mejor soporte de controladores NVIDIA/AMD, jugar en Linux es cada vez mejor.</p>
+                <p>Con Proton (de Steam) y mejor soporte de controladores NVIDIA/AMD, jugar en Linux es cada vez mejor.
+                </p>
 
                 <h3>📱 Convergencia</h3>
-                <p>Proyectos como Ubuntu Touch y Plasma Mobile buscan unificar la experiencia entre escritorio y móvil.</p>
+                <p>Proyectos como Ubuntu Touch y Plasma Mobile buscan unificar la experiencia entre escritorio y móvil.
+                </p>
 
                 <h3>🤖 IoT y dispositivos embebidos</h3>
                 <p>Linux domina el mundo del Internet de las Cosas por su flexibilidad y bajo consumo de recursos.</p>
@@ -504,7 +548,8 @@
                 <h3>☁️ Nube y contenedores</h3>
                 <p>Docker, Kubernetes y la mayoría de la infraestructura cloud moderna corre sobre Linux.</p>
 
-                <p><strong>Conclusión:</strong> Linux no es solo el pasado y presente de la informática, sino también su futuro.</p>
+                <p><strong>Conclusión:</strong> Linux no es solo el pasado y presente de la informática, sino también su
+                    futuro.</p>
             </article>
         </div>
 
@@ -513,15 +558,47 @@
             <ul class="quick-links">
                 <li><a href="/main/"><i class="fa-solid fa-house"></i> Inicio</a></li>
                 <li><a href="/main/#Juegos"><i class="fa-solid fa-gamepad"></i> Juegos</a></li>
-                <li><a href="https://www.youtube.com/@FoxOrange224"><i class="fa-brands fa-youtube"></i> YouTube</a></li>
-                <li><a href="https://github.com/foxorange224/FoxWeb/issues"><i class="fa-brands fa-github"></i> Soporte</a></li>
+                <li><a href="https://www.youtube.com/@FoxOrange224"><i class="fa-brands fa-youtube"></i> YouTube</a>
+                </li>
+                <li><a href="https://github.com/foxorange224/FoxWeb/issues"><i class="fa-brands fa-github"></i>
+                        Soporte</a></li>
             </ul>
             <div class="copyright">
-                © 2025 - 2026 FoxWeb | Todos los derechos reservados. Los logos y marcas son propiedad de sus respectivos dueños.
+                © 2025 - 2026 FoxWeb | Todos los derechos reservados. Los logos y marcas son propiedad de sus
+                respectivos dueños.
             </div>
         </footer>
 
     </main>
+    <script>
+        // Funcionalidad básica de cambio de tema
+        const themeToggle = document.getElementById('themeToggle');
+        const savedTheme = localStorage.getItem('foxweb_theme') || 'dark';
 
+        // Establecer tema inicial
+        document.documentElement.setAttribute('data-theme', savedTheme);
+
+        // Actualizar iconos del toggle
+        function updateThemeIcons() {
+            const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+            const icons = themeToggle.querySelectorAll('i');
+            icons[0].style.display = isDark ? 'none' : 'block';
+            icons[1].style.display = isDark ? 'block' : 'none';
+        }
+
+        // Inicializar iconos
+        updateThemeIcons();
+
+        // Alternar tema al hacer clic
+        themeToggle.addEventListener('click', function () {
+            const currentTheme = document.documentElement.getAttribute('data-theme');
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+
+            document.documentElement.setAttribute('data-theme', newTheme);
+            localStorage.setItem('foxweb_theme', newTheme);
+            updateThemeIcons();
+        });
+    </script>
 </body>
+
 </html>
