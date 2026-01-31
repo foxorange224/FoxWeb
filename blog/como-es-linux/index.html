@@ -1,0 +1,518 @@
+<!doctype html>
+<html lang="es" data-theme="dark">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Linux: Guía Completa | Blog FoxWeb</title>
+    <link rel="stylesheet" href="/main/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="canonical" href="https://foxweb.pages.dev/blog/como-es-linux" />
+    <link rel=icon type=image/png href=/assets/favicon-96x96.png sizes=96x96>
+    <link rel=icon type=image/svg+xml href=/assets/favicon.svg>
+    <link rel="shortcut icon" href=/assets/favicon.ico>  
+    <style>
+        /* RESET DE ANIMACIONES Y AJUSTES FIJOS */
+        * {
+            transition: none !important;
+            animation: none !important;
+        }
+
+        body {
+            background-color: var(--bg-body);
+            margin: 0;
+            color: var(--text-main);
+        }
+
+        /* [PANEL DE ARRIBA] - Fino y Estático */
+        .header-blog {
+            position: fixed;
+            width: 100%;
+            top: 0;
+            background: var(--bg-header);
+            border-bottom: 1px solid var(--border);
+            z-index: 1000;
+            height: 75px;
+            display: flex;
+            align-items: center;
+        }
+
+        .nav-blog {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+            padding: 0 5%;
+        }
+
+        /* LOGO - Grande pero sin mover el panel */
+        .logo-img {
+            height: 60px;
+            width: auto;
+            display: block;
+        }
+
+        .nav-links-blog a {
+            color: var(--text-main);
+            text-decoration: none;
+            margin-left: 25px;
+            font-size: 0.95rem;
+        }
+
+        .nav-links-blog a.active {
+            color: var(--primary);
+            font-weight: bold;
+        }
+
+        /* [CENTRO: TODO A LA IZQUIERDA] */
+        .main-container {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start; /* Alineación izquierda absoluta */
+            padding: 110px 5% 60px 5%;
+        }
+
+        .blog-content-area {
+            max-width: 800px; /* Ancho de lectura normal */
+            width: 100%;
+        }
+
+        .post-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            padding: 25px;
+            margin-top: 20px;
+        }
+
+        .post-card h2 {
+            margin: 0 0 15px 0;
+            color: var(--text-main);
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 10px;
+        }
+
+        .post-card h3 {
+            color: var(--primary);
+            margin-top: 20px;
+        }
+
+        .post-card p, .post-card ul li {
+            color: var(--text-secondary);
+            line-height: 1.6;
+            margin-bottom: 15px;
+        }
+
+        .post-card ul {
+            padding-left: 20px;
+        }
+
+        .post-img {
+            width: 30%; /* Ajustado un poco para mejor visualización */
+            border-radius: var(--radius-sm);
+            margin: 15px 0;
+            border: 1px solid var(--border);
+            display: block;
+        }
+
+        /* Tabla de comparación */
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            border: 1px solid var(--border);
+        }
+
+        .comparison-table th, .comparison-table td {
+            border: 1px solid var(--border);
+            padding: 12px 15px;
+            text-align: left;
+        }
+
+        .comparison-table th {
+            background-color: var(--bg-header);
+            color: var(--primary);
+            font-weight: bold;
+        }
+
+        .comparison-table tr:nth-child(even) {
+            background-color: rgba(255,255,255,0.03);
+        }
+
+        /* Código de terminal */
+        .terminal {
+            background-color: #1a1a1a;
+            color: #00ff00;
+            font-family: 'Courier New', monospace;
+            padding: 15px;
+            border-radius: var(--radius-sm);
+            border-left: 4px solid var(--primary);
+            overflow-x: auto;
+            margin: 15px 0;
+        }
+
+        .terminal .prompt {
+            color: #4d9fff;
+        }
+
+        /* Índice del contenido */
+        .content-index {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            padding: 20px;
+            margin: 20px 0;
+        }
+
+        .content-index h3 {
+            margin-top: 0;
+        }
+
+        .content-index ul {
+            columns: 2;
+            column-gap: 30px;
+        }
+
+        .content-index li {
+            break-inside: avoid;
+            margin-bottom: 8px;
+        }
+
+        .content-index a {
+            color: var(--text-main);
+            text-decoration: none;
+        }
+
+        .content-index a:hover {
+            color: var(--primary);
+            text-decoration: underline;
+        }
+
+        /* [ABAJO: ENLACES RÁPIDOS] */
+        .footer-blog {
+            margin-top: 60px;
+            padding-top: 25px;
+            border-top: 1px solid var(--border);
+            width: 100%;
+        }
+
+        .quick-links {
+            display: flex;
+            gap: 25px;
+            flex-wrap: wrap;
+            list-style: none;
+            padding: 0;
+            margin: 15px 0;
+        }
+
+        .quick-links a {
+            color: var(--text-dim);
+            text-decoration: none;
+            font-size: 0.9rem;
+        }
+
+        .quick-links a:hover {
+            color: var(--primary);
+        }
+
+        .copyright {
+            color: var(--text-muted);
+            font-size: 0.75rem;
+        }
+    </style>
+</head>
+<body>
+
+    <header class="header-blog">
+        <nav class="nav-blog">
+            <div class="logo">
+                <a href="index.html">
+                    <img src="/assets/foxweb/logo.png" alt="FoxWeb Logo" class="logo-img">
+                </a>
+            </div>
+            <div class="nav-links-blog">
+                <a href="/main/">Inicio</a>
+                <a href="/blog/" class="active">Blog</a>
+            </div>
+        </nav>
+    </header>
+
+    <main class="main-container">
+
+        <div class="blog-content-area">
+            <h1 style="color: var(--primary); font-size: 2.5rem; margin: 0;">Linux: El Sistema que Mueve al Mundo</h1>
+            <p style="color: var(--text-dim); margin: 5px 0 20px 0;">Publicado el 31 de Enero, 2026 | Por El Equipo de FoxWeb</p>
+
+            <!-- Índice del contenido -->
+            <div class="content-index">
+                <h3>📚 Índice del contenido</h3>
+                <ul>
+                    <li><a href="#que-es-linux">1. ¿Qué es realmente Linux?</a></li>
+                    <li><a href="#historia">2. Breve historia de Linux</a></li>
+                    <li><a href="#distros">3. Las "Distros": Un sabor para cada uno</a></li>
+                    <li><a href="#arquitectura">4. Arquitectura del sistema Linux</a></li>
+                    <li><a href="#comparativa">5. Linux vs Windows vs macOS</a></li>
+                    <li><a href="#terminal">6. La terminal: Tu superpoder</a></li>
+                    <li><a href="#instalacion">7. Instalación paso a paso</a></li>
+                    <li><a href="#por-que-usarlo">8. ¿Por qué deberías usarlo?</a></li>
+                    <li><a href="#futuro">9. El futuro de Linux</a></li>
+                </ul>
+            </div>
+
+            <article id="que-es-linux" class="post-card">
+                <h2>¿Qué es realmente Linux?</h2>
+                <p>
+                    Linux es mucho más que un sistema operativo alternativo. Técnicamente, <strong>Linux es solo el Kernel</strong> (el núcleo) - el software que gestiona los recursos del hardware y permite que otros programas se ejecuten. Sin embargo, cuando la gente habla de "Linux", generalmente se refiere a un sistema operativo completo basado en este kernel.
+                </p>
+                <p>
+                    El proyecto Linux fue iniciado en 1991 por <strong>Linus Torvalds</strong>, entonces un estudiante finlandés de 21 años. Lo que empezó como un hobby se convirtió en uno de los proyectos colaborativos más grandes y exitosos de la historia de la informática.
+                </p>
+                <p>
+                    La filosofía central de Linux es la libertad: libertad para usar, estudiar, modificar y distribuir el software. Esto es posible gracias a su licencia <strong>GPL (Licencia Pública General)</strong>, que garantiza estas libertades a todos los usuarios.
+                </p>
+                <img src="https://cdn-icons-png.flaticon.com/512/6124/6124995.png" alt="Linux Tux Logo" class="post-img">
+            </article>
+
+            <article id="historia" class="post-card">
+                <h2>Breve historia de Linux</h2>
+                <p>
+                    La historia de Linux comienza con <strong>GNU</strong>, un proyecto iniciado por Richard Stallman en 1983 para crear un sistema operativo completamente libre. Cuando Torvalds lanzó el kernel Linux en 1991, combinado con las herramientas GNU, nació el primer sistema operativo libre completo.
+                </p>
+
+                <h3>Hitos importantes:</h3>
+                <ul>
+                    <li><strong>1991:</strong> Linus Torvalds anuncia Linux en un grupo de noticias</li>
+                    <li><strong>1992:</strong> Linux se licencia bajo GPL, garantizando su libertad</li>
+                    <li><strong>1993:</strong> Surge Slackware, la distribución más antigua aún activa</li>
+                    <li><strong>1996:</strong> Aparece KDE, el primer entorno de escritorio moderno</li>
+                    <li><strong>2004:</strong> Ubuntu lanza su primera versión, revolucionando la usabilidad</li>
+                    <li><strong>2007:</strong> Google anuncia Android, basado en el kernel Linux</li>
+                    <li><strong>2011:</strong> Linux domina el 91% de los supercomputadores del mundo</li>
+                </ul>
+            </article>
+
+            <article id="distros" class="post-card">
+                <h2>Las "Distros": Un sabor para cada uno</h2>
+                <p>
+                    La magia de Linux está en su diversidad. Las <strong>Distribuciones (Distros)</strong> son versiones completas del sistema operativo que incluyen el kernel Linux, herramientas GNU y software adicional. Cada una tiene su propia personalidad y objetivos.
+                </p>
+
+                <h3>🐧 Para Principiantes</h3>
+                <ul>
+                    <li><strong>Ubuntu:</strong> La distribución más popular, con excelente soporte y comunidad</li>
+                    <li><strong>Linux Mint:</strong> Basada en Ubuntu, enfocada en simplicidad y elegancia</li>
+                    <li><strong>Zorin OS:</strong> Diseñada específicamente para usuarios que vienen de Windows</li>
+                    <li><strong>Pop!_OS:</strong> Orientada a desarrolladores y creativos, con herramientas especiales</li>
+                </ul>
+
+                <h3>⚙️ Para Usuarios Avanzados</h3>
+                <ul>
+                    <li><strong>Arch Linux:</strong> Sistema rolling-release donde tú construyes todo desde cero</li>
+                    <li><strong>Fedora:</strong> Vanguardista, con las últimas tecnologías y muy estable</li>
+                    <li><strong>Debian:</strong> La "distro madre" de muchas otras, famosa por su estabilidad</li>
+                    <li><strong>openSUSE:</strong> Potente herramienta de administración (YaST) y excelente para servidores</li>
+                </ul>
+
+                <h3>🚀 Para propósitos especiales</h3>
+                <ul>
+                    <li><strong>Kali Linux:</strong> Especializada en seguridad informática y pruebas de penetración</li>
+                    <li><strong>Tails:</strong> Enfocada en privacidad y anonimato (se ejecuta desde USB)</li>
+                    <li><strong>SteamOS:</strong> Optimizada para gaming en la plataforma Steam</li>
+                </ul>
+
+                <img src="https://cdn-icons-png.flaticon.com/512/9849/9849397.png" alt="Desktop Environment" class="post-img">
+            </article>
+
+            <article id="arquitectura" class="post-card">
+                <h2>Arquitectura del sistema Linux</h2>
+                <p>
+                    Linux sigue una arquitectura modular que permite una gran flexibilidad. Estas son las capas principales:
+                </p>
+
+                <h3>1. Hardware</h3>
+                <p>El equipo físico: procesador, memoria, discos, etc.</p>
+
+                <h3>2. Kernel (Núcleo)</h3>
+                <p>Gestiona el hardware, la memoria, procesos y seguridad. Es el "cerebro" del sistema.</p>
+
+                <h3>3. Shell</h3>
+                <p>La interfaz de línea de comandos que permite interactuar con el sistema (Bash, Zsh, Fish).</p>
+
+                <h3>4. Sistema de Archivos</h3>
+                <p>Estructura jerárquica que organiza los datos (ext4, Btrfs, XFS, etc.).</p>
+
+                <h3>5. Entorno de Escritorio</h3>
+                <p>La interfaz gráfica (GNOME, KDE Plasma, XFCE, etc.).</p>
+
+                <h3>6. Aplicaciones</h3>
+                <p>Software que usamos diariamente: navegadores, editores, reproductores, etc.</p>
+            </article>
+
+            <article id="comparativa" class="post-card">
+                <h2>Linux vs Windows vs macOS</h2>
+
+                <table class="comparison-table">
+                    <thead>
+                        <tr>
+                            <th>Característica</th>
+                            <th>Linux</th>
+                            <th>Windows</th>
+                            <th>macOS</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Costo</td>
+                            <td>Gratuito</td>
+                            <td>De pago</td>
+                            <td>Solo con hardware Apple</td>
+                        </tr>
+                        <tr>
+                            <td>Seguridad</td>
+                            <td>Excelente (pocos virus)</td>
+                            <td>Buena (requiere antivirus)</td>
+                            <td>Muy buena</td>
+                        </tr>
+                        <tr>
+                            <td>Personalización</td>
+                            <td>Total (cambia todo)</td>
+                            <td>Limitada</td>
+                            <td>Limitada</td>
+                        </tr>
+                        <tr>
+                            <td>Estabilidad</td>
+                            <td>Excelente (pocos reinicios)</td>
+                            <td>Media (requiere reinicios)</td>
+                            <td>Buena</td>
+                        </tr>
+                        <tr>
+                            <td>Compatibilidad de software</td>
+                            <td>Buena (alternativas libres)</td>
+                            <td>Excelente</td>
+                            <td>Buena</td>
+                        </tr>
+                        <tr>
+                            <td>Soporte de hardware</td>
+                            <td>Muy bueno</td>
+                            <td>Excelente</td>
+                            <td>Solo hardware Apple</td>
+                        </tr>
+                        <tr>
+                            <td>Comunidad</td>
+                            <td>Enorme y activa</td>
+                            <td>Grande</td>
+                            <td>Grande</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </article>
+
+            <article id="terminal" class="post-card">
+                <h2>La terminal: Tu superpoder</h2>
+                <p>
+                    A diferencia de otros sistemas, en Linux la terminal no es algo aterrador, sino una herramienta poderosa que te da control total sobre tu sistema.
+                </p>
+
+                <h3>Comandos esenciales para empezar:</h3>
+
+                <div class="terminal">
+                    <span class="prompt">$</span> pwd                 # Muestra tu ubicación actual<br>
+                    <span class="prompt">$</span> ls                  # Lista archivos y directorios<br>
+                    <span class="prompt">$</span> cd nombre_directorio # Cambia de directorio<br>
+                    <span class="prompt">$</span> mkdir nuevo_directorio # Crea un directorio<br>
+                    <span class="prompt">$</span> cp archivo1 archivo2  # Copia archivos<br>
+                    <span class="prompt">$</span> sudo apt update     # Actualiza lista de paquetes (Ubuntu)<br>
+                    <span class="prompt">$</span> sudo apt install programa # Instala un programa<br>
+                </div>
+
+                <h3>Ventajas de usar la terminal:</h3>
+                <ul>
+                    <li><strong>Automatización:</strong> Puedes crear scripts para tareas repetitivas</li>
+                    <li><strong>Eficiencia:</strong> Muchas tareas son más rápidas por terminal</li>
+                    <li><strong>Control remoto:</strong> Administra servidores desde cualquier lugar</li>
+                    <li><strong>Resolución de problemas:</strong> Información detallada de errores</li>
+                </ul>
+            </article>
+
+            <article id="instalacion" class="post-card">
+                <h2>Instalación paso a paso</h2>
+                <p>Instalar Linux hoy es tan fácil como instalar Windows o macOS. Te guiamos paso a paso:</p>
+
+                <h3>1. Elige tu distribución</h3>
+                <p>Para principiantes recomendamos <strong>Ubuntu</strong> o <strong>Linux Mint</strong>.</p>
+
+                <h3>2. Crea un USB de instalación</h3>
+                <p>Necesitarás una memoria USB de al menos 4GB y el programa <strong>Rufus</strong> (Windows) o <strong>BalenaEtcher</strong> (multiplataforma).</p>
+
+                <h3>3. Prueba sin instalar</h3>
+                <p>Arranca desde el USB y selecciona "Probar Ubuntu". Así puedes experimentar sin modificar tu equipo.</p>
+
+                <h3>4. Instalación real</h3>
+                <p>El asistente de instalación guiará todo el proceso. Es seguro e intuitivo.</p>
+
+                <h3>5. Instalación dual (recomendado)</h3>
+                <p>Puedes mantener Windows y Linux en el mismo equipo, eligiendo cuál arrancar al inicio.</p>
+
+                <p><strong>Consejo:</strong> Haz una copia de seguridad de tus datos importantes antes de empezar.</p>
+            </article>
+
+            <article id="por-que-usarlo" class="post-card">
+                <h2>¿Por qué deberías usarlo?</h2>
+                <p>
+                    Linux ya no es solo para expertos. Hoy es una alternativa viable para cualquier usuario:
+                </p>
+                <ul>
+                    <li><strong>Revive tu PC viejo:</strong> Con distribuciones ligeras como Xubuntu o Lubuntu, equipos de hace 10 años funcionan como nuevos.</li>
+                    <li><strong>Privacidad Total:</strong> Linux no te espía. No recopila tus datos para vender anuncios. Tú eres el dueño de tu máquina.</li>
+                    <li><strong>Personalización Extrema:</strong> Puedes cambiar absolutamente todo. Desde los iconos hasta cómo se comportan las ventanas.</li>
+                    <li><strong>Sin costo oculto:</strong> Es completamente gratis, sin suscripciones, sin versiones "premium" limitadas.</li>
+                    <li><strong>Gran seguridad:</strong> La arquitectura de permisos y el modelo de código abierto hacen que Linux sea extremadamente seguro.</li>
+                    <li><strong>Software libre de calidad:</strong> Alternativas gratuitas a programas de pago: LibreOffice (Office), GIMP (Photoshop), Inkscape (Illustrator).</li>
+                    <li><strong>Aprender habilidades valiosas:</strong> El conocimiento de Linux es muy valorado en el mundo laboral IT.</li>
+                </ul>
+                <p>
+                    Si buscas libertad, seguridad, velocidad y control sobre tu computadora, Linux es el camino a seguir.
+                </p>
+            </article>
+
+            <article id="futuro" class="post-card">
+                <h2>El futuro de Linux</h2>
+                <p>
+                    Linux continúa creciendo y evolucionando. Estas son algunas tendencias para el futuro:
+                </p>
+
+                <h3>🌐 En todas partes</h3>
+                <p>Linux ya está en el 100% de supercomputadores, 96% de servidores web, 85% de smartphones (Android), y crece en el escritorio.</p>
+
+                <h3>🎮 Gaming en Linux</h3>
+                <p>Con Proton (de Steam) y mejor soporte de controladores NVIDIA/AMD, jugar en Linux es cada vez mejor.</p>
+
+                <h3>📱 Convergencia</h3>
+                <p>Proyectos como Ubuntu Touch y Plasma Mobile buscan unificar la experiencia entre escritorio y móvil.</p>
+
+                <h3>🤖 IoT y dispositivos embebidos</h3>
+                <p>Linux domina el mundo del Internet de las Cosas por su flexibilidad y bajo consumo de recursos.</p>
+
+                <h3>☁️ Nube y contenedores</h3>
+                <p>Docker, Kubernetes y la mayoría de la infraestructura cloud moderna corre sobre Linux.</p>
+
+                <p><strong>Conclusión:</strong> Linux no es solo el pasado y presente de la informática, sino también su futuro.</p>
+            </article>
+        </div>
+
+        <footer class="footer-blog">
+            <strong style="color: var(--text-main); font-size: 0.9rem;">ENLACES RÁPIDOS</strong>
+            <ul class="quick-links">
+                <li><a href="/main/"><i class="fa-solid fa-house"></i> Inicio</a></li>
+                <li><a href="/main/#Juegos"><i class="fa-solid fa-gamepad"></i> Juegos</a></li>
+                <li><a href="https://www.youtube.com/@FoxOrange224"><i class="fa-brands fa-youtube"></i> YouTube</a></li>
+                <li><a href="https://github.com/foxorange224/FoxWeb/issues"><i class="fa-brands fa-github"></i> Soporte</a></li>
+            </ul>
+            <div class="copyright">
+                © 2025 - 2026 FoxWeb | Todos los derechos reservados. Los logos y marcas son propiedad de sus respectivos dueños.
+            </div>
+        </footer>
+
+    </main>
+
+</body>
+</html>
