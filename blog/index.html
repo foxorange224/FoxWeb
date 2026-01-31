@@ -1,5 +1,193 @@
-<title>blog</title>
-<h1>Este es el directorio de los blogs</h1>
-<p>Para ir a un blog en especifico escribe:
-    https://foxweb.pages.dev/blog/(Nombre del blog)
-</p>
+<!doctype html>
+<html lang="es" data-theme="dark">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Blog | FoxWeb</title>
+    <link rel="stylesheet" href="/main/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="canonical" href="https://foxweb.pages.dev/blog" />
+    <link rel=icon type=image/png href=/assets/favicon-96x96.png sizes=96x96>
+    <link rel=icon type=image/svg+xml href=/assets/favicon.svg>
+    <link rel="shortcut icon" href=/assets/favicon.ico>   
+
+    <style>
+        /* RESET DE ANIMACIONES Y AJUSTES FIJOS */
+        * {
+            transition: none !important;
+            animation: none !important;
+        }
+
+        body {
+            background-color: var(--bg-body);
+            margin: 0;
+            color: var(--text-main);
+        }
+
+        /* [PANEL DE ARRIBA] - Fino y Estático */
+        .header-blog {
+            position: fixed;
+            width: 100%;
+            top: 0;
+            background: var(--bg-header);
+            border-bottom: 1px solid var(--border);
+            z-index: 1000;
+            height: 75px;
+            display: flex;
+            align-items: center;
+        }
+
+        .nav-blog {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+            padding: 0 5%;
+        }
+
+        /* LOGO - Grande pero sin mover el panel */
+        .logo-img {
+            height: 60px;
+            width: auto;
+            display: block;
+        }
+
+        .nav-links-blog a {
+            color: var(--text-main);
+            text-decoration: none;
+            margin-left: 25px;
+            font-size: 0.95rem;
+        }
+
+        .nav-links-blog a.active {
+            color: var(--primary);
+            font-weight: bold;
+        }
+
+        /* [CENTRO: TODO A LA IZQUIERDA] */
+        .main-container {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start; /* Alineación izquierda absoluta */
+            padding: 110px 5% 60px 5%;
+        }
+
+        .blog-content-area {
+            max-width: 800px; /* Ancho de lectura normal */
+            width: 100%;
+        }
+
+        .post-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            padding: 25px;
+            margin-top: 20px;
+        }
+
+        .post-card h2 {
+            margin: 0 0 15px 0;
+            color: var(--text-main);
+        }
+
+        .post-card p {
+            color: var(--text-secondary);
+            line-height: 1.6;
+            margin-bottom: 15px;
+        }
+
+        .post-img {
+            width: 50%;
+            border-radius: var(--radius-sm);
+            margin: 10px 0;
+            border: 1px solid var(--border);
+        }
+
+        /* [ABAJO: ENLACES RÁPIDOS] */
+        .footer-blog {
+            margin-top: 60px;
+            padding-top: 25px;
+            border-top: 1px solid var(--border);
+            width: 100%;
+        }
+
+        .quick-links {
+            display: flex;
+            gap: 25px;
+            flex-wrap: wrap;
+            list-style: none;
+            padding: 0;
+            margin: 15px 0;
+        }
+
+        .quick-links a {
+            color: var(--text-dim);
+            text-decoration: none;
+            font-size: 0.9rem;
+        }
+
+        .quick-links a:hover {
+            color: var(--primary);
+        }
+
+        .copyright {
+            color: var(--text-muted);
+            font-size: 0.75rem;
+        }
+    </style>
+</head>
+<body>
+
+    <header class="header-blog">
+        <nav class="nav-blog">
+            <div class="logo">
+                <a href="index.html">
+                    <img src="/assets/foxweb/logo.png" alt="FoxWeb Logo" class="logo-img">
+                </a>
+            </div>
+            <div class="nav-links-blog">
+                <a href="/main/">Inicio</a>
+                <a href="/blog/" class="active">Blog</a>
+            </div>
+        </nav>
+    </header>
+
+    <main class="main-container">
+
+        <div class="blog-content-area">
+            <h1 style="color: var(--primary); font-size: 2.5rem; margin: 0;">¡Bienvenido a los Blogs!</h1>
+            <p style="color: var(--text-dim); margin: 5px 0 20px 0;">Publicado el 31 de Enero, 2026</p>
+
+            <article class="post-card">
+                <h2>Estas viendo como se ve un blog</h2>
+                <p>
+                    Este es el texto del blog. No tiene animaciones, ni efectos de carga, ni movimientos al pasar el ratón.
+                    Es una estructura sólida pegada a la izquierda para una lectura rápida.
+                </p>
+
+                <img src="https://cdn-icons-png.flaticon.com/512/5360/5360938.png" alt="Post Image" class="post-img">
+
+                <p>
+                    Puedes añadir tantos párrafos como necesites. El ancho está limitado a 800px para que las líneas
+                    de texto no sean infinitas en pantallas panorámicas, pero el bloque siempre nace desde la izquierda.
+                </p>
+            </article>
+        </div>
+
+        <footer class="footer-blog">
+            <strong style="color: var(--text-main); font-size: 0.9rem;">ENLACES RÁPIDOS</strong>
+            <ul class="quick-links">
+                <li><a href="/main/"><i class="fa-solid fa-house"></i> Inicio</a></li>
+                <li><a href="/main/#Juegos"><i class="fa-solid fa-gamepad"></i> Juegos</a></li>
+                <li><a href="https://www.youtube.com/@FoxOrange224"><i class="fa-brands fa-youtube"></i> YouTube</a></li>
+                <li><a href="https://github.com/foxorange224/FoxWeb/issues"><i class="fa-brands fa-github"></i> Soporte</a></li>
+            </ul>
+            <div class="copyright">
+                © 2025 - 2026 FoxWeb | Todos los derechos reservados. Los logos y marcas son propiedad de sus respectivos dueños.
+            </div>
+        </footer>
+
+    </main>
+
+</body>
+</html>
