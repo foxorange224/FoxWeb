@@ -21,7 +21,7 @@
     <meta property="og:title" content="FoxWeb | Descargas Gratis de Software y Juegos Seguros">
     <meta property="og:description"
         content="Descarga software, Linux optimizado, juegos retro y APKs seguras. Más de 50 programas verificados sin malware. Contraseña: foxorange224">
-    <meta property="og:url" content="https://foxweb.pages.dev/main">
+    <meta property="og:url" content="https://foxweb.pages.dev/main/">
     <meta property="og:type" content="website">
     <meta property="og:image" content="https://foxweb.pages.dev/assets/foxweb/logo.png">
     <meta property="og:image:alt" content="Logo FoxWeb - Centro de descargas gratis y seguras">
@@ -155,12 +155,12 @@
     <meta name="bingbot" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
 
     <!-- Canonical URL -->
-    <link rel="canonical" href="https://foxweb.pages.dev/main">
+    <link rel="canonical" href="https://foxweb.pages.dev/main/">
 
     <!-- Alternate languages -->
-    <link rel="alternate" hreflang="es" href="https://foxweb.pages.dev/main">
-    <link rel="alternate" hreflang="es-ES" href="https://foxweb.pages.dev/main">
-    <link rel="alternate" hreflang="x-default" href="https://foxweb.pages.dev/main">
+    <link rel="alternate" hreflang="es" href="https://foxweb.pages.dev/main/">
+    <link rel="alternate" hreflang="es-ES" href="https://foxweb.pages.dev/main/">
+    <link rel="alternate" hreflang="x-default" href="https://foxweb.pages.dev/main/">
 
     <!-- Favicons optimizados -->
     <link rel="icon" type="image/png" href="/assets/favicon-96x96.png" sizes="96x96">
@@ -199,6 +199,12 @@
 
     <!-- Estilos -->
     <link rel="stylesheet" href="style.css">
+    <style>
+        a.active {
+            color: var(--primary);
+
+        }
+    </style>
 
     <!-- Google Ads -->
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9082337258272819"
@@ -249,19 +255,21 @@
     <header class="main-header" role="banner">
         <div class="header-content">
             <div class="logo-container">
-                <img src="/assets/foxweb/icon.png" alt="FoxWeb - Logo del centro de descargas gratis" class="main-logo"
-                    width="50" height="50" loading="lazy" itemprop="logo">
+                <a href="/"><img src="/assets/foxweb/logo.png" alt="FoxWeb - Logo del centro de descargas" width="140"
+                        height="60" loading="lazy" itemprop="logo"></a>
                 <div class="logo-text">
-                    <h1>Fox<span>Web</span></h1>
-                    <p>Centro de descargas confiable</p>
+                    <a href="/" title="Una mini guia para que no te sientas perdido."><i
+                            class="fa-solid fa-house-chimney"></i> Bienvenida</a>
+                </div>
+                <div class="logo-text">
+                    <a href="/main/" class="active"><i class="fa-solid fa-box"></i> Software</a>
+                </div>
+                <div class="logo-text">
+                    <a href="/blog/" title="Aqui hay algunos blogs de tutoriales en texto."><i
+                            class="fa-solid fa-blog"></i> Árticulos</a>
                 </div>
             </div>
             <div class="header-actions">
-                <a href="/blog" class="btn-discord" rel="noopener noreferrer" aria-label="Blog de FoxWeb con tutoriales"
-                    title="Blog">
-                    <i class="fa-solid fa-blog" aria-hidden="true"></i>
-                    <span class="sr-only">Blog</span>
-                </a>
                 <a href="https://discord.gg/r9v67gFRcp" class="btn-discord" target="_blank"
                     rel="noopener noreferrer nofollow" aria-label="Unirse al servidor de Discord de FoxWeb"
                     title="Discord FoxWeb">
@@ -425,9 +433,8 @@
                         aria-label="Donar al proyecto FoxWeb">
                         <i class="fa-solid fa-heart" aria-hidden="true"></i>Donar
                     </button>
-                    <a href="https://github.com/foxorange224/foxorange224.github.io/issues" target="_blank"
-                        class="quick-action-btn" aria-label="Reportar problema en GitHub de FoxWeb"
-                        rel="noopener noreferrer nofollow">
+                    <a href="https://github.com/foxorange224/FoxWeb/issues" target="_blank" class="quick-action-btn"
+                        aria-label="Reportar problema en GitHub de FoxWeb" rel="noopener noreferrer nofollow">
                         <i class="fa-solid fa-bug" aria-hidden="true"></i>Reportar problema
                     </a>
                 </div>
@@ -456,11 +463,6 @@
     <footer class="main-footer" role="contentinfo">
         <div class="footer-content">
             <div class="footer-section">
-                <div class="footer-logo">
-                    <img src="/assets/foxweb/icon.png" alt="FoxWeb Logo pequeño - Centro de descargas" width="30"
-                        height="30" loading="lazy">
-                    <h3>Fox<span>Web</span></h3>
-                </div>
                 <p class="footer-description">Centro de descargas confiable con software verificado y enlaces directos.
                     Todo el contenido es gratuito y seguro.</p>
                 <p class="footer-copyright">© Copyright 2026 FoxOrange224 | FoxWeb</p>
@@ -470,7 +472,7 @@
                 <h4>Enlaces Rápidos</h4>
                 <ul class="footer-links" role="list">
                     <li role="listitem">
-                        <a href="/about" class="footer-link">
+                        <a href="/about/" class="footer-link">
                             <i class="fa-solid fa-circle-info" aria-hidden="true"></i>Información del proyecto
                         </a>
                     </li>
@@ -480,9 +482,8 @@
                         </button>
                     </li>
                     <li role="listitem">
-                        <a href="https://github.com/foxorange224/foxorange224.github.io/issues" target="_blank"
-                            class="footer-link" rel="noopener noreferrer nofollow"
-                            aria-label="Reportar problema en GitHub">
+                        <a href="https://github.com/foxorange224/FoxWeb/issues" target="_blank" class="footer-link"
+                            rel="noopener noreferrer nofollow" aria-label="Reportar problema en GitHub">
                             <i class="fa-solid fa-bug" aria-hidden="true"></i>Reportar Problema
                         </a>
                     </li>

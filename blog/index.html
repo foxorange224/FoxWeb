@@ -14,6 +14,10 @@
     <link rel=icon type=image/png href=/assets/favicon-96x96.png sizes=96x96>
     <link rel=icon type=image/svg+xml href=/assets/favicon.svg>
     <link rel="shortcut icon" href=/assets/favicon.ico>
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
 
     <style>
         /* RESET DE ANIMACIONES Y AJUSTES FIJOS */
@@ -29,6 +33,11 @@
         }
 
         /* [PANEL DE ARRIBA] - Fino y Estático */
+        a.active {
+            color: var(--primary);
+
+        }
+
         .header-blog {
             position: fixed;
             width: 100%;
@@ -143,34 +152,45 @@
     </style>
 </head>
 
-<body>
-
-    <header class="header-blog">
-        <nav class="nav-blog">
-            <div class="logo">
-                <a href="/main/">
-                    <img src="/assets/foxweb/logo.png" alt="FoxWeb Logo" class="logo-img">
-                    <span class="sr-only">Ir a Pricipal</span>
-                </a>
+<body itemscope itemtype="https://schema.org/WebPage">
+    <header class="main-header" role="banner">
+        <div class="header-content">
+            <div class="logo-container">
+                <img src="/assets/foxweb/logo.png" alt="FoxWeb - Logo del centro de descargas" width="140" height="60"
+                    loading="lazy" itemprop="logo">
+                <div class="logo-text">
+                    <a href="/" title="Una mini guia para que no te sientas perdido."><i
+                            class="fa-solid fa-house-chimney"></i> Bienvenida</a>
+                </div>
+                <div class="logo-text">
+                    <a href="/main/" title="Aqui esta todo el contenido descagable de FoxWeb."><i
+                            class="fa-solid fa-box"></i> Software</a>
+                </div>
+                <div class="logo-text">
+                    <a href="/blog/" class="active"><i class="fa-solid fa-blog"></i> Árticulos</a>
+                </div>
             </div>
-            <div class="nav-links-blog">
-                <a href="https://discord.gg/r9v67gFRcp"
-                    style="background: none; border: 1px solid var(--border); color: var(--text-main); cursor: pointer; padding: 5px 10px; border-radius: 5px; margin-left: 15px;">
-                    <i class="fa-brands fa-discord"></i>
+            <div class="header-actions">
+                <a href="https://discord.gg/r9v67gFRcp" class="btn-discord" target="_blank"
+                    rel="noopener noreferrer nofollow" aria-label="Unirse al servidor de Discord de FoxWeb"
+                    title="Discord FoxWeb">
+                    <i class="fa-brands fa-discord" aria-hidden="true"></i>
+                    <span class="sr-only">Discord</span>
                 </a>
-                <a href="https://www.youtube.com/@FoxOrange224"
-                    style="background: none; border: 1px solid var(--border); color: var(--text-main); cursor: pointer; padding: 5px 10px; border-radius: 5px; margin-left: 15px;">
-                    <i class="fa-brands fa-youtube"></i>
+                <a href="https://www.youtube.com/@FoxOrange224" class="btn-youtube" target="_blank"
+                    rel="noopener noreferrer nofollow" aria-label="Visitar canal de YouTube de FoxOrange224"
+                    title="YouTube FoxWeb">
+                    <i class="fa-brands fa-youtube" aria-hidden="true"></i>
+                    <span class="sr-only">YouTube</span>
                 </a>
-                <button
-                    style="background: none; border: 1px solid var(--border); color: var(--text-main); cursor: pointer; padding: 5px 10px; border-radius: 5px; margin-left: 15px;"
-                    id="themeToggle" aria-label="Cambiar entre tema claro y oscuro" title="Cambiar tema">
+                <button class="btn-theme-toggle" id="themeToggle" aria-label="Cambiar entre tema claro y oscuro"
+                    title="Cambiar tema">
                     <i class="fa-solid fa-moon" aria-hidden="true"></i>
                     <i class="fa-solid fa-sun" aria-hidden="true"></i>
                     <span class="sr-only">Cambiar tema</span>
                 </button>
             </div>
-        </nav>
+        </div>
     </header>
 
     <main class="main-container">
