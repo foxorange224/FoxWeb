@@ -2,4 +2,4 @@ https://foxweb.pages.dev/
 https://foxweb.pages.dev/main/
 https://foxweb.pages.dev/blog/
 https://foxweb.pages.dev/about/
-https://foxweb.pages.dev/about/lincense/
+https://foxweb.pages.dev/about/license/
