@@ -2,4 +2,4 @@
   Content-Type: application/xml; charset=utf-8
   X-Robots-Tag: all
   Access-Control-Allow-Origin: *
-  Cache-Control: no-cache
+  Cache-Control: no-cache, no-store, must-revalidate
