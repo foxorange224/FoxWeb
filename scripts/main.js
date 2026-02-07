@@ -1,12 +1,34 @@
 const CONFIG = { appName: 'FoxWeb', version: '1.0.4', defaultTheme: 'dark', enableAnimations: false, cacheEnabled: true, maxRecentItems: 10, dbVersionKey: 'foxweb_db_version_1' }; const AppState = { currentTab: 'Programas', currentSearch: '', currentFilter: 'all', theme: CONFIG.defaultTheme, notifications: [], recentItems: [], favorites: new Set(), isLoading: true, isOffline: false, voiceSearchSupported: false, dbData: null, firstVisit: true, lastScrollTop: 0, searchActive: false, dbHash: null, lastUpdateCheck: null, isHashNavigation: true, previousHash: '', navigationLock: false }; window.addEventListener('error', function (e) { console.error('Error global capturado:', e.error); if (e.error && e.error.message && e.error.message.includes('FoxWebDB')) { showErrorScreen('Error crítico: No se pudo cargar la base de datos. Por favor, recarga la página.'); } }); window.addEventListener('unhandledrejection', function (e) { console.error('Promesa rechazada no manejada:', e.reason); showToast('Error inesperado en la aplicación', 'error'); }); document.addEventListener('DOMContentLoaded', function () {
-    console.log(`🚀 ${CONFIG.appName} v${CONFIG.version} inicializando...`); try {
+    console.log(`🚀 ${CONFIG.appName} v${CONFIG.version} inicializando...`);
+    try {
+        AppState.hasInitialHash = window.location.hash !== ''; // Determina si la URL tenía un hash al cargar
         checkFirstVisit(); checkBrowserFeatures(); initTheme(); initEventListeners(); loadAppState(); loadNotifications(); loadFavorites(); initUIComponents(); initAccessibility(); initScrollHideNav(); if (typeof FoxWebDB !== 'undefined') { AppState.dbData = FoxWebDB; initApp(); } else { loadDataScript(); }
         if (AppState.firstVisit) { setTimeout(() => { showToast('Bienvenido a FoxWeb', 'info'); localStorage.setItem('foxweb_first_visit', 'false'); AppState.firstVisit = false; }, 1000); }
         console.log('✅ DOM cargado correctamente');
-    } catch (error) { console.error('Error crítico en DOMContentLoaded:', error); showErrorScreen('Error crítico al cargar la aplicación. Por favor, recarga la página.'); }
+    } catch (error) {
+        console.error('Error crítico en DOMContentLoaded:', error);
+        showErrorScreen('Error crítico al cargar la aplicación. Por favor, recarga la página.');
+    }
 }); function checkFirstVisit() { const firstVisit = localStorage.getItem('foxweb_first_visit'); if (firstVisit === 'false') { AppState.firstVisit = false; } }
 function checkBrowserFeatures() { AppState.voiceSearchSupported = 'webkitSpeechRecognition' in window || 'SpeechRecognition' in window; AppState.isOffline = !navigator.onLine; if (AppState.isOffline) { showToast('Estás sin conexión. Algunas funciones pueden no estar disponibles.', 'warning'); } }
-function loadDataScript() { console.log('📦 Cargando data.js...'); const script = document.createElement('script'); script.src = 'data.js'; script.onload = function () { if (typeof FoxWebDB !== 'undefined') { AppState.dbData = FoxWebDB; initApp(); } else { showErrorScreen('No se pudo cargar la base de datos. Por favor, recarga la página.'); } }; script.onerror = function () { showErrorScreen('Error al cargar la Base de Datos. Por favor, recarga la página.'); }; document.head.appendChild(script); }
+function loadDataScript() {
+    console.log('📦 Cargando data.json...');
+    fetch('../database/data.json')
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            return response.json();
+        })
+        .then(data => {
+            AppState.dbData = data;
+            initApp();
+        })
+        .catch(error => {
+            console.error('Error al cargar o parsear data.json:', error);
+            showErrorScreen('Error al cargar la Base de Datos. Por favor, recarga la página.');
+        });
+}
 function initApp() {
     console.log('🎯 Inicializando aplicación...'); try {
         if (!AppState.dbData) { showErrorScreen('No se pudo cargar la base de datos. Por favor, recarga la página.'); return; }
@@ -48,7 +70,18 @@ function renderAllTabs() { if (!AppState.dbData) return; try { const tabs = [{ k
 function activateCurrentTab() {
     try {
         document.querySelectorAll('.tab-content').forEach(tab => { tab.classList.remove('active'); tab.setAttribute('aria-hidden', 'true'); }); const activeTab = document.getElementById(AppState.currentTab); if (activeTab) { activeTab.classList.add('active'); activeTab.setAttribute('aria-hidden', 'false'); }
-        document.querySelectorAll('.tablink').forEach(btn => { const tabName = btn.getAttribute('data-tab') || btn.textContent.trim() || btn.getAttribute('onclick')?.match(/'([^']+)'/)?.[1]; const isActive = tabName === AppState.currentTab; btn.classList.toggle('active', isActive); btn.setAttribute('aria-selected', isActive); }); updateHash(AppState.currentTab);
+        document.querySelectorAll('.tablink').forEach(btn => { const tabName = btn.getAttribute('data-tab') || btn.textContent.trim() || btn.getAttribute('onclick')?.match(/'([^']+)'/)?.[1]; const isActive = tabName === AppState.currentTab; btn.classList.toggle('active', isActive); btn.setAttribute('aria-selected', isActive); });
+        
+        updateHash(AppState.currentTab);
+
+        // Si la pestaña es 'Programas' y la página se cargó sin hash,
+        // nos aseguramos de que el hash se elimine de la URL.
+        if (AppState.currentTab === 'Programas' && !AppState.hasInitialHash) {
+            if (history.replaceState) {
+                const url = window.location.href.split('#')[0];
+                history.replaceState(null, null, url);
+            }
+        }
     } catch (error) { console.error('Error activando pestaña:', error); }
 }
 function updateHash(tabName) {
@@ -409,4 +442,4 @@ function closeErrorScreen() {
 function loadAppState() { try { const saved = localStorage.getItem('foxweb_state'); if (saved) { const state = JSON.parse(saved); AppState.currentSearch = state.currentSearch || ''; AppState.currentFilter = state.currentFilter || 'all'; AppState.theme = state.theme || CONFIG.defaultTheme; AppState.recentItems = state.recentItems || []; setTheme(AppState.theme); if (AppState.currentSearch) { const searchInput = document.getElementById('mainSearch'); if (searchInput) { searchInput.value = AppState.currentSearch; } } } } catch (error) { console.error('Error cargando estado:', error); } }
 function saveAppState() { try { const state = { currentTab: AppState.currentTab, currentSearch: AppState.currentSearch, currentFilter: AppState.currentFilter, theme: AppState.theme, recentItems: AppState.recentItems.slice(-CONFIG.maxRecentItems), lastSaved: new Date().toISOString() }; localStorage.setItem('foxweb_state', JSON.stringify(state)); } catch (error) { console.error('Error guardando estado:', error); } }
 function initContentCardsEvents() { }
-window.FoxWeb = { state: AppState, config: CONFIG, openTab, openModal, closeModal, toggleTheme, showToast, copyItemLink, toggleFavorite, findItemById, getItemType, showErrorScreen, closeErrorScreen, version: CONFIG.version }; console.log(`✅ FoxWeb v${CONFIG.version} listo con sistema de hash completo`); window.addEventListener('load', function () { if (!AppState.isLoading && AppState.dbData) { determineInitialTabFromHash(); activateCurrentTab(); } });
+window.FoxWeb = { state: AppState, config: CONFIG, openTab, openModal, closeModal, toggleTheme, showToast, copyItemLink, toggleFavorite, findItemById, getItemType, showErrorScreen, closeErrorScreen, version: CONFIG.version }; console.log(`✅ FoxWeb v${CONFIG.version} listo con sistema de hash completo`); window.addEventListener('load', function () { });

@@ -1,22 +1,13 @@
 <!DOCTYPE html>
 <html lang="es" data-theme="dark">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
-
-    <!-- Título optimizado - menos de 60 caracteres -->
     <title>FoxWeb | Descargas Gratis de Software, Linux, Juegos y APKs</title>
-
-    <!-- Meta descripción optimizada - menos de 160 caracteres -->
     <meta name="description"
         content="✅ Descarga software gratis en FoxWeb: Linux optimizado, juegos retro, APKs Android seguras. Más de 50 programas verificados sin virus. Enlaces directos.">
-
-    <!-- Keywords mejoradas -->
     <meta name="keywords"
         content="descargas gratis software, programas PC gratis, Linux optimizado, juegos retro, APKs Android seguras, herramientas Windows, descargas seguras, centro descargas, software libre, utilidades PC">
-
-    <!-- Open Graph optimizado -->
     <meta property="og:title" content="FoxWeb - Centro de Descargas Gratis y Seguras">
     <meta property="og:description"
         content="Descarga software, Linux, juegos y APKs verificadas. Todo gratis y sin virus.">
@@ -26,39 +17,25 @@
     <meta property="og:type" content="website">
     <meta property="og:site_name" content="FoxWeb">
     <meta property="og:locale" content="es_ES">
-
-    <!-- Twitter Card optimizado -->
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="FoxWeb - Descargas Gratis de Software">
     <meta name="twitter:description" content="Software, Linux, juegos retro y APKs verificadas. Descargas seguras.">
     <meta name="twitter:image" content="https://foxweb.pages.dev/assets/foxweb/icon.png">
-
-    <!-- Meta tags SEO -->
     <meta name="theme-color" content="#FF4500">
     <meta name="author" content="FoxOrange224">
     <meta name="robots" content="index, follow, max-image-preview:large">
     <meta name="googlebot" content="index, follow">
     <meta name="bingbot" content="index, follow">
-
-    <!-- Canonical optimizado -->
     <link rel="canonical" href="https://foxweb.pages.dev">
     <script async custom-element="amp-auto-ads" src="https://cdn.ampproject.org/v0/amp-auto-ads-0.1.js">
     </script>
-
-    <!-- Alternate hreflang simplificado -->
     <link rel="alternate" hreflang="es" href="https://foxweb.pages.dev">
     <link rel="alternate" hreflang="x-default" href="https://foxweb.pages.dev">
-
-    <!-- Favicon -->
     <link rel="icon" type="image/png" href="/assets/favicon-96x96.png" sizes="96x96">
     <link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
     <link rel="shortcut icon" href="/assets/favicon.ico">
     <link rel="apple-touch-icon" sizes="180x180" href="/assets/apple-touch-icon.png">
     <link rel="manifest" href="/site.webmanifest">
-    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9082337258272819"
-        crossorigin=anonymous>
-        </script>
-    <!-- Schema.org optimizado -->
     <script type="application/ld+json">
     {
         "@context": "https://schema.org",
@@ -88,18 +65,11 @@
         }
     }
     </script>
-
-    <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
-
-    <!-- Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-
-    <!-- Styles -->
-    <link rel="stylesheet" href="/main/style.css">
-
+    <link rel="stylesheet" href="/assets/css/main.css">
     <style>
         /* Estilos específicos para la página de bienvenida */
         a.active {
@@ -380,7 +350,6 @@
         }
     </style>
 </head>
-
 <body itemscope itemtype="https://schema.org/WebPage">
     <amp-auto-ads type="adsense" data-ad-client="ca-pub-9082337258272819">
     </amp-auto-ads>
@@ -406,20 +375,15 @@
                     rel="noopener noreferrer nofollow" aria-label="Unirse al servidor de Discord de FoxWeb"
                     title="Discord">
                     <i class="fa-brands fa-discord" aria-hidden="true"></i>
-                    <span class="sr-only">Discord</span>
                 </a>
                 <a href="https://www.youtube.com/@FoxOrange224" class="btn-youtube" target="_blank"
                     rel="noopener noreferrer nofollow" aria-label="Visitar canal de YouTube de FoxOrange224"
                     title="YouTube">
                     <i class="fa-brands fa-youtube" aria-hidden="true"></i>
-                    <span class="sr-only">YouTube</span>
                 </a>
-                <button class="btn-theme-toggle" id="themeToggle" aria-label="Cambiar entre tema claro y oscuro"
-                    title="Cambiar tema">
-                    <i class="fa-solid fa-moon" aria-hidden="true"></i>
-                    <i class="fa-solid fa-sun" aria-hidden="true"></i>
-                    <span class="sr-only">Cambiar tema</span>
-                </button>
+            <button class=btn-theme-toggle id=themeToggle aria-label="Cambiar entre tema claro y oscuro" title="Cambiar tema">
+            <i class="fa-solid fa-moon" aria-hidden=true></i><i class="fa-solid fa-sun" aria-hidden=true></i>
+            </button>
             </div>
         </div>
     </header>
@@ -441,8 +405,6 @@
                 Ir al sitio de descargas
             </a>
         </div>
-
-        <!-- Sección de enlaces internos para mejorar SEO -->
         <div class="internal-links">
             <h3>Explora Nuestras Categorías Principales</h3>
             <div class="internal-links-grid">
@@ -699,52 +661,7 @@
             </div>
         </div>
     </footer>
-
-    <script>
-        // Funcionalidad básica de cambio de tema
-        const themeToggle = document.getElementById('themeToggle');
-        const savedTheme = localStorage.getItem('foxweb_theme') || 'dark';
-
-        // Establecer tema inicial
-        document.documentElement.setAttribute('data-theme', savedTheme);
-
-        // Actualizar iconos del toggle
-        function updateThemeIcons() {
-            const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
-            const icons = themeToggle.querySelectorAll('i');
-            icons[0].style.display = isDark ? 'none' : 'block';
-            icons[1].style.display = isDark ? 'block' : 'none';
-        }
-
-        // Inicializar iconos
-        updateThemeIcons();
-
-        // Alternar tema al hacer clic
-        themeToggle.addEventListener('click', function () {
-            const currentTheme = document.documentElement.getAttribute('data-theme');
-            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
-
-            document.documentElement.setAttribute('data-theme', newTheme);
-            localStorage.setItem('foxweb_theme', newTheme);
-            updateThemeIcons();
-        });
-
-        // Para el problema de redirección www vs no-www
-        // Esto debería manejarse en el servidor, pero podemos agregar un check
-        if (window.location.hostname.startsWith('www.')) {
-            var newHostname = window.location.hostname.replace('www.', '');
-            window.location.href = window.location.protocol + '//' + newHostname + window.location.pathname + window.location.search;
-        }
-
-        // Añadir eventos de seguimiento para compartir en redes sociales
-        document.querySelectorAll('.share-button').forEach(button => {
-            button.addEventListener('click', function (e) {
-                const platform = this.querySelector('i').className.split(' ')[1].replace('fa-', '');
-                console.log(`Compartiendo en ${platform}`);
-                // Aquí podrías añadir Google Analytics o otro sistema de tracking
-            });
-        });
-    </script>
+<script src="/scripts/theme.js" defer></script>
+<script src="/scripts/main.js" defer></script>
 </body>
-
 </html>

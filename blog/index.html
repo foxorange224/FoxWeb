@@ -1,28 +1,23 @@
 <!doctype html>
 <html lang="es" data-theme="dark">
-<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9082337258272819"
-    crossorigin=anonymous>
-    </script>
-
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <title>Artículos | FoxWeb</title>
-    <link rel="stylesheet" href="/main/style.css">
-    <link rel="stylesheet" href="/blog/style.css">
-    <link rel="stylesheet" href="/blog/index.css">
+    <link rel="stylesheet" href="/assets/css/main.css">
+    <link rel="stylesheet" href="/assets/css/blog.css">
+    <link rel="stylesheet" href="/assets/css/index-blog.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="canonical" href="https://foxweb.pages.dev/blog" />
     <link rel=icon type=image/png href=/assets/favicon-96x96.png sizes=96x96>
     <link rel=icon type=image/svg+xml href=/assets/favicon.svg>
     <link rel="shortcut icon" href=/assets/favicon.ico>
-    <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
-
+    <script src="/scripts/main.js" defer></script>
+    <script src="/scripts/post.js" defer></script>
 </head>
-
 <body itemscope itemtype="https://schema.org/WebPage">
     <header class="main-header" role="banner">
         <div class="header-content">
@@ -83,117 +78,6 @@
             <ul id="blog-index" style="list-style: none; padding: 0; border-top: 1px solid var(--border);">
             </ul>
         </div>
-        <script>
-            fetch('posts.json')
-                .then(response => response.json())
-                .then(posts => {
-                    const lista = document.getElementById('blog-index');
-                    const buscador = document.getElementById('blogSearch');
-                    const btnBorrar = document.getElementById('clearSearch');
-
-                    // --- Función para dibujar la lista ---
-                    function renderPosts(filteredPosts) {
-                        lista.innerHTML = ''; // Limpiar lista antes de renderizar
-
-                        // Si no hay resultados, mostrar mensaje personalizado
-                        if (filteredPosts.length === 0) {
-                            lista.innerHTML = `
-                        <li style="padding: 40px 20px; color: var(--text-dim); text-align: center; border: none;">
-                            <i class="fa-solid fa-circle-xmark" style="display: block; font-size: 2.5rem; margin-bottom: 15px; color: var(--primary);"></i>
-                            <strong style="font-size: 1.1rem; display: block; margin-bottom: 5px;">No se encuentra ningun resultado</strong>
-                            <span style="font-size: 0.9rem; opacity: 0.7;">Intenta buscar otra cosa o revisa la ortografía.</span>
-                        </li>`;
-                            return;
-                        }
-
-                        // Dibujar cada post encontrado
-                        filteredPosts.forEach(post => {
-                            const item = document.createElement('li');
-
-                            // Estilos de la fila
-                            item.style.borderBottom = "1px solid var(--border)";
-                            item.style.padding = "15px 10px";
-                            item.style.display = "flex";
-                            item.style.alignItems = "center";
-                            item.style.transition = "background-color 0.2s ease"; // Un toque de suavidad
-
-                            item.innerHTML = `
-                        <i class="fa-solid fa-file-lines" style="color: var(--text-dim); margin-right: 15px;"></i>
-                        <a href="${post.url}" style="color: var(--text-main); text-decoration: none; font-size: 1.1rem; flex-grow: 1;">
-                            ${post.title}
-                        </a>
-                        <i class="fa-solid fa-angle-right" style="color: var(--primary); font-size: 0.8rem;"></i>
-                    `;
-
-                            // Efecto Hover
-                            item.onmouseover = () => { item.style.backgroundColor = "rgba(255,255,255,0.05)"; };
-                            item.onmouseout = () => { item.style.backgroundColor = "transparent"; };
-
-                            lista.appendChild(item);
-                        });
-                    }
-
-                    // --- Lógica del Buscador ---
-                    buscador.addEventListener('input', (e) => {
-                        const term = e.target.value.toLowerCase().trim();
-
-                        // Mostrar/Ocultar la X según si hay texto
-                        btnBorrar.style.display = term.length > 0 ? 'block' : 'none';
-
-                        const filtered = posts.filter(post =>
-                            post.title.toLowerCase().includes(term)
-                        );
-
-                        renderPosts(filtered);
-                    });
-
-                    // --- Lógica del Botón X (Borrar) ---
-                    btnBorrar.addEventListener('click', () => {
-                        buscador.value = '';             // Limpiar el texto
-                        btnBorrar.style.display = 'none';   // Ocultar la X
-                        renderPosts(posts);              // Mostrar todos los posts
-                        buscador.focus();                // Devolver el cursor al input
-                    });
-
-                    // --- Carga Inicial ---
-                    renderPosts(posts);
-                })
-                .catch(err => {
-                    console.error('Error cargando índice:', err);
-                    document.getElementById('blog-index').innerHTML =
-                        `<li style="padding: 20px; color: var(--primary);">Error al cargar los artículos.</li>`;
-                });
-        </script>
-        <script>
-            // Funcionalidad básica de cambio de tema
-            const themeToggle = document.getElementById('themeToggle');
-            const savedTheme = localStorage.getItem('foxweb_theme') || 'dark';
-
-            // Establecer tema inicial
-            document.documentElement.setAttribute('data-theme', savedTheme);
-
-            // Actualizar iconos del toggle
-            function updateThemeIcons() {
-                const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
-                const icons = themeToggle.querySelectorAll('i');
-                icons[0].style.display = isDark ? 'none' : 'block';
-                icons[1].style.display = isDark ? 'block' : 'none';
-            }
-
-            // Inicializar iconos
-            updateThemeIcons();
-
-            // Alternar tema al hacer clic
-            themeToggle.addEventListener('click', function () {
-                const currentTheme = document.documentElement.getAttribute('data-theme');
-                const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
-
-                document.documentElement.setAttribute('data-theme', newTheme);
-                localStorage.setItem('foxweb_theme', newTheme);
-                updateThemeIcons();
-            });
-        </script>
-
         <footer class="footer-blog">
             <strong style="color: var(--text-main); font-size: 0.9rem;">ENLACES RÁPIDOS</strong>
             <ul class="quick-links">
@@ -209,9 +93,6 @@
                 respectivos dueños.
             </div>
         </footer>
-
     </main>
-
 </body>
-
 </html>

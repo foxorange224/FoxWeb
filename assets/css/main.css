@@ -532,7 +532,6 @@ select:focus {
 }
 
 .empty-state,
-.loading-data,
 .no-results {
     text-align: center;
     padding: var(--space-xl);
@@ -540,7 +539,6 @@ select:focus {
 }
 
 .empty-state i,
-.loading-data i,
 .no-results i {
     font-size: 2rem;
     color: var(--text-dim);
@@ -549,7 +547,6 @@ select:focus {
 }
 
 .empty-state h3,
-.loading-data h3,
 .no-results h3 {
     font-size: 1rem;
     color: var(--text-main);
@@ -557,7 +554,6 @@ select:focus {
 }
 
 .empty-state p,
-.loading-data p,
 .no-results p {
     color: var(--text-dim);
     font-size: .8rem
@@ -1632,78 +1628,19 @@ select:focus {
     border-left-color: var(--info)
 }
 
-.loading-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: var(--bg-body);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 1040;
-    opacity: 1;
-    transition: opacity .3s ease
-}
 
-.loading-overlay.hidden {
-    opacity: 0;
-    pointer-events: none
-}
 
-.loader-container {
-    text-align: center
-}
 
-.fox-loader {
-    position: relative;
-    width: 60px;
-    height: 60px;
-    margin: 0 auto var(--space-md)
-}
 
-.fox-ear {
-    position: absolute;
-    top: 0;
-    width: 15px;
-    height: 15px;
-    background-color: var(--primary);
-    border-radius: 50%
-}
 
-.fox-ear:first-child {
-    left: 10px
-}
 
-.fox-ear:last-child {
-    right: 10px
-}
 
-.fox-face {
-    position: relative;
-    top: 20px;
-    left: 15px;
-    width: 30px;
-    height: 30px;
-    background-color: var(--primary);
-    border-radius: 50%
-}
 
-.fox-body {
-    position: absolute;
-    top: 45px;
-    left: 20px;
-    width: 20px;
-    height: 30px;
-    background-color: var(--primary-hover);
-    border-radius: 10px 10px 0 0
-}
 
-.loading-text {
-    color: var(--text-dim);
-    font-size: .85rem
-}
+
+
+
+
 
 .error-screen {
     position: fixed;
@@ -2044,4 +1981,8 @@ input[type=search]::-ms-clear {
 
 .modal .close {
     z-index: 1060 !important
+}
+a.active {
+    color: var(--primary);
+
 }
