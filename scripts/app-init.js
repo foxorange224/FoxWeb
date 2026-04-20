@@ -1,0 +1,401 @@
+/**
+ * FoxWeb App Init - Inicialización unificada
+ * Maneja: Theme, Service Worker, Lazy Loading, Prefetch
+ */
+
+(function() {
+  'use strict';
+
+  // ============================================
+  // 1. Theme Initialization (Unificado)
+  // ============================================
+  const ThemeManager = {
+    KEY: 'foxweb_theme',
+    DEFAULT: 'light',
+    retries: 0,
+    maxRetries: 10,
+    
+    init() {
+      const saved = localStorage.getItem(this.KEY);
+      const theme = saved || this.DEFAULT;
+      this.set(theme);
+      this.setupToggle();
+      this.watchForHeader();
+    },
+    
+    set(theme) {
+      document.documentElement.setAttribute('data-theme', theme);
+      localStorage.setItem(this.KEY, theme);
+      this.updateIcons(theme);
+    },
+    
+    updateIcons(theme) {
+      const btn = document.getElementById('themeToggle');
+      if (btn) {
+        const moon = btn.querySelector('.fa-moon');
+        const sun = btn.querySelector('.fa-sun');
+        
+        if (moon && sun) {
+          // Both icons exist - toggle display
+          moon.style.display = theme === 'dark' ? 'inline-block' : 'none';
+          sun.style.display = theme === 'dark' ? 'none' : 'inline-block';
+        } else if (moon || sun) {
+          // Only one icon - swap class
+          const icon = moon || sun;
+          icon.className = theme === 'dark' ? 'fas fa-moon' : 'fas fa-sun';
+        }
+      }
+      return false;
+    },
+    
+    updateIcon(theme) {
+      // Alias for backward compatibility
+      return this.updateIcons(theme);
+    },
+    
+    syncIcons() {
+      try {
+        const theme = document.documentElement.getAttribute('data-theme') || 'dark';
+        this.updateIcons(theme);
+      } catch (e) {
+        // Ignorar errores
+      }
+    },
+    
+    toggle() {
+      const current = document.documentElement.getAttribute('data-theme') || 'dark';
+      this.set(current === 'dark' ? 'light' : 'dark');
+    },
+    
+    setupToggle() {
+      const btn = document.getElementById('themeToggle');
+      if (btn && !btn._themeListener) {
+        btn._themeListener = true;
+        btn.addEventListener('click', () => this.toggle());
+      }
+    },
+    
+    watchForHeader() {
+      const checkHeader = () => {
+        this.retries++;
+        const btn = document.getElementById('themeToggle');
+        
+        if (!btn && this.retries < this.maxRetries) {
+          setTimeout(checkHeader, 100);
+          return;
+        }
+        
+        if (btn) {
+          this.setupToggle();
+          this.updateIcons(document.documentElement.getAttribute('data-theme') || 'dark');
+        }
+      };
+      
+      // Iniciar observación
+      setTimeout(checkHeader, 100);
+    }
+  };
+
+  // ============================================
+  // 2. Service Worker Registration
+  // ============================================
+  const ServiceWorkerManager = {
+    init() {
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', function() {
+          navigator.serviceWorker.register('/sw.js')
+            .then(function(reg) {
+              console.log('[App] Service Worker registrado:', reg.scope);
+              
+              // Escuchar actualizaciones
+              reg.addEventListener('updatefound', function() {
+                const newWorker = reg.installing;
+                newWorker.addEventListener('statechange', function() {
+                  if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+                    console.log('[App] Nueva versión disponible');
+                  }
+                });
+              });
+            })
+            .catch(function(err) {
+              console.error('[App] Error registering SW:', err);
+            });
+        });
+      }
+    }
+  };
+
+  // ============================================
+  // 3. Lazy Loading Images
+  // ============================================
+  const LazyLoader = {
+    init() {
+      if ('IntersectionObserver' in window) {
+        const observer = new IntersectionObserver(
+          (entries) => this.handleIntersection(entries),
+          {
+            rootMargin: '50px 0px',
+            threshold: 0.01
+          }
+        );
+
+        document.querySelectorAll('img[data-src]').forEach(function(img) {
+          observer.observe(img);
+        });
+      } else {
+        this.loadAll();
+      }
+    },
+
+    handleIntersection(entries) {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          this.loadImage(entry.target);
+          entry.target.__lazyObserver.unobserve(entry.target);
+        }
+      });
+    },
+
+    loadImage(img) {
+      const src = img.dataset.src;
+      if (!src) return;
+
+      img.src = src;
+      img.removeAttribute('data-src');
+      img.classList.add('lazy-loaded');
+      
+      img.dispatchEvent(new CustomEvent('lazyloaded', { detail: { src } }));
+    },
+
+    loadAll() {
+      document.querySelectorAll('img[data-src]').forEach((img) => {
+        this.loadImage(img);
+      });
+    }
+  };
+
+  // ============================================
+  // 4. Prefetch Manager
+  // ============================================
+  const PrefetchManager = {
+    PREFETCH_PAGES: ['/downloads', '/blog', '/about'],
+    
+    init() {
+      if (!('IntersectionObserver' in window)) return;
+      
+      const observer = new IntersectionObserver(
+        (entries) => this.handleIntersection(entries),
+        { rootMargin: '200px' }
+      );
+
+      document.querySelectorAll('a[data-prefetch]').forEach(function(link) {
+        observer.observe(link);
+      });
+
+      // Prefetch en hover
+      document.addEventListener('mouseover', function(e) {
+        const link = e.target.closest('a[data-prefetch]');
+        if (link) this.prefetch(link.href);
+      }.bind(this));
+
+      // Prefetch en touch
+      document.addEventListener('touchstart', function(e) {
+        const link = e.target.closest('a[data-prefetch]');
+        if (link) this.prefetch(link.href);
+      }.bind(this), { passive: true });
+    },
+
+    handleIntersection(entries) {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          const link = entry.target;
+          this.prefetch(link.href);
+          link.__prefetchObserver.unobserve(link);
+        }
+      });
+    },
+
+    prefetch(url) {
+      if (!url || document.querySelector('link[rel="prefetch"][href="' + url + '"]')) return;
+      
+      const link = document.createElement('link');
+      link.rel = 'prefetch';
+      link.href = url;
+      document.head.appendChild(link);
+    }
+  };
+
+  // ============================================
+  // 5. Navigation Preload
+  // ============================================
+  const NavigationPreload = {
+    init() {
+      if (navigator.serviceWorker && 'navigationPreload' in navigator.serviceWorker) {
+        navigator.serviceWorker.ready.then(function(reg) {
+          reg.navigationPreload.enable();
+        });
+      }
+    }
+  };
+
+  // ============================================
+  // 6. Resource Hints
+  // ============================================
+  const ResourceHints = {
+    init() {
+      const domains = [
+        'pagead2.googlesyndication.com',
+        'cdnjs.cloudflare.com',
+        'fonts.googleapis.com',
+        'fonts.gstatic.com'
+      ];
+
+      domains.forEach(function(domain) {
+        const link = document.createElement('link');
+        link.rel = 'dns-prefetch';
+        link.href = '//' + domain;
+        document.head.appendChild(link);
+      });
+
+      const preconnects = [
+        'https://pagead2.googlesyndication.com',
+        'https://cdnjs.cloudflare.com'
+      ];
+
+      preconnects.forEach(function(url) {
+        const link = document.createElement('link');
+        link.rel = 'preconnect';
+        link.href = url;
+        document.head.appendChild(link);
+      });
+
+      this.preloadCritical();
+    },
+
+    preloadCritical() {
+      const critical = [
+        { href: '/assets/css/main.css', as: 'style' }
+      ];
+
+      critical.forEach(function(item) {
+        const link = document.createElement('link');
+        link.rel = 'preload';
+        link.href = item.href;
+        link.as = item.as;
+        if (item.as === 'style') {
+          link.onload = function() { link.rel = 'stylesheet'; };
+        }
+        document.head.appendChild(link);
+      });
+    }
+  };
+
+  // ============================================
+  // Version Check - Clear cache on version change
+  // ============================================
+  const VersionManager = {
+    KEY: 'foxweb_version',
+    
+    async init() {
+      try {
+        const response = await fetch('/version.json');
+        const data = await response.json();
+        const newVersion = data.version;
+        const savedVersion = localStorage.getItem(this.KEY);
+        
+        if (savedVersion && savedVersion !== newVersion) {
+          console.log('[Version] Nueva versión detectada: ' + newVersion + ' (antes: ' + savedVersion + ')');
+          this.clearCache();
+          this.notifyUpdate(newVersion);
+        }
+        
+        localStorage.setItem(this.KEY, newVersion);
+      } catch (e) {
+        console.log('[Version] Error al verificar versión:', e);
+      }
+    },
+    
+    clearCache() {
+      console.log('[Version] Limpiando cache y datos...');
+      
+      const keysToRemove = [
+        'foxweb_favorites',
+        'foxweb_download_history',
+        'foxweb_stats',
+        'foxweb_notifications',
+        'foxweb_username',
+        'foxweb_tabs_visibility',
+        'foxweb_view_mode',
+        'foxweb_welcome_done'
+      ];
+      
+      keysToRemove.forEach(key => {
+        localStorage.removeItem(key);
+      });
+      
+      console.log('[Version] Datos limpiados');
+    },
+    
+    notifyUpdate(version) {
+      setTimeout(() => {
+        const message = 'FoxWeb se ha actualizado, reiniciando la app...';
+        
+        if (typeof showToast === 'function') {
+          showToast(message, 'success', 0);
+        } else {
+          alert(message);
+        }
+        
+        setTimeout(() => {
+          window.location.reload();
+        }, 2000);
+      }, 1000);
+    }
+  };
+
+  // ============================================
+  // Initialization
+  // ============================================
+  async function init() {
+    console.log('[App] Inicializando FoxWeb...');
+    
+    await VersionManager.init();
+    ThemeManager.init();
+    LazyLoader.init();
+    PrefetchManager.init();
+    ResourceHints.init();
+    NavigationPreload.init();
+    ServiceWorkerManager.init();
+    
+    console.log('[App] FoxWeb inicializado correctamente');
+  }
+
+  // Ejecutar cuando DOM esté listo
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', init);
+  } else {
+    init();
+  }
+
+  // Escuchar mensajes del Service Worker
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.addEventListener('message', (event) => {
+      if (event.data && event.data.type === 'RELOAD') {
+        console.log('[App] Recargando por actualización...');
+        location.reload();
+      }
+    });
+  }
+
+  // Exponer API global
+  window.FoxWeb = {
+    theme: ThemeManager,
+    lazy: LazyLoader,
+    prefetch: PrefetchManager
+  };
+  
+  // Exponer syncIcons para compatibilidad con código existente
+  window.syncIcons = function() {
+    ThemeManager.syncIcons();
+  };
+})();

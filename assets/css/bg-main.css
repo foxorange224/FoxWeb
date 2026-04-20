@@ -1,0 +1,15 @@
+body {
+    background-color: var(--bg-body);
+}
+
+/* Fondo en el área del hero - más espaciado y adaptable */
+.welcome-hero {
+    background-image: 
+        linear-gradient(var(--bg-overlay), var(--bg-overlay)),
+        url('/assets/background.webp');
+    background-size: cover;
+    background-position: center center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    padding: 80px 20px;
+}
