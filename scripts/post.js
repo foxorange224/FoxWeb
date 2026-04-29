@@ -280,7 +280,7 @@ async function initCMS() {
         // Render inicial
         render(posts, '');
         
-        console.log(`CMS: ${posts.length} artículos cargados`);
+        console.debug(`CMS: ${posts.length} artículos cargados`);
         
     } catch (error) {
         console.error('CMS Error:', error);

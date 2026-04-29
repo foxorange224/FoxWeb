@@ -11,6 +11,7 @@
     <meta name="keywords"
         content="descargas gratis software,programas PC gratuitos,Linux optimizado descargar,juegos retro PC,APKs Android seguras,Windows modificado,utilidades Windows,sistemas operativos ligeros,software libre,descargas seguras sin virus,FoxWeb centro descargas,FoxOrange224,optimización PC,drivers actualizados,juegos clásicos">
     <meta name="theme-color" content="#FF4500">
+    
     <meta name="author" content="FoxOrange224">
     <meta name="publisher" content="FoxOrange224">
     <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
@@ -60,27 +61,28 @@
     <meta name="msapplication-TileImage" content="/assets/icon.webp">
     <meta name="msapplication-config" content="browserconfig.xml">
     <meta http-equiv="x-ua-compatible" content="IE=edge">
-    <meta name="format-detection" content="telephone=no">
-    <meta name="format-detection" content="address=no">
-    <meta name="format-detection" content="email=no">
+    <meta name="format-detection" content="telephone=no, address=no, email=no">
     <meta name="HandheldFriendly" content="True">
     <meta name="MobileOptimized" content="320">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="dns-prefetch" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.5.2/css/all.min.css">
     <link rel="stylesheet" href="/assets/css/main.css">
     <link rel="stylesheet" href="/assets/css/bg-main.css">
     <link rel="stylesheet" href="/assets/css/pagination.css">
+    <script src="/scripts/main-core.js" defer></script>
     <script src="/scripts/app-init.js" defer></script>
     <script src="/scripts/interface.js" defer></script>
-    <script src="/scripts/main-core.js" defer></script>
     <script src="/scripts/main-features.js" defer></script>
     <script src="/scripts/pagination.js" defer></script>
     <script src="/scripts/modals.js" defer></script>
     <script src="/scripts/profile-tracker.js" defer></script>
     <script>
+        // Fallback if loadInfoMessage not loaded
+        window.loadInfoMessage = window.loadInfoMessage || function(page) { console.log('[Info] Loading:', page); };
+
         document.addEventListener('DOMContentLoaded', function() {
             // Load info message
             loadInfoMessage('downloads');
@@ -129,14 +131,11 @@
             }
             
             if (!selectedTab) {
-                const lastTab = localStorage.getItem('foxweb_last_tab');
-                if (lastTab && categoryMap[lastTab]) {
-                    selectedTab = lastTab;
-                }
+                selectedTab = 'Programas';
             }
             
             if (selectedTab) {
-                setTimeout(function() { openTab(selectedTab); }, 0);
+                openTab(selectedTab);
             }
         });
     </script>
@@ -166,8 +165,8 @@
     <header class="main-header" id="header-placeholder" role="banner"></header>
     <nav class="main-nav" role="navigation" aria-label="Categorías de descargas FoxWeb">
         <div class="nav-container">
-            <div class="tab-buttons" role="tablist"><button class="tablink active" id="tabProgramas" role="tab"
-                    aria-selected="true" aria-controls="Programas" data-tab="Programas" onclick='openTab("Programas")'
+            <div class="tab-buttons" role="tablist"><button class="tablink" id="tabProgramas" role="tab"
+                    aria-selected="false" aria-controls="Programas" data-tab="Programas" onclick='openTab("Programas")'
                     aria-label="Pestaña Programas"><i class="fa-solid fa-laptop-code"></i>
                     <span>Programas</span></button> <button class="tablink" id="tabSistemas" role="tab"
                     aria-selected="false" aria-controls="Sistemas" data-tab="Sistemas" onclick='openTab("Sistemas")'
@@ -191,7 +190,7 @@
         </div>
     </section>
     <main id="main-content" class="main-content" role="main">
-        <section id="Programas" class="tab-content" role="tabpanel" aria-labelledby="tabProgramas" aria-hidden="false">
+        <section id="Programas" class="tab-content" role="tabpanel" aria-labelledby="tabProgramas" aria-hidden="true">
             <div class="content-header">
                 <div class="header-text">
                     <h2><i class="fa-solid fa-laptop-code"></i> Programas Esenciales <span class="category-count"

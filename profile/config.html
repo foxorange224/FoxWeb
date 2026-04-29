@@ -11,7 +11,7 @@
     <link rel="preconnect" href="https://cdnjs.cloudflare.com">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.5.2/css/all.min.css">
     <style>
         :root {
             --primary: #b34700;
@@ -264,7 +264,7 @@
     <script>
         // Variables
         var selectedTheme = localStorage.getItem('foxweb_theme') || 'light';
-        var selectedView = localStorage.getItem('foxweb_view') || 'compact';
+        var selectedView = localStorage.getItem('foxweb_view') || 'cards';
         
         // Apply theme immediately
         document.documentElement.setAttribute('data-theme', selectedTheme);
@@ -345,10 +345,9 @@
 
         function clearData() {
             if (confirm('¿Borrar todos los datos? Esto no se puede deshacer.')) {
-                var keys = ['foxweb_favorites', 'foxweb_download_history', 'foxweb_stats', 'foxweb_notifications'];
+                var keys = ['foxweb_favorites', 'foxweb_download_history', 'foxweb_stats', 'foxweb_notifications', 'foxweb_username', 'foxweb_theme', 'foxweb_view', 'foxweb_categories', 'foxweb_configured', 'foxweb_first_visit'];
                 keys.forEach(function(k) { localStorage.removeItem(k); });
-                alert('Datos borrados');
-                location.reload();
+                window.location.href = '/welcome';
             }
         }
 
@@ -381,7 +380,7 @@
             localStorage.setItem('foxweb_first_visit', 'false');
             localStorage.setItem('foxweb_categories', JSON.stringify(selectedTabs));
             
-            window.location.href = '/profile';
+            window.location.href = '/downloads';
         };
 
         document.addEventListener('DOMContentLoaded', function() {

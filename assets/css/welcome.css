@@ -585,6 +585,13 @@ a.active {
     border-radius: 50%;
 }
 
+.recent-icon-img {
+    width: 40px;
+    height: 40px;
+    object-fit: contain;
+    border-radius: 50%;
+}
+
 .recent-card h3 {
     color: var(--text-main);
     font-size: 1.1rem;

@@ -812,6 +812,7 @@
         .content-card .card-actions {
             display: flex;
             gap: var(--space-xs);
+            margin-top: var(--space-sm);
         }
 
         .content-card .card-action-btn {

@@ -39,6 +39,19 @@ function openBlogTab(tabName) {
         selectedLink.setAttribute('aria-selected', 'true');
     }
 
+    // Actualizar URL con el parámetro tab
+    const tabParamMap = {
+        'Todos': 'all',
+        'Linux': 'linux',
+        'Software': 'software',
+        'Windows': 'windows',
+        'Tutoriales': 'tutorials'
+    };
+    const paramValue = tabParamMap[tabName] || tabName.toLowerCase();
+    const url = new URL(window.location);
+    url.searchParams.set('tab', paramValue);
+    history.replaceState({}, document.title, url);
+
     // Scroll al inicio
     window.scrollTo({
         top: 0,
@@ -48,27 +61,29 @@ function openBlogTab(tabName) {
 
 // Función para inicializar las pestañas desde el HTML (sin esperar a que carguen los posts)
 function initBlogTabs() {
-    // Asegurar que la pestaña "Todos" esté activa desde el inicio
-    const tabTodos = document.getElementById('tabTodos');
-    const contentTodos = document.getElementById('Todos');
-    
-    if (tabTodos && contentTodos) {
-        // La pestaña "Todos" ya debería estar activa en el HTML
-        // Solo nos aseguramos de que el contenido esté visible
-        tabTodos.classList.add('active');
-        tabTodos.setAttribute('aria-selected', 'true');
-        contentTodos.style.display = 'block';
-        contentTodos.setAttribute('aria-hidden', 'false');
-    }
+    // Mapeo de parámetros de URL a nombres de pestañas
+    const urlTabMap = {
+        'all': 'Todos',
+        'linux': 'Linux',
+        'software': 'Software',
+        'windows': 'Windows',
+        'tutorials': 'Tutoriales'
+    };
+
+    const urlParams = new URLSearchParams(window.location.search);
+    const tabParam = urlParams.get('tab');
+    const tabToOpen = (tabParam && urlTabMap[tabParam]) ? urlTabMap[tabParam] : 'Todos';
+
+    openBlogTab(tabToOpen);
 }
 
 // Cargar posts desde posts.json
 async function loadBlogPosts() {
     try {
         const response = await fetch('/database/posts.json?v=' + Date.now());
+        if (!response.ok) throw new Error('HTTP ' + response.status);
         const posts = await response.json();
         
-        // Distribuir posts en las pestañas correspondientes
         distributePosts(posts);
         setupBlogSearch(posts);
     } catch (error) {
@@ -166,6 +181,8 @@ function formatDate(dateString) {
 function setupBlogSearch(posts) {
     const searchInput = document.getElementById('blogSearch');
     const clearBtn = document.getElementById('clearSearch');
+
+    if (!searchInput || !clearBtn) return;
 
     searchInput.addEventListener('input', (e) => {
         const query = e.target.value.toLowerCase();

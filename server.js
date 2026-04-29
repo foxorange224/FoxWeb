@@ -31,7 +31,7 @@ const componentCache = new Map();
 /**
  * Carga un componente desde la carpeta components/
  */
-function loadComponent(componentName) {
+async function loadComponent(componentName) {
   if (componentCache.has(componentName)) {
     return componentCache.get(componentName);
   }
@@ -39,29 +39,28 @@ function loadComponent(componentName) {
   const componentPath = path.join(__dirname, 'components', `${componentName}.html`);
   
   try {
-    if (fs.existsSync(componentPath)) {
-      const content = fs.readFileSync(componentPath, 'utf8');
-      componentCache.set(componentName, content);
-      return content;
-    }
+    const content = await fs.promises.readFile(componentPath, 'utf8');
+    componentCache.set(componentName, content);
+    return content;
   } catch (err) {
-    console.error(`Error cargando componente ${componentName}:`, err.message);
+    if (err.code !== 'ENOENT') {
+      console.error(`Error cargando componente ${componentName}:`, err.message);
+    }
+    return '';
   }
-  
-  return '';
 }
 
 /**
  * Procesa los includes en el HTML: <!--#include file="header.html" -->
  */
-function processIncludes(htmlContent) {
+async function processIncludes(htmlContent) {
   const includeRegex = /<!--#include\s+file="([^"]+)"\s*-->/g;
   let result = htmlContent;
   let match;
   
   while ((match = includeRegex.exec(htmlContent)) !== null) {
     const componentName = match[1].replace('.html', '');
-    const componentContent = loadComponent(componentName);
+    const componentContent = await loadComponent(componentName);
     result = result.replace(match[0], componentContent);
   }
   
@@ -88,7 +87,7 @@ function getEncoding(acceptEncoding) {
 /**
  * Obtiene headers de cache basados en el tipo de archivo
  */
-function getCacheHeaders(ext) {
+function getCacheHeaders(ext, mtime) {
   const isStatic = ['.css', '.js', '.ico', '.webp', '.png', '.jpg', '.svg', '.woff2', '.ttf'].includes(ext);
   
   // No cachear JS durante desarrollo para evitar problemas
@@ -105,7 +104,7 @@ function getCacheHeaders(ext) {
   if (isStatic) {
     return {
       'Cache-Control': `public, max-age=${CACHE_DURATION}`,
-      'ETag': `"${Date.now()}"`,
+      'ETag': mtime ? `"${mtime}"` : `"${Date.now()}"`,
       'Expires': new Date(Date.now() + CACHE_DURATION * 1000).toUTCString()
     };
   }
@@ -120,57 +119,24 @@ function getCacheHeaders(ext) {
 /**
  * Sirve un archivo con compresión
  */
-function serveFile(filePath, res, acceptEncoding) {
+async function serveFile(filePath, res, acceptEncoding) {
   const ext = path.extname(filePath);
-  const cacheHeaders = getCacheHeaders(ext);
   
-  fs.readFile(filePath, (err, content) => {
-    if (err) {
-      if (err.code === 'ENOENT') {
-        // Intentar servir 404
-        fs.readFile(path.join(__dirname, '404.html'), (err404, content404) => {
-          if (err404) {
-            res.writeHead(404, { 'Content-Type': 'text/plain' });
-            res.end('404 Not Found');
-          } else {
-            const encoding = getEncoding(acceptEncoding);
-            const contentType = mimeTypes[ext] || 'text/plain';
-            
-            if (encoding) {
-              res.writeHead(200, { 
-                'Content-Type': contentType,
-                'Content-Encoding': encoding.type,
-                ...cacheHeaders
-              });
-              encoding.encoder.pipe(res);
-              encoding.encoder.end(content404);
-            } else {
-              res.writeHead(200, { 
-                'Content-Type': contentType,
-                ...cacheHeaders
-              });
-              res.end(content404);
-            }
-          }
-        });
-      } else {
-        res.writeHead(500);
-        res.end('500 Internal Server Error');
-      }
-      return;
-    }
+  try {
+    const stats = await fs.promises.stat(filePath);
+    const mtime = stats.mtimeMs;
+    const cacheHeaders = getCacheHeaders(ext, mtime);
     
+    const content = await fs.promises.readFile(filePath);
     const contentType = mimeTypes[ext] || 'text/plain';
     let contentToServe = content;
     
-    // Procesar includes solo para archivos HTML
     if (ext === '.html') {
-      contentToServe = processIncludes(content.toString());
-      contentToServe = Buffer.from(contentToServe);
+      const processed = await processIncludes(content.toString());
+      contentToServe = Buffer.from(processed);
     }
     
     const encoding = getEncoding(acceptEncoding);
-    
     if (encoding) {
       res.writeHead(200, { 
         'Content-Type': contentType,
@@ -192,41 +158,107 @@ function serveFile(filePath, res, acceptEncoding) {
       });
       res.end(contentToServe);
     }
-  });
+  } catch (err) {
+    if (err.code === 'ENOENT') {
+      try {
+        const content404 = await fs.promises.readFile(path.join(__dirname, '404.html'));
+        const encoding = getEncoding(acceptEncoding);
+        
+        if (encoding) {
+          res.writeHead(200, { 
+            'Content-Type': 'text/html',
+            'Content-Encoding': encoding.type,
+            ...getCacheHeaders('.html', Date.now())
+          });
+          const compressor = encoding.type === 'br' 
+            ? zlib.createBrotliCompress() 
+            : zlib.createGzip();
+          compressor.pipe(res);
+          compressor.end(content404);
+        } else {
+          res.writeHead(200, { 
+            'Content-Type': 'text/html',
+            ...getCacheHeaders('.html', Date.now())
+          });
+          res.end(content404);
+        }
+      } catch (err404) {
+        res.writeHead(404, { 'Content-Type': 'text/plain' });
+        res.end('404 Not Found');
+      }
+    } else {
+      res.writeHead(500);
+      res.end('500 Internal Server Error');
+    }
+  }
 }
 
 // Servir archivos estáticos con compression
-const server = http.createServer((req, res) => {
+/**
+ * Helper para obtener cookies
+ */
+function getCookie(req, name) {
+  const cookies = req.headers.cookie;
+  if (!cookies) return null;
+  const result = cookies.split(';').find(c => c.trim().startsWith(name + '='));
+  return result ? result.split('=')[1] : null;
+}
+
+/**
+ * Helper para setear cookies
+ */
+function setCookie(res, name, value, days = 365) {
+  const expires = new Date(Date.now() + days * 864e5).toUTCString();
+  res.setHeader('Set-Cookie', `${name}=${value}; Path=/; Expires=${expires}; HttpOnly; SameSite=Lax`);
+}
+
+const server = http.createServer(async (req, res) => {
   const acceptEncoding = req.headers['accept-encoding'] || '';
   
-  // Headers de seguridad
+  // Log de requests para debug
+  console.log(`[${new Date().toISOString()}] ${req.method} ${req.url}`);
+  
+  // Headers de seguridad básicos para local
   res.setHeader('X-Content-Type-Options', 'nosniff');
   res.setHeader('X-Frame-Options', 'DENY');
-  res.setHeader('X-XSS-Protection', '1; mode=block');
-  res.setHeader('Referrer-Policy', 'strict-origin-when-cross-origin');
   
   // Determinar la ruta del archivo
-  let filePath = req.url.split('?')[0];
+  let urlPath = req.url.split('?')[0];
   
-  if (filePath === '/') {
-    filePath = '/index.html';
-  } else if (!path.extname(filePath)) {
+  if (urlPath === '/') {
+    urlPath = '/index.html';
+  } else if (!path.extname(urlPath)) {
     // Intentar agregar .html
-    const htmlPath = path.join(__dirname, filePath + '.html');
-    const indexPath = path.join(__dirname, filePath, 'index.html');
+    const htmlPath = path.join(__dirname, urlPath + '.html');
+    const indexPath = path.join(__dirname, urlPath, 'index.html');
     
     if (fs.existsSync(htmlPath)) {
-      filePath = filePath + '.html';
+      urlPath = urlPath + '.html';
     } else if (fs.existsSync(indexPath)) {
-      filePath = filePath + '/index.html';
+      urlPath = urlPath + '/index.html';
     } else {
-      filePath = filePath + '.html';
+      urlPath = urlPath + '.html';
     }
   }
   
-  const fullPath = path.join(__dirname, filePath);
+  const fullPath = path.resolve(path.join(__dirname, urlPath));
+  const rootPath = path.resolve(__dirname);
   
-  serveFile(fullPath, res, acceptEncoding);
+  // Prevenir directory traversal
+  if (!fullPath.startsWith(rootPath)) {
+    res.writeHead(403, { 'Content-Type': 'text/plain' });
+    res.end('403 Forbidden');
+    return;
+  }
+  
+  // Verificar que el archivo existe
+  if (!fs.existsSync(fullPath)) {
+    res.writeHead(404, { 'Content-Type': 'text/html' });
+    res.end('<html><body><h1>404 Not Found</h1></body></html>');
+    return;
+  }
+  
+  await serveFile(fullPath, res, acceptEncoding);
 });
 
 server.listen(PORT, '0.0.0.0', () => {

@@ -2,6 +2,23 @@
  * Script para cargar las últimas incorporaciones dinámicamente en la página principal
  */
 
+// Función para escapar HTML y prevenir XSS
+function escapeHtml(text) {
+    if (!text) return '';
+    const div = document.createElement('div');
+    div.textContent = String(text);
+    return div.innerHTML;
+}
+
+// Helper function to render icon
+function renderRecentIcon(icon) {
+    if (!icon) return '<i class="fa-solid fa-folder"></i>';
+    if (icon.match(/^(http|https|\/|data:)/i)) {
+        return '<img src="'+icon+'" alt="icon" class="recent-icon-img">';
+    }
+    return '<i class="'+escapeHtml(icon)+'"></i>';
+}
+
 async function loadRecentItems() {
     const container = document.getElementById('recent-items-container');
     if (!container) return;
@@ -30,15 +47,20 @@ async function loadRecentItems() {
             return;
         }
         
-        // Generar HTML
-        container.innerHTML = recentItems.map(item => `
-            <article class="recent-card">
-                <div class="recent-icon"><i class="${item.icon}"></i></div>
-                <h3>${item.name}</h3>
-                <p>${item.info ? (item.info.substring(0, 80) + (item.info.length > 80 ? '...' : '')) : ''}</p>
-                <a href="${item.categoryLink}" class="recent-link">Ver más <i class="fas fa-arrow-right"></i></a>
-            </article>
-        `).join('');
+        // Generar HTML con sanitización
+        container.innerHTML = recentItems.map(item => {
+            const safeName = escapeHtml(item.name);
+            const safeInfo = item.info ? escapeHtml(item.info.substring(0, 80) + (item.info.length > 80 ? '...' : '')) : '';
+            const iconHtml = renderRecentIcon(item.icon);
+            return `
+                <article class="recent-card">
+                    <div class="recent-icon">${iconHtml}</div>
+                    <h3>${safeName}</h3>
+                    <p>${safeInfo}</p>
+                    <a href="${item.categoryLink}" class="recent-link">Ver más <i class="fas fa-arrow-right"></i></a>
+                </article>
+            `;
+        }).join('');
         
     } catch (error) {
         console.error('Error cargando recientes:', error);

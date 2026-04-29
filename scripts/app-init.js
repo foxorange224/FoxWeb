@@ -6,6 +6,12 @@
 (function() {
   'use strict';
 
+  // Production check
+  const isDev = window.location.hostname === 'localhost' || 
+                window.location.hostname.includes('127.0.0.1') ||
+                window.location.hostname.includes('.local');
+  const log = (...args) => isDev && console.log(...args);
+
   // ============================================
   // 1. Theme Initialization (Unificado)
   // ============================================
@@ -97,33 +103,7 @@
   };
 
   // ============================================
-  // 2. Service Worker Registration
-  // ============================================
-  const ServiceWorkerManager = {
-    init() {
-      if ('serviceWorker' in navigator) {
-        window.addEventListener('load', function() {
-          navigator.serviceWorker.register('/sw.js')
-            .then(function(reg) {
-              console.log('[App] Service Worker registrado:', reg.scope);
-              
-              // Escuchar actualizaciones
-              reg.addEventListener('updatefound', function() {
-                const newWorker = reg.installing;
-                newWorker.addEventListener('statechange', function() {
-                  if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
-                    console.log('[App] Nueva versión disponible');
-                  }
-                });
-              });
-            })
-            .catch(function(err) {
-              console.error('[App] Error registering SW:', err);
-            });
-        });
-      }
-    }
-  };
+  // Service Worker eliminado
 
   // ============================================
   // 3. Lazy Loading Images
@@ -131,7 +111,7 @@
   const LazyLoader = {
     init() {
       if ('IntersectionObserver' in window) {
-        const observer = new IntersectionObserver(
+        this.observer = new IntersectionObserver(
           (entries) => this.handleIntersection(entries),
           {
             rootMargin: '50px 0px',
@@ -139,8 +119,8 @@
           }
         );
 
-        document.querySelectorAll('img[data-src]').forEach(function(img) {
-          observer.observe(img);
+        document.querySelectorAll('img[data-src]').forEach((img) => {
+          this.observer.observe(img);
         });
       } else {
         this.loadAll();
@@ -151,7 +131,9 @@
       entries.forEach((entry) => {
         if (entry.isIntersecting) {
           this.loadImage(entry.target);
-          entry.target.__lazyObserver.unobserve(entry.target);
+          if (this.observer) {
+            this.observer.unobserve(entry.target);
+          }
         }
       });
     },
@@ -225,70 +207,17 @@
     }
   };
 
-  // ============================================
-  // 5. Navigation Preload
-  // ============================================
-  const NavigationPreload = {
-    init() {
-      if (navigator.serviceWorker && 'navigationPreload' in navigator.serviceWorker) {
-        navigator.serviceWorker.ready.then(function(reg) {
-          reg.navigationPreload.enable();
-        });
-      }
-    }
-  };
+// ============================================
+// 5. Navigation Preload
+// ============================================
+// Eliminado: Requiere Service Worker activo
 
-  // ============================================
-  // 6. Resource Hints
-  // ============================================
-  const ResourceHints = {
-    init() {
-      const domains = [
-        'pagead2.googlesyndication.com',
-        'cdnjs.cloudflare.com',
-        'fonts.googleapis.com',
-        'fonts.gstatic.com'
-      ];
 
-      domains.forEach(function(domain) {
-        const link = document.createElement('link');
-        link.rel = 'dns-prefetch';
-        link.href = '//' + domain;
-        document.head.appendChild(link);
-      });
+// ============================================
+// 6. Resource Hints
+// ============================================
+// Eliminado: Movido al HTML para mejor rendimiento
 
-      const preconnects = [
-        'https://pagead2.googlesyndication.com',
-        'https://cdnjs.cloudflare.com'
-      ];
-
-      preconnects.forEach(function(url) {
-        const link = document.createElement('link');
-        link.rel = 'preconnect';
-        link.href = url;
-        document.head.appendChild(link);
-      });
-
-      this.preloadCritical();
-    },
-
-    preloadCritical() {
-      const critical = [
-        { href: '/assets/css/main.css', as: 'style' }
-      ];
-
-      critical.forEach(function(item) {
-        const link = document.createElement('link');
-        link.rel = 'preload';
-        link.href = item.href;
-        link.as = item.as;
-        if (item.as === 'style') {
-          link.onload = function() { link.rel = 'stylesheet'; };
-        }
-        document.head.appendChild(link);
-      });
-    }
-  };
 
   // ============================================
   // Version Check - Clear cache on version change
@@ -304,19 +233,19 @@
         const savedVersion = localStorage.getItem(this.KEY);
         
         if (savedVersion && savedVersion !== newVersion) {
-          console.log('[Version] Nueva versión detectada: ' + newVersion + ' (antes: ' + savedVersion + ')');
+          log('[Version] Nueva versión detectada: ' + newVersion + ' (antes: ' + savedVersion + ')');
           this.clearCache();
           this.notifyUpdate(newVersion);
         }
         
         localStorage.setItem(this.KEY, newVersion);
       } catch (e) {
-        console.log('[Version] Error al verificar versión:', e);
+        log('[Version] Error al verificar versión:', e);
       }
     },
     
     clearCache() {
-      console.log('[Version] Limpiando cache y datos...');
+      log('[Version] Limpiando cache y datos...');
       
       const keysToRemove = [
         'foxweb_favorites',
@@ -333,23 +262,11 @@
         localStorage.removeItem(key);
       });
       
-      console.log('[Version] Datos limpiados');
+      log('[Version] Datos limpiados');
     },
     
     notifyUpdate(version) {
-      setTimeout(() => {
-        const message = 'FoxWeb se ha actualizado, reiniciando la app...';
-        
-        if (typeof showToast === 'function') {
-          showToast(message, 'success', 0);
-        } else {
-          alert(message);
-        }
-        
-        setTimeout(() => {
-          window.location.reload();
-        }, 2000);
-      }, 1000);
+      log('[Version] Nueva versión: ' + version);
     }
   };
 
@@ -357,17 +274,14 @@
   // Initialization
   // ============================================
   async function init() {
-    console.log('[App] Inicializando FoxWeb...');
+    log('[App] Inicializando FoxWeb...');
     
     await VersionManager.init();
     ThemeManager.init();
     LazyLoader.init();
     PrefetchManager.init();
-    ResourceHints.init();
-    NavigationPreload.init();
-    ServiceWorkerManager.init();
     
-    console.log('[App] FoxWeb inicializado correctamente');
+    log('[App] FoxWeb inicializado correctamente');
   }
 
   // Ejecutar cuando DOM esté listo
@@ -375,16 +289,6 @@
     document.addEventListener('DOMContentLoaded', init);
   } else {
     init();
-  }
-
-  // Escuchar mensajes del Service Worker
-  if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.addEventListener('message', (event) => {
-      if (event.data && event.data.type === 'RELOAD') {
-        console.log('[App] Recargando por actualización...');
-        location.reload();
-      }
-    });
   }
 
   // Exponer API global

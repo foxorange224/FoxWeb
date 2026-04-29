@@ -2,6 +2,14 @@
  * Script para abrir modales desde URL - se ejecuta después de cargar los scripts
  */
 
+// Función local de sanitización por si window.sanitizeHTML no está disponible
+function escapeHtml(text) {
+    if (!text) return '';
+    const div = document.createElement('div');
+    div.textContent = String(text);
+    return div.innerHTML;
+}
+
 (function () {
     const urlParams = new URLSearchParams(window.location.search);
     const modalParam = urlParams.get('openModal');
@@ -36,7 +44,10 @@
                     return response.text();
                 })
                 .then(html => {
-                    container.innerHTML = html;
+                    // Sanitizar HTML antes de inyectar
+                    const sanitizeFn = window.sanitizeHTML || escapeHtml;
+                    const sanitizedHtml = typeof sanitizeFn === 'function' ? sanitizeFn(html) : html;
+                    container.innerHTML = sanitizedHtml;
                     // Ahora intentar abrir el modal
                     setTimeout(tryOpenModal, 150);
                 })

@@ -244,7 +244,7 @@
             // Agregar interactividad para expandir/colapsar
             setupTreeInteraction(container);
             
-            console.log('[ProjectTree] Árbol del proyecto generado correctamente');
+            console.debug('[ProjectTree] Árbol del proyecto generado correctamente');
         } catch (error) {
             console.error('[ProjectTree] Error al generar el árbol:', error);
             container.innerHTML = `

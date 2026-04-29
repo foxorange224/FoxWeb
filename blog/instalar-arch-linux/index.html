@@ -10,7 +10,7 @@
     <link rel="stylesheet" href="/assets/css/main.css">
     <link rel="stylesheet" href="/assets/css/bg-main.css">
     <link rel="stylesheet" href="/assets/css/index-blog.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.5.2/css/all.min.css">
     <link rel="canonical" href="https://foxweb.qzz.io/blog/instalar-arch-linux/">
     <link rel="icon" type="image/png" href="/assets/favicon-96x96.png" sizes="96x96">
     <link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
@@ -211,10 +211,8 @@ nmcli device wifi connect "MiRed" password "mipassword"</code></pre>
                 <a href="/downloads?tab=systems&page=1" class="enter-button"><i class="fas fa-download"></i> Ver Sistemas Operativos</a>
             </div>
         </div>
-    </main>
-    <div id="modales-container"></div>
+</main>
     <script src="/scripts/post.js" defer></script>
-    <script>(() => { function e(t) { try { var o, e, n = document.getElementById(t); n && ((o = n.querySelector(".modal-backdrop")) || ((o = document.createElement("div")).className = "modal-backdrop", n.insertBefore(o, n.firstChild), o.addEventListener("click", function (e) { e.target === o && r(t) })), n.style.display = "flex", n.setAttribute("aria-hidden", "false"), document.body.style.overflow = "hidden", e = n.querySelector('button, [href], input, select, textarea, [tabindex]:not([tabindex="-1")]')) && e.focus() } catch (e) { console.error("Error opening modal:", e) } } function r(e) { try { var t = document.getElementById(e); t && (t.style.display = "none", t.setAttribute("aria-hidden", "true"), document.body.style.overflow = "") } catch (e) { console.error("Error closing modal:", e) } } fetch("/database/modals.html").then(function (e) { return e.text() }).then(function (e) { var t = document.getElementById("modales-container"); t && (t.innerHTML = e) }).catch(function (e) { console.error("Error cargando modals:", e) }), window.openModal = e, window.closeModal = r; var t = new URLSearchParams(window.location.search).get("openModal"); t && setTimeout(function () { e(t), history.replaceState({}, document.title, window.location.pathname) }, 500) })()</script>
     <script src="/scripts/main-core.js" defer></script>
     <footer class="main-footer" id="footer-placeholder" role="contentinfo"></footer>
 

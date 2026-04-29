@@ -6,6 +6,21 @@
 // =============================================================================
 
 // =============================================================================
+// MODO PRODUCCIÓN
+// =============================================================================
+const IS_PRODUCTION = window.location.hostname !== 'localhost' && 
+                   !window.location.hostname.includes('127.0.0.1') &&
+                   !window.location.hostname.includes('.local');
+
+// logger solo en desarrollo
+const logger = {
+    log: (...args) => !IS_PRODUCTION && console.log(...args),
+    warn: (...args) => !IS_PRODUCTION && console.warn(...args),
+    error: (...args) => console.error(...args),
+    info: (...args) => !IS_PRODUCTION && console.info(...args)
+};
+
+// =============================================================================
 // CONFIGURACIÓN Y ESTADO
 // =============================================================================
 
@@ -92,12 +107,10 @@ document.addEventListener('DOMContentLoaded', function () {
         checkBrowserFeatures();
         initTheme();
         initEventListeners();
-        loadAppState();
         loadNotifications();
         loadFavorites();
         initUIComponents();
         initAccessibility();
-        initScrollHideNav();
 
         // Only initialize main app if we're on the main page
         if (isMainPage) {
@@ -116,7 +129,7 @@ document.addEventListener('DOMContentLoaded', function () {
         if (AppState.firstVisit) {
             setTimeout(() => {
                 showToast('Bienvenido a FoxWeb', 'info');
-                localStorage.setItem('foxweb_first_visit', 'false');
+                Storage.set('foxweb_first_visit', 'false');
                 AppState.firstVisit = false;
             }, 1000);
         }
@@ -127,24 +140,59 @@ document.addEventListener('DOMContentLoaded', function () {
 });
 
 // =============================================================================
+// STORAGE SEGURO
+// =============================================================================
+
+const Storage = {
+    get(key) {
+        try {
+            return localStorage.getItem(key);
+        } catch (e) {
+            console.warn('[Storage] Error reading:', key);
+            return null;
+        }
+    },
+    set(key, value) {
+        try {
+            localStorage.setItem(key, value);
+        } catch (e) {
+            console.warn('[Storage] Error writing:', key, e.message);
+        }
+    },
+    getJSON(key, fallback = null) {
+        try {
+            const data = localStorage.getItem(key);
+            return data ? JSON.parse(data) : fallback;
+        } catch (e) {
+            return fallback;
+        }
+    },
+    setJSON(key, value) {
+        try {
+            localStorage.setItem(key, JSON.stringify(value));
+        } catch (e) {
+            console.warn('[Storage] Error writing JSON:', key, e.message);
+        }
+    }
+};
+
+// =============================================================================
 // VISITA Y NAVEGADOR
 // =============================================================================
 
 function checkFirstVisit() {
-    const firstVisit = localStorage.getItem('foxweb_first_visit');
+    const firstVisit = Storage.get('foxweb_first_visit');
     if (firstVisit === 'false') {
         AppState.firstVisit = false;
     }
     
-    // Check for returning user - show welcome back notification
-    const lastVisit = localStorage.getItem('foxweb_last_visit');
+    const lastVisit = Storage.get('foxweb_last_visit');
     const now = Date.now();
     
     if (lastVisit) {
         const timeSinceLastVisit = now - parseInt(lastVisit);
-        const oneDay = 24 * 60 * 60 * 1000; // 24 hours
+        const oneDay = 24 * 60 * 60 * 1000;
         
-        // If user hasn't visited in more than 1 day, show welcome back
         if (timeSinceLastVisit > oneDay) {
             setTimeout(() => {
                 showToast('¡Bienvenido de nuevo! Explora el nuevo contenido.', 'info');
@@ -152,7 +200,7 @@ function checkFirstVisit() {
         }
     }
     
-    localStorage.setItem('foxweb_last_visit', now.toString());
+    Storage.set('foxweb_last_visit', now.toString());
 }
 
 function checkBrowserFeatures() {
@@ -164,7 +212,7 @@ function checkBrowserFeatures() {
 }
 
 function loadModals() {
-    fetch('/database/modals.html?v=' + Date.now())
+    fetch('/database/modals.html')
         .then(response => {
             if (!response.ok) {
                 throw new Error(`HTTP error! status: ${response.status}`);
@@ -172,9 +220,10 @@ function loadModals() {
             return response.text();
         })
         .then(html => {
+            const sanitizedHtml = sanitizeHTML(html);
             const modalsContainer = document.getElementById('modales-container');
             if (modalsContainer) {
-                modalsContainer.innerHTML = html;
+                modalsContainer.innerHTML = sanitizedHtml;
             }
         })
         .catch(error => {
@@ -183,25 +232,89 @@ function loadModals() {
         });
 }
 
+/**
+ * Sanitiza HTML removiendo scripts y eventos inline peligrosos
+ */
+function sanitizeHTML(html) {
+    if (!html) return '';
+    
+    const div = document.createElement('div');
+    div.innerHTML = html;
+    
+    // Remover todos los scripts
+    const scripts = div.querySelectorAll('script');
+    scripts.forEach(script => script.remove());
+    
+    // Remover TODOS los atributos de eventos para prevenir XSS
+    const allElements = div.querySelectorAll('*');
+    allElements.forEach(el => {
+        const attrs = [...el.attributes];
+        attrs.forEach(attr => {
+            if (attr.name.startsWith('on')) {
+                el.removeAttribute(attr.name);
+            }
+        });
+    });
+    
+    return div.innerHTML;
+}
+
+// Exponer sanitizeHTML globalmente para otros scripts
+window.sanitizeHTML = sanitizeHTML;
+
 // =============================================================================
 // CARGA DE DATOS
 // =============================================================================
 
+function validateJSONData(data) {
+    if (!data || typeof data !== 'object') return null;
+    
+    const requiredCategories = ['programas', 'sistemas', 'juegos', 'extras', 'apks'];
+    const validData = {};
+    
+    for (const cat of requiredCategories) {
+        if (!Array.isArray(data[cat])) {
+            validData[cat] = [];
+            continue;
+        }
+        
+        validData[cat] = data[cat].filter(item => {
+            if (!item || typeof item !== 'object') return false;
+            if (!item.name || typeof item.name !== 'string') return false;
+            return true;
+        }).map(item => ({
+            name: String(item.name).slice(0, 500),
+            info: String(item.info || '').slice(0, 2000),
+            enlace: item.enlace || '#',
+            icon: item.icon || '',
+            badges: Array.isArray(item.badges) ? item.badges.slice(0, 10).map(String).slice(0, 100) : [],
+            modal: item.modal || null
+        }));
+    }
+    
+    return validData;
+}
+
 function loadDataScript() {
     fetch('/database/data.json?v=' + Date.now())
         .then(response => {
-            if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
-            }
-            return response.json();
+            if (!response.ok) throw new Error(`HTTP ${response.status}`);
+            return response.text();
         })
-        .then(data => {
-            AppState.dbData = data;
+        .then(text => {
+            try {
+                const data = JSON.parse(text);
+                const validated = validateJSONData(data);
+                if (!validated) throw new Error('Validación falló');
+                AppState.dbData = validated;
+            } catch (e) {
+                throw new Error('JSON inválido');
+            }
             updateCounters();
             initApp();
         })
         .catch(error => {
-            console.error('Error al cargar o parsear data.json:', error);
+            console.error('Error data.json:', error);
             showErrorScreen('Error al cargar la Base de Datos. Por favor, recarga la página.');
         });
 }
@@ -214,15 +327,26 @@ const DEFAULT_ICONS = {
     apks: 'fa-solid fa-mobile-android'
 };
 
+// Escapar HTML para prevenir XSS
+function escapeHTML(str) {
+    if (typeof str !== 'string') return String(str);
+    return str
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
+}
+
 // Normalizar datos con valores por defecto
 function normalizeDataItem(item, category) {
     return {
-        name: item.name || 'Sin título',
+        name: escapeHTML(item.name || 'Sin título'),
         icon: item.icon || DEFAULT_ICONS[category] || 'fa-solid fa-folder',
-        info: item.info || 'Descripción no disponible',
-        enlace: item.enlace || '#',
+        info: escapeHTML(item.info || 'Descripción no disponible'),
+        enlace: sanitizeURL(item.enlace || '#'),
         modal: item.modal || null,
-        badges: item.badges || []
+        badges: (item.badges || []).map(b => escapeHTML(b))
     };
 }
 
@@ -248,8 +372,14 @@ function initApp() {
         // Normalizar datos antes de usar
         AppState.dbData = normalizeAllData(AppState.dbData);
         checkForNewContent();
-        hideLoading();
-        determineInitialTabFromHash();
+        // Fallback hideLoading if not defined
+        if (typeof hideLoading === 'function') {
+            hideLoading();
+        } else {
+            const loader = document.getElementById('loading-overlay');
+            if (loader) loader.style.display = 'none';
+        }
+        determineInitialTabFromQuery();
         // Inicializar modos de vista antes de renderizar
         initAllViewModes();
         renderAllTabs();
@@ -260,7 +390,6 @@ function initApp() {
         checkUrlForModal();
         initNotificationCenter();
         initFloatingButtons();
-        initSidebar();
         initCounters();
         // Iniciar verificación del blog
         initBlogCheck();
@@ -272,14 +401,14 @@ function initApp() {
     }
 }
 
-function determineInitialTabFromHash() {
+function determineInitialTabFromQuery() {
     try {
         // Leer query parameters en lugar de hash
         const url = new URL(window.location.href);
         const tabParam = url.searchParams.get('tab');
         const pageParam = url.searchParams.get('page');
         
-        console.log('[DEBUG] determineInitialTabFromHash - tabParam:', tabParam, 'pageParam:', pageParam);
+        console.debug('[DEBUG] determineInitialTabFromQuery - tabParam:', tabParam, 'pageParam:', pageParam);
         
         // Mapeo inverso: de valores de query a nombres de pestañas
         const QUERY_TAB_MAP = {
@@ -298,7 +427,7 @@ function determineInitialTabFromHash() {
             // Si hay un parámetro de página, guardarlo en AppState para usarlo después
             if (pageParam && !isNaN(parseInt(pageParam, 10))) {
                 AppState.initialPage = parseInt(pageParam, 10);
-                console.log('[DEBUG] determineInitialTabFromHash - AppState.initialPage establecido a:', AppState.initialPage);
+                console.debug('[DEBUG] determineInitialTabFromQuery - AppState.initialPage establecido a:', AppState.initialPage);
             }
             return;
         }
@@ -331,28 +460,28 @@ function checkForNewContent() {
         const currentHash = calculateDBHash(AppState.dbData);
         AppState.dbHash = currentHash;
         
-        const savedHash = localStorage.getItem(CONFIG.dbVersionKey);
+        const savedHash = Storage.get(CONFIG.dbVersionKey);
         
         // Primera vez: guardar el hash actual y los datos sin mostrar notificación
         if (!savedHash) {
-            localStorage.setItem(CONFIG.dbVersionKey, currentHash);
+            Storage.set(CONFIG.dbVersionKey, currentHash);
             cacheDBData(AppState.dbData);
-            console.log('Base de datos inicializada');
+            logger.log('Base de datos inicializada');
             return;
         }
         
         // Si el hash es diferente, verificar si hay contenido nuevo
         if (currentHash !== savedHash) {
-            console.log('¡Se detectaron cambios en la base de datos!');
+            logger.log('¡Se detectaron cambios en la base de datos!');
             
             const oldData = getCachedDBData();
             const newData = AppState.dbData;
             
             // Si no hay datos antiguos, no podemos detectar contenido nuevo
             if (!oldData) {
-                localStorage.setItem(CONFIG.dbVersionKey, currentHash);
+                Storage.set(CONFIG.dbVersionKey, currentHash);
                 cacheDBData(newData);
-                console.log('No hay datos antiguos para comparar');
+                logger.log('No hay datos antiguos para comparar');
                 return;
             }
             
@@ -367,9 +496,9 @@ function checkForNewContent() {
                     showToast(`¡Se han agregado ${changes.totalNew} nuevos contenidos!`, 'info');
                 }
                 // Mostrar notificación del navegador si está permitida
-                console.log('Verificando notificaciones - Permission:', Notification.permission);
+                logger.log('Verificando notificaciones - Permission:', Notification.permission);
                 if ('Notification' in window && Notification.permission === 'granted') {
-                    console.log('Intentando mostrar notificación push...');
+                    logger.log('Intentando mostrar notificación push...');
                     const notificationTitle = changes.totalNew === 1 ? 'Nuevo contenido en FoxWeb' : `${changes.totalNew} nuevos contenidos en FoxWeb`;
                     const notificationBody = changes.totalNew === 1 ? 'Se ha agregado 1 nuevo programa al catálogo.' : `Se han agregado ${changes.totalNew} nuevos programas al catálogo.`;
                     try {
@@ -380,23 +509,23 @@ function checkForNewContent() {
                             tag: 'new-content',
                             requireInteraction: false
                         });
-                        console.log('Notificación mostrada exitosamente');
+                        logger.log('Notificación mostrada exitosamente');
                     } catch (e) {
                         console.error('Error mostrando notificación:', e);
                     }
                 } else if ('Notification' in window && Notification.permission === 'denied') {
-                    console.log('Notificaciones denegadas por el usuario');
+                    logger.log('Notificaciones denegadas por el usuario');
                 }
-                console.log('Nuevo contenido detectado:', changes);
+                logger.log('Nuevo contenido detectado:', changes);
             } else {
-                console.log('Los cambios en la base de datos no son contenido nuevo (puede que se haya eliminado o modificado)');
+                logger.log('Los cambios en la base de datos no son contenido nuevo (puede que se haya eliminado o modificado)');
             }
             
             // Actualizar el hash y la caché
-            localStorage.setItem(CONFIG.dbVersionKey, currentHash);
+            Storage.set(CONFIG.dbVersionKey, currentHash);
             cacheDBData(newData);
         } else {
-            console.log('La base de datos está actualizada');
+            console.debug('La base de datos está actualizada');
         }
     } catch (error) {
         console.error('Error verificando contenido nuevo:', error);
@@ -414,7 +543,9 @@ let cachedBlogPosts = null;
 function calculateBlogHash(posts) {
     if (!posts || !Array.isArray(posts)) return '';
     try {
-        return btoa(posts.length.toString());
+        // Hash basado en títulos y fechas para detectar cambios en el contenido
+        const hashData = posts.map(p => `${p.title}|${p.date}`);
+        return JSON.stringify(hashData);
     } catch (error) {
         return Date.now().toString();
     }
@@ -422,33 +553,37 @@ function calculateBlogHash(posts) {
 
 // Función para verificar si hay nuevo contenido en el blog
 async function checkForNewBlogContent() {
+    let hasChanges = false;
     try {
         const response = await fetch('/database/posts.json?v=' + Date.now());
         if (!response.ok) throw new Error('Error fetching posts.json');
         
         const posts = await response.json();
-        const currentHash = calculateBlogHash(posts);
-        const savedHash = localStorage.getItem(CONFIG.blogVersionKey);
         
-        // Primera vez: guardar el hash sin mostrar notificación
-        if (!savedHash) {
-            localStorage.setItem(CONFIG.blogVersionKey, currentHash);
-            cachedBlogPosts = posts;
-            console.log('Blog inicializado');
-            return;
+        if (!Array.isArray(posts)) {
+            console.warn('posts.json no es un array, ignorando');
+            return false;
         }
         
-        // Si hay un hash diferente, verificar si hay nuevos posts
+        const currentHash = calculateBlogHash(posts);
+        const savedHash = Storage.get(CONFIG.blogVersionKey);
+        
+        if (!savedHash) {
+            Storage.set(CONFIG.blogVersionKey, currentHash);
+            cachedBlogPosts = posts;
+            logger.log('Blog inicializado');
+            return false;
+        }
+        
         if (currentHash !== savedHash) {
-            console.log('¡Se detectaron cambios en el blog!');
+            logger.log('¡Se detectaron cambios en el blog!');
+            hasChanges = true;
             
-            // Contar posts nuevos (comparando títulos)
             const oldTitles = cachedBlogPosts ? cachedBlogPosts.map(p => p.title) : [];
             const newTitles = posts.map(p => p.title);
             const newPosts = newTitles.filter(t => !oldTitles.includes(t));
             
             if (newPosts.length > 0) {
-                // Crear notificación de nuevo contenido del blog
                 const notification = {
                     id: Date.now(),
                     type: 'info',
@@ -471,7 +606,6 @@ async function checkForNewBlogContent() {
                     ? '¡Nuevo artículo en el Blog!' 
                     : `¡${newPosts.length} nuevos artículos en el Blog!`, 'info');
                 
-                // Mostrar notificación del navegador si está permitida
                 if ('Notification' in window && Notification.permission === 'granted') {
                     const blogNotificationTitle = newPosts.length === 1 ? 'Nuevo artículo en el Blog de FoxWeb' : `${newPosts.length} nuevos artículos en el Blog de FoxWeb`;
                     const blogNotificationBody = newPosts.length === 1 ? `Se ha publicado: "${newPosts[0]}"` : `Se han publicado ${newPosts.length} nuevos artículos.`;
@@ -484,51 +618,60 @@ async function checkForNewBlogContent() {
                     });
                 }
                 
-                console.log('Nuevos posts detectados:', newPosts);
+                logger.log('Nuevos posts detectados:', newPosts);
             }
             
-            localStorage.setItem(CONFIG.blogVersionKey, currentHash);
+            Storage.set(CONFIG.blogVersionKey, currentHash);
             cachedBlogPosts = posts;
         }
     } catch (error) {
         console.error('Error verificando contenido del blog:', error);
     }
+    return hasChanges;
 }
 
-// Función para iniciar la verificación periódica del blog
+// Función para iniciar la verificación periódica del blog con exponential backoff
 function initBlogCheck() {
-    // Verificar inmediatamente
-    checkForNewBlogContent();
+    let checkDelay = CONFIG.checkInterval;
+    let maxDelay = 5 * 60 * 1000; // 5 min max
+    let checkCount = 0;
     
-    // Verificar cada intervalo configurado
-    setInterval(checkForNewBlogContent, CONFIG.checkInterval);
+    function scheduleCheck() {
+        const delay = Math.min(checkDelay * Math.pow(1.5, checkCount), maxDelay);
+        setTimeout(() => {
+            checkForNewBlogContent().then(changed => {
+                if (changed) {
+                    checkCount = 0; // Reset on change
+                } else {
+                    checkCount++;
+                }
+            });
+            scheduleCheck();
+        }, delay);
+    }
+    
+    checkForNewBlogContent().then(changed => {
+        if (changed) checkCount = 0;
+        scheduleCheck();
+    });
 }
 
 function calculateDBHash(dbData) {
     if (!dbData) return '';
     try {
-        // Solo usamos los conteos de elementos, sin timestamp para evitar falsos positivos
-        const hashData = {
-            programas: dbData.programas ? dbData.programas.length : 0,
-            sistemas: dbData.sistemas ? dbData.sistemas.length : 0,
-            juegos: dbData.juegos ? dbData.juegos.length : 0,
-            extras: dbData.extras ? dbData.extras.length : 0,
-            apks: dbData.apks ? dbData.apks.length : 0
-        };
-        return btoa(JSON.stringify(hashData));
+        // Generar hash basado en nombres y enlaces para detectar cambios reales
+        const hashData = {};
+        CATEGORY_KEYS.forEach(cat => {
+            hashData[cat] = (dbData[cat] || []).map(item => `${item.name}|${item.enlace}`);
+        });
+        return JSON.stringify(hashData);
     } catch (error) {
         return Date.now().toString();
     }
 }
 
 function getCachedDBData() {
-    try {
-        const cached = localStorage.getItem(`${CONFIG.dbVersionKey}_data`);
-        return cached ? JSON.parse(cached) : null;
-    } catch (error) {
-        console.error('Error obteniendo datos cacheados:', error);
-        return null;
-    }
+    return Storage.getJSON(`${CONFIG.dbVersionKey}_data`, null);
 }
 
 function cacheDBData(dbData) {
@@ -538,7 +681,7 @@ function cacheDBData(dbData) {
             cacheData[key] = dbData[key] ? dbData[key].map(item => item.name) : [];
         });
         cacheData.timestamp = new Date().toISOString();
-        localStorage.setItem(`${CONFIG.dbVersionKey}_data`, JSON.stringify(cacheData));
+        Storage.setJSON(`${CONFIG.dbVersionKey}_data`, cacheData);
     } catch (error) {
         console.error('Error guardando caché de datos:', error);
     }
@@ -719,7 +862,7 @@ function setViewMode(tabId, viewMode) {
         renderTab(tabId, AppState.dbData[getCategoryKey(tabId)]);
         
         // Save preference
-        localStorage.setItem('foxweb_view_mode_' + tabId, viewMode);
+        Storage.set('foxweb_view_mode_' + tabId, viewMode);
         
     } catch (error) {
         console.error('Error cambiando modo de vista:', error);
@@ -740,8 +883,8 @@ function getCategoryKey(tabId) {
 function initViewMode(tabId) {
     try {
         // Load saved preference per tab or use global preference from welcome page
-        const savedView = localStorage.getItem('foxweb_view_mode_' + tabId);
-        const globalView = localStorage.getItem('foxweb_view'); // From welcome page
+        const savedView = Storage.get('foxweb_view_mode_' + tabId);
+        const globalView = Storage.get('foxweb_view');
         const viewMode = savedView || globalView || 'cards';
         setViewMode(tabId, viewMode);
     } catch (error) {
@@ -760,13 +903,13 @@ function initAllViewModes() {
 // =============================================================================
 
 // Función showToast de respaldo (se usa antes de que main-features.js cargue)
-// Si la función real está disponible en window, la usa; si no, hace console.log
+// Si la función real está disponible en window, la usa; si no, hace logger.log
 function showToast(message, type = 'info', persistent) {
     if (window.showToast && window.showToast !== showToast) {
         window.showToast(message, type, persistent);
     } else {
         // Función de respaldo simple
-        console.log(`[Toast ${type}]: ${message}`);
+        logger.log(`[Toast ${type}]: ${message}`);
     }
 }
 
@@ -784,20 +927,24 @@ window.loadInfoMessage = function(page) {
 };
 
 // Función showErrorScreen de respaldo
+let showErrorScreenCalled = false;
 function showErrorScreen(message) {
-    if (typeof window.showErrorScreen === 'function') {
-        window.showErrorScreen(message);
-    } else {
-        console.error(`[Error Screen]: ${message}`);
+    if (showErrorScreenCalled) return; // Prevent infinite recursion
+    showErrorScreenCalled = true;
+    
+    try {
         document.body.innerHTML = `
             <div style="padding: 20px; text-align: center; background: #000; color: #fff; height: 100vh; display: flex; align-items: center; justify-content: center; flex-direction: column;">
                 <h1 style="color: #ff4500;">Error Crítico</h1>
-                <p>${message}</p>
+                <p>${escapeHTML ? escapeHTML(message) : message}</p>
                 <button onclick="location.reload()" style="margin-top: 20px; padding: 10px 20px; background: #ff4500; color: white; border: none; border-radius: 5px; cursor: pointer;">
                     Recargar Página
                 </button>
             </div>
         `;
+    } catch (e) {
+        // Fallback
+        alert('Error: ' + message);
     }
 }
 
@@ -820,6 +967,38 @@ const ACCESSIBILITY_KEYS = {
     ESCAPE: 'Escape'
 };
 
+/**
+ * Valida que una URL sea segura (http/https) y esté en lista blanca si es necesario
+ */
+function sanitizeURL(url) {
+    if (!url || url === '#') return '#';
+    
+    try {
+        // Si es una URL relativa (empieza con /), es segura
+        if (url.startsWith('/')) {
+            return url;
+        }
+        
+        const parsed = new URL(url);
+        const protocol = parsed.protocol;
+        
+        // Solo permitir http y https
+        if (protocol !== 'http:' && protocol !== 'https:') {
+            return '#';
+        }
+        
+        // Lista blanca opcional de dominios (comentada para flexibilidad)
+        // const ALLOWED_DOMAINS = [...];
+        // if (!ALLOWED_DOMAINS.some(d => parsed.hostname === d || parsed.hostname.endsWith('.' + d))) {
+        //     return '#';
+        // }
+        
+        return url;
+    } catch {
+        return '#';
+    }
+}
+
 function initAccessibility() {
     try {
         // Mejorar navegación por teclado
@@ -831,7 +1010,7 @@ function initAccessibility() {
         // Agregar roles faltantes a elementos interactivos
         enhanceInteractiveRoles();
         
-        console.log('Sistema de accesibilidad inicializado');
+        console.debug('Sistema de accesibilidad inicializado');
     } catch (error) {
         console.error('Error inicializando accesibilidad:', error);
     }
@@ -938,6 +1117,137 @@ function announceToScreenReader(message, priority = 'polite') {
 }
 
 // =============================================================================
+// MODALES CORE
+// =============================================================================
+
+let focusedElementBeforeModal = null;
+
+function openModal(modalId) {
+    try {
+        const modal = document.getElementById(modalId);
+        if (!modal) {
+            console.warn(`Modal ${modalId} no encontrado`);
+            return;
+        }
+        
+        focusedElementBeforeModal = document.activeElement;
+        
+        let backdrop = modal.querySelector('.modal-backdrop');
+        if (!backdrop) {
+            backdrop = document.createElement('div');
+            backdrop.className = 'modal-backdrop';
+            backdrop.setAttribute('role', 'presentation');
+            modal.insertBefore(backdrop, modal.firstChild);
+            
+            backdrop.addEventListener('click', function(e) {
+                if (e.target === backdrop) {
+                    closeModal(modalId);
+                }
+            });
+        }
+        
+        modal.style.display = 'flex';
+        modal.setAttribute('aria-hidden', 'false');
+        modal.removeAttribute('inert');
+        document.body.style.overflow = 'hidden';
+        
+        const focusable = modal.querySelector('button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])');
+        if (focusable) {
+            focusable.focus();
+        } else {
+            modal.setAttribute('tabindex', '-1');
+            modal.focus();
+        }
+        
+        modal.addEventListener('keydown', handleModalKeyDown);
+        
+        if (modalId === 'sugerenciaModal') {
+            if (typeof initSuggestionForm === 'function') initSuggestionForm();
+        }
+    } catch (error) {
+        console.error('Error abriendo modal:', error);
+    }
+}
+
+function closeModal(modalId) {
+    try {
+        const modal = modalId ? document.getElementById(modalId) : document.querySelector('.modal[style*="display: flex"]');
+        if (!modal) return;
+        
+        modal.style.display = 'none';
+        modal.setAttribute('aria-hidden', 'true');
+        document.body.style.overflow = '';
+        
+        if (focusedElementBeforeModal && focusedElementBeforeModal.focus) {
+            focusedElementBeforeModal.focus();
+            focusedElementBeforeModal = null;
+        }
+    } catch (error) {
+        console.error('Error closing modal:', error);
+    }
+}
+
+function initModals() {
+    try {
+        // Delegación de eventos para cerrar modales mediante el botón .close
+        document.addEventListener('click', (e) => {
+            const closeBtn = e.target.closest('.close');
+            if (closeBtn) {
+                const modal = closeBtn.closest('.modal');
+                if (modal && typeof closeModal === 'function') {
+                    closeModal(modal.id);
+                }
+            }
+        });
+
+        // Cerrar al hacer clic en el fondo (backdrop)
+        document.addEventListener('click', (e) => {
+            const openModalElement = e.target.closest('.modal[style*="display: flex"]');
+            if (openModalElement && e.target === openModalElement) {
+                closeModal();
+            }
+        });
+
+        // Cerrar con la tecla Escape
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') closeModal();
+        });
+
+        if (typeof initSuggestionForm === 'function') {
+            initSuggestionForm();
+        }
+    } catch (error) {
+        console.error('Error inicializando modales:', error);
+    }
+}
+
+function handleModalKeyDown(e) {
+    const modal = e.currentTarget;
+    if (e.key === 'Escape') {
+        closeModal(modal.id);
+        return;
+    }
+    if (e.key === 'Tab') {
+        const focusableElements = modal.querySelectorAll(
+            'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+        );
+        if (focusableElements.length === 0) {
+            e.preventDefault();
+            return;
+        }
+        const firstElement = focusableElements[0];
+        const lastElement = focusableElements[focusableElements.length - 1];
+        if (e.shiftKey && document.activeElement === firstElement) {
+            e.preventDefault();
+            lastElement.focus();
+        } else if (!e.shiftKey && document.activeElement === lastElement) {
+            e.preventDefault();
+            firstElement.focus();
+        }
+    }
+}
+
+// =============================================================================
 // UI COMPONENTS
 // =============================================================================
 
@@ -948,7 +1258,7 @@ function initUIComponents() {
     if (window.PaginationSystem && typeof window.PaginationSystem.init === 'function') {
         try {
             window.PaginationSystem.init();
-            console.log('[UI] Sistema de paginación inicializado');
+            console.debug('[UI] Sistema de paginación inicializado');
         } catch (error) {
             console.error('[UI] Error inicializando paginación:', error);
         }
@@ -961,7 +1271,7 @@ function initUIComponents() {
 
 function loadFavorites() {
     try {
-        const favorites = JSON.parse(localStorage.getItem('foxweb_favorites')) || [];
+        const favorites = Storage.getJSON('foxweb_favorites', []);
         AppState.favorites = new Set(favorites);
     } catch (error) {
         console.error('Error cargando favoritos:', error);
@@ -972,7 +1282,7 @@ function loadFavorites() {
 function saveFavorites() { 
     try { 
         const favoritesArray = Array.from(AppState.favorites); 
-        localStorage.setItem('foxweb_favorites', JSON.stringify(favoritesArray)); 
+        Storage.setJSON('foxweb_favorites', favoritesArray); 
     } catch (error) { 
         console.error('Error guardando favoritos:', error); 
     } 
@@ -1018,59 +1328,89 @@ function updateFavoriteIcon(button, itemId) {
     } 
 }
 
+// Actualizar todos los iconos de favoritos en una pestaña
+function updateAllFavoriteIconsInTab(tabId) {
+    const grid = document.getElementById('grid-' + tabId);
+    if (!grid) return;
+
+    // Obtener todos los botones de favorito de una vez
+    const favButtons = grid.querySelectorAll('[data-id] .favorite-btn, [data-id] .card-action-btn:first-child, [data-id] .fa-heart');
+    favButtons.forEach(button => {
+        const card = button.closest('.content-card');
+        if (card) {
+            const itemId = card.dataset.id;
+            if (itemId) {
+                updateFavoriteIcon(button, itemId);
+            }
+        }
+    });
+}
+
 function copyItemLink(itemId) {
     try {
-        const item = findItemById(itemId); 
-        if (!item) { 
-            showToast('No se pudo encontrar el item', 'error'); 
-            return; 
+        const item = findItemById(itemId);
+        if (!item) {
+            showToast('No se pudo encontrar el item', 'error');
+            return;
         }
-        
+
         let urlToCopy = item.enlace || '';
-        
-        if (item.modal && item.modal !== 'null') { 
-            showToast('Este contenido no tiene enlace directo para copiar', 'warning'); 
-            return; 
-        } 
-        
-        if (!urlToCopy || urlToCopy === '#') { 
-            showToast('Este item no tiene enlace para copiar', 'warning'); 
-            return; 
+
+        if (item.modal && item.modal !== 'null') {
+            showToast('Este contenido no tiene enlace directo para copiar', 'warning');
+            return;
         }
-        
+
+        if (!urlToCopy || urlToCopy === '#') {
+            showToast('Este item no tiene enlace para copiar', 'warning');
+            return;
+        }
+
         if (urlToCopy.startsWith('/redirect?url=')) {
             urlToCopy = decodeURIComponent(urlToCopy.replace('/redirect?url=', ''));
         }
-        
-        navigator.clipboard.writeText(urlToCopy).then(() => showToast('Enlace copiado: ' + urlToCopy, 'success')).catch(err => {
-            console.error('Error copiando al portapapeles:', err); 
-            const textArea = document.createElement('textarea'); 
-            textArea.value = urlToCopy; 
-            document.body.appendChild(textArea); 
-            textArea.select(); 
-            try { 
-                document.execCommand('copy'); 
-                showToast('Enlace copiado: ' + urlToCopy, 'success'); 
-            } catch (e) { 
-                showToast('Error copiando enlace', 'error'); 
+
+        navigator.clipboard.writeText(urlToCopy).then(() => {
+            showToast('Enlace copiado', 'success');
+        }).catch(err => {
+            console.error('Error copiando al portapapeles:', err);
+            const textArea = document.createElement('textarea');
+            textArea.value = urlToCopy;
+            document.body.appendChild(textArea);
+            textArea.select();
+            try {
+                document.execCommand('copy');
+                showToast('Enlace copiado', 'success');
+            } catch (e) {
+                showToast('Error copiando enlace', 'error');
             }
-            document.body.removeChild(textArea);
         });
-    } catch (error) { 
-        console.error('Error copiando enlace:', error); 
-        showToast('Error al copiar enlace', 'error'); 
-    } 
+    } catch (error) {
+        console.error('Error en copyItemLink:', error);
+        showToast('Error al copiar enlace', 'error');
+    }
 }
 
 function findItemById(itemId) {
     try {
         if (!AppState.dbData) return null;
+        
+        // 1. Intentar buscar por ID único (formato "000001")
+        for (const category in AppState.dbData) {
+            if (category === 'modales') continue;
+            const item = AppState.dbData[category].find(i => i.id === itemId);
+            if (item) return item;
+        }
+        
+        // 2. Fallback: Buscar por formato antiguo "categoria_indice"
         const [category, indexStr] = itemId.split('_');
-        if (!CATEGORY_KEYS.includes(category)) return null;
-        const categoryData = AppState.dbData[category];
-        const index = parseInt(indexStr, 10);
-        if (!categoryData || !categoryData[index]) return null;
-        return categoryData[index];
+        if (category && indexStr && AppState.dbData[category]) {
+            const index = parseInt(indexStr, 10);
+            const categoryData = AppState.dbData[category];
+            if (categoryData[index]) return categoryData[index];
+        }
+        
+        return null;
     } catch (error) {
         console.error('Error buscando item:', error);
         return null;
@@ -1083,8 +1423,8 @@ function findItemById(itemId) {
 
 function initTheme() {
     try {
-        const savedTheme = localStorage.getItem('foxweb_theme') || CONFIG.defaultTheme;
-        AppState.theme = savedTheme; // Sync AppState with localStorage
+        const savedTheme = Storage.get('foxweb_theme') || CONFIG.defaultTheme;
+        AppState.theme = savedTheme;
         setTheme(savedTheme);
     } catch (error) {
         console.error('Error inicializando tema:', error);
@@ -1109,7 +1449,7 @@ function setTheme(theme) {
     try {
         AppState.theme = theme; 
         document.documentElement.setAttribute('data-theme', theme); 
-        localStorage.setItem('foxweb_theme', theme); 
+        Storage.set('foxweb_theme', theme); 
         
         // Sync icons using ThemeManager if available
         if (typeof window.FoxWeb !== 'undefined' && window.FoxWeb.theme) {
@@ -1140,19 +1480,16 @@ function setTheme(theme) {
 
 const DEFAULT_NOTIFICATIONS = [
     { id: 1, type: 'info', title: '🎉 Bienvenido a FoxWeb', message: 'Gracias por visitar nuestro centro de descargas. ¡Explora nuestro contenido!', date: new Date().toISOString(), read: false },
-    { id: 2, type: 'success', title: '📦 Contenido disponible', message: 'Explora nuestro catálogo con 15 APKs y 17 juegos disponibles.', date: new Date(Date.now() - 3600000).toISOString(), read: false },
-    { id: 3, type: 'info', title: '💡 Contraseña importante', message: 'Recuerda usar la contraseña: foxorange224', date: new Date(Date.now() - 7200000).toISOString(), read: false }
+    { id: 2, type: 'success', title: '📦 Contenido disponible', message: 'Explora nuestro catálogo con software, juegos y APKs verificadas.', date: new Date(Date.now() - 3600000).toISOString(), read: false }
 ];
 
 function loadNotifications() {
     try {
-        const saved = localStorage.getItem('foxweb_notifications');
-        // Si no hay notificaciones guardadas o las notificaciones existentes no tienen el contenido nuevo, usar las predeterminadas
+        const saved = Storage.getJSON('foxweb_notifications', null);
         if (!saved) {
             AppState.notifications = DEFAULT_NOTIFICATIONS.slice();
         } else {
-            const parsedNotifications = JSON.parse(saved);
-            // Verificar si las notificaciones contienen el contenido nuevo
+            const parsedNotifications = saved;
             const hasNewContent = parsedNotifications.some(n => n.message && n.message.includes('15 APKs'));
             if (!hasNewContent && parsedNotifications.length < 3) {
                 AppState.notifications = DEFAULT_NOTIFICATIONS.slice();
@@ -1168,7 +1505,7 @@ function loadNotifications() {
 
 function saveNotifications() {
     try {
-        localStorage.setItem('foxweb_notifications', JSON.stringify(AppState.notifications));
+        Storage.setJSON('foxweb_notifications', AppState.notifications);
     } catch (error) {
         console.error('Error guardando notificaciones:', error);
     }
@@ -1199,7 +1536,7 @@ function isNotificationRouteEnabled() {
 function initNotificationCenter() { 
     // Verificar si las notificaciones están habilitadas para esta ruta
     if (!isNotificationRouteEnabled()) {
-        console.log('Notificaciones deshabilitadas para esta página');
+        console.debug('Notificaciones deshabilitadas para esta página');
         return;
     }
     
@@ -1240,7 +1577,7 @@ function setupNotificationCenter(notificationBtn, notificationCenter) {
         document.removeEventListener('click', handleOutsideClick);
         document.addEventListener('click', handleOutsideClick);
         
-        console.log('Centro de notificaciones inicializado correctamente');
+        console.debug('Centro de notificaciones inicializado correctamente');
         
         // Actualizar el badge después de que el panel esté cargado
         updateNotificationBadge();
@@ -1349,11 +1686,20 @@ function markNotificationsAsRead() {
     } 
 }
 
+let isFirstBadgeUpdate = true;
+
 function updateNotificationBadge() { 
     try { 
         const badge = document.querySelector('.notification-badge'); 
         if (!badge) return; 
         const unreadCount = AppState.notifications.filter(n => !n.read).length; 
+        
+        if (isFirstBadgeUpdate) {
+            badge.style.display = 'none';
+            isFirstBadgeUpdate = false;
+            return;
+        }
+
         badge.textContent = unreadCount; 
         badge.style.display = unreadCount > 0 ? 'flex' : 'none'; 
     } catch (error) { 
@@ -1398,12 +1744,16 @@ function createNotificationElement(notification) {
         div.setAttribute('role', 'listitem'); 
         const icon = getNotificationIcon(notification.type); 
         const time = formatNotificationTime(notification.date); 
+        // Sanitizar datos de notificación
+        const safeTitle = escapeHTML(notification.title);
+        const safeMessage = escapeHTML(notification.message);
+        const safeTime = escapeHTML(time);
         div.innerHTML = `
             <i class="notification-icon ${icon.class}" style="color: ${icon.color};" aria-hidden="true"></i>
             <div class="notification-content">
-                <strong>${notification.title}</strong>
-                <p>${notification.message}</p>
-                <small>${time}</small>
+                <strong>${safeTitle}</strong>
+                <p>${safeMessage}</p>
+                <small>${safeTime}</small>
             </div>
         `; 
         return div;
@@ -1458,8 +1808,128 @@ function formatNotificationTime(dateString) {
 }
 
 // =============================================================================
+// ICON LOADER SYSTEM - Carga de iconos con detección de conectividad
+// =============================================================================
+(function() {
+    const STYLE_ID = 'foxweb-icon-loader-styles';
+
+    function injectStyles() {
+        if (document.getElementById(STYLE_ID)) return;
+        const style = document.createElement('style');
+        style.id = STYLE_ID;
+        style.textContent = `
+            .icon-loading-overlay {
+                position: absolute;
+                inset: 0;
+                background: rgba(0,0,0,0.08);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                backdrop-filter: blur(1px);
+                z-index: 5;
+            }
+            .icon-spinner {
+                width: 18px; height: 18px;
+                border: 2px solid var(--border);
+                border-top-color: var(--primary);
+                border-radius: 50%;
+                animation: foxweb-icon-spin 0.7s linear infinite;
+            }
+            @keyframes foxweb-icon-spin {
+                to { transform: rotate(360deg); }
+            }
+            /* Asegurar que los contenedores de iconos sean relativos */
+            .card-icon, .profile-avatar, .nav-icon, .tab-icon {
+                position: relative !important;
+            }
+        `;
+        document.head.appendChild(style);
+    }
+
+    function isOnline() {
+        return navigator.onLine;
+    }
+
+    function loadIcon(img) {
+        // Usar getAttribute/setAttribute para compatibilidad
+        if (img.getAttribute('data-icon-loaded')) return;
+
+        // Si ya está cargada completamente, marcarla y salir
+        if (img.complete && img.naturalWidth > 0) {
+            img.setAttribute('data-icon-loaded', 'true');
+            return;
+        }
+
+        if (!isOnline()) {
+            console.debug('[IconLoader] Offline - skipping', img.src);
+            return;
+        }
+
+        const src = img.src;
+        const parent = img.parentElement;
+        if (!parent) return;
+
+        // Asegurar posición relativa en el padre
+        const computed = window.getComputedStyle(parent);
+        if (computed.position === 'static') {
+            parent.style.position = 'relative';
+        }
+
+        // Evitar múltiples overlays
+        if (parent.querySelector('.icon-loading-overlay')) return;
+
+        // Crear overlay con spinner
+        const overlay = document.createElement('div');
+        overlay.className = 'icon-loading-overlay';
+        overlay.innerHTML = '<div class="icon-spinner"></div>';
+        parent.appendChild(overlay);
+
+        // Cargar imagen en segundo plano
+        const tempImg = new Image();
+        tempImg.onload = () => {
+            img.src = src;
+            img.setAttribute('data-icon-loaded', 'true');
+            overlay.remove();
+        };
+        tempImg.onerror = () => {
+            // Reintentar en 5 segundos
+            setTimeout(() => loadIcon(img), 5000);
+        };
+        tempImg.src = src;
+    }
+
+    function initIconLoader() {
+        injectStyles();
+        const images = document.querySelectorAll('img.card-icon-img:not([data-icon-loaded])');
+        console.debug('[IconLoader] Loading', images.length, 'icons');
+        images.forEach(loadIcon);
+    }
+    
+    // Eventos de conectividad
+    window.addEventListener('online', initIconLoader);
+    window.addEventListener('offline', () => {
+        console.debug('[IconLoader] Connection lost - icons paused');
+    });
+
+    // Inicializar al cargar el DOM
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', () => {
+            setTimeout(initIconLoader, 200);
+        });
+    } else {
+        setTimeout(initIconLoader, 200);
+    }
+
+    // Exponer para recarga manual
+    window.reloadIcons = initIconLoader;
+})();
+
+// =============================================================================
 // EXPORTAR API PÚBLICA
 // =============================================================================
+
+window.openModal = openModal;
+window.closeModal = closeModal;
 
 window.FoxWebCore = {
     state: AppState,
@@ -1471,5 +1941,7 @@ window.FoxWebCore = {
     toggleFavorite,
     findItemById,
     showErrorScreen,
-    closeErrorScreen
+    closeErrorScreen,
+    openModal,
+    closeModal
 };

@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="referrer" content="strict-origin-when-cross-origin">
     <title>Redireccionando...</title>
+    <meta name="description" content="Redireccionando a la página principal de FoxWeb...">
     <meta name="theme-color" content="#b34700">
     <link rel="icon" type="image/png" href="/assets/favicon-96x96.png" sizes="96x96">
     <link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
@@ -161,12 +162,32 @@
         <div class="error">
             <p class="message">⚠️ Falta la URL</p>
         </div>
-        <p class="usage">Uso: /rediret?url=www.ejemplo.com</p>
+        <p class="usage">Uso: /redirect?url=www.ejemplo.com</p>
         <img src="/assets/banner.webp" alt="Banner Publicitario" style="max-width: 100%; height: auto; margin-top: 1.5rem; border-radius: 8px;" loading="lazy" width="728" height="90">
     </div>
 
     <script>
         (function() {
+            // Lista blanca de dominios permitidos para redirección
+            const ALLOWED_DOMAINS = [
+              'mediafire.com', 'drive.google.com', 'mega.nz', 'dropbox.com',
+              'github.com', 'sourceforge.net', 'gitlab.com',
+              '7-zip.org', 'code.visualstudio.com', 'libreoffice.org',
+              'gimp.org', 'audacityteam.org', 'obsproject.com',
+              'notepad-plus-plus.org', 'krita.org', 'inkscape.org',
+              'blackmagicdesign.com', 'python.org', 'git-scm.com',
+              'nodejs.org', 'apachefriends.org', 'getsharex.com',
+              'getgreenshot.org', 'voidtools.com', 'keepassxc.org',
+              'malwarebytes.com', 'qbittorrent.org', 'filezilla-project.org',
+              'etcher.balena.io', 'rufus.ie', 'cpuid.com',
+              'ccleaner.com', '3dpchip.com', 'linuxmint.com',
+              'archlinux.org', 'ubuntu-mate.org', 'debian.org',
+              'reactos.org', 'gparted.org', 'ventoy.net',
+              'store.steampowered.com', 'llaun.ch', 'optijuegos.net',
+              'gofile.io', 'assault.cubers.net', 'openttd.org',
+              'supertuxkart.net', 'retroarch.com'
+            ];
+            
             // Obtener parámetros de la URL
             const params = new URLSearchParams(window.location.search);
             let url = params.get('url');
@@ -185,9 +206,36 @@
             // Mostrar la URL destino
             urlDisplay.textContent = url;
             
-            // Asegurar que la URL tenga el protocolo si no lo tiene
-            if (!url.startsWith('http://') && !url.startsWith('https://')) {
-                url = 'https://' + url;
+            // Validar y sanitizar URL
+            try {
+                // Asegurar que la URL tenga el protocolo si no lo tiene
+                if (!url.startsWith('http://') && !url.startsWith('https://')) {
+                    url = 'https://' + url;
+                }
+                
+                const urlObj = new URL(url);
+                const hostname = urlObj.hostname.toLowerCase();
+                
+                // Verificar que el dominio esté en la lista blanca
+                const isAllowed = ALLOWED_DOMAINS.some(domain => {
+                  return hostname === domain || hostname.endsWith('.' + domain);
+                });
+                
+                if (!isAllowed) {
+                    // Dominio no permitido
+                    loadingDiv.style.display = 'none';
+                    errorDiv.style.display = 'block';
+                    const errorMessage = errorDiv.querySelector('.message');
+                    if (errorMessage) {
+                        errorMessage.innerHTML = '⚠️ dominio no permitido<br><small>Solo se permiten enlaces de sitios seguros conocidos</small>';
+                    }
+                    return;
+                }
+            } catch (e) {
+                // URL inválida
+                loadingDiv.style.display = 'none';
+                errorDiv.style.display = 'block';
+                return;
             }
             
             // Contador regresivo de 3 segundos

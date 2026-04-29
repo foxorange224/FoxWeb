@@ -1,8 +1,21 @@
 {
   "programas": [
     {
+      "name": "Mypal",
+      "icon": "https://cdn2.portableapps.com/MyPALPortable_128.png",
+      "info": "¿Buscas el navegador web perfecto para Windows XP? Mypal es un navegador actual y con mantenimiento para Windows XP!",
+      "enlace": "#",
+      "modal": "mypalModal",
+      "badges": [
+        "LIGERO",
+        "OPEN SOURCE",
+        "WINDOWS XP"
+      ],
+      "id": "000001"
+    },
+    {
       "name": "7-Zip",
-      "icon": "fa-solid fa-file-zipper",
+      "icon": "https://www.google.com/s2/favicons?domain=7-zip.org&sz=28",
       "info": "Compresor de archivos de alto rendimiento y código abierto. Soporta formatos como 7z, ZIP, RAR, TAR y GZIP.",
       "enlace": "https://www.7-zip.org/download.html",
       "modal": null,
@@ -10,11 +23,12 @@
         "COMPRESIÓN",
         "OPEN SOURCE",
         "ESENCIAL"
-      ]
+      ],
+      "id": "000002"
     },
     {
       "name": "VLC Media Player",
-      "icon": "fa-solid fa-compact-disc",
+      "icon": "https://www.google.com/s2/favicons?domain=images.videolan.org/vlc/index.es.html&sz=28",
       "info": "El reproductor multimedia universal. Reproduce cualquier formato de video o audio sin necesidad de instalar códecs adicionales.",
       "enlace": "#",
       "modal": "vlcModal",
@@ -22,11 +36,12 @@
         "MULTIMEDIA",
         "UNIVERSAL",
         "ESENCIAL"
-      ]
+      ],
+      "id": "000003"
     },
     {
       "name": "Visual Studio Code",
-      "icon": "fa-solid fa-code",
+      "icon": "https://www.google.com/s2/favicons?domain=code.visualstudio.com&sz=28",
       "info": "Editor de código fuente ligero pero potente. Soporte para múltiples lenguajes, debugging y control de Git integrado.",
       "enlace": "https://code.visualstudio.com/Download",
       "modal": null,
@@ -34,11 +49,12 @@
         "PROGRAMACIÓN",
         "EDITOR",
         "GRATUITO"
-      ]
+      ],
+      "id": "000004"
     },
     {
       "name": "LibreOffice",
-      "icon": "fa-solid fa-file-word",
+      "icon": "https://www.google.com/s2/favicons?domain=libreoffice.org&sz=28",
       "info": "Suite ofimática completa y gratuita. Incluye procesador de texto, hojas de cálculo, presentaciones y más.",
       "enlace": "https://www.libreoffice.org/download/download-libreoffice/",
       "modal": null,
@@ -46,11 +62,12 @@
         "OFIMÁTICA",
         "PRODUCTIVIDAD",
         "GRATUITO"
-      ]
+      ],
+      "id": "000005"
     },
     {
       "name": "GIMP",
-      "icon": "fa-solid fa-image",
+      "icon": "https://www.google.com/s2/favicons?domain=gimp.org&sz=28",
       "info": "Editor de imágenes de código abierto. Potente alternativa a Photoshop con soporte para capas, filtros y scripts.",
       "enlace": "https://www.gimp.org/downloads/",
       "modal": null,
@@ -58,11 +75,12 @@
         "EDICIÓN",
         "FOTOS",
         "OPEN SOURCE"
-      ]
+      ],
+      "id": "000006"
     },
     {
       "name": "Audacity",
-      "icon": "fa-solid fa-wave-square",
+      "icon": "https://www.google.com/s2/favicons?domain=audacityteam.org&sz=28",
       "info": "Editor de audio gratuito y de código abierto. Graba, edita y mezcla pistas de audio de forma profesional.",
       "enlace": "https://www.audacityteam.org/download/",
       "modal": null,
@@ -70,11 +88,12 @@
         "AUDIO",
         "EDITOR",
         "OPEN SOURCE"
-      ]
+      ],
+      "id": "000007"
     },
     {
       "name": "OBS Studio",
-      "icon": "fa-solid fa-video",
+      "icon": "https://www.google.com/s2/favicons?domain=obsproject.com&sz=28",
       "info": "Software de grabación y transmisión en vivo. Gratuito y open source para streamers, youtubers y creadores.",
       "enlace": "https://obsproject.com/download",
       "modal": null,
@@ -82,23 +101,25 @@
         "STREAMING",
         "GRABACIÓN",
         "OPEN SOURCE"
-      ]
+      ],
+      "id": "000008"
     },
     {
       "name": "Notepad++",
-      "icon": "fa-solid fa-file-code",
+      "icon": "https://www.google.com/s2/favicons?domain=notepad-plus-plus.org/downloads&sz=28",
       "info": "Editor de texto y código fuente potente y ligero. Ideal para programadores, con soporte para múltiples lenguajes y plugins.",
-      "enlace": "https://github.com/notepad-plus-plus/notepad-plus-plus/releases/latest",
+      "enlace": "https://notepad-plus-plus.org/downloads",
       "modal": null,
       "badges": [
         "EDITOR",
         "PROGRAMACIÓN",
         "WINDOWS"
-      ]
+      ],
+      "id": "000009"
     },
     {
       "name": "Krita",
-      "icon": "fa-solid fa-paintbrush",
+      "icon": "https://www.google.com/s2/favicons?domain=krita.org&sz=28",
       "info": "Software de pintura digital y animación de código abierto. Alternativa gratuita a Photoshop para artistas digitales.",
       "enlace": "https://krita.org/es/download/",
       "modal": null,
@@ -106,11 +127,12 @@
         "DISEÑO",
         "PINTURA DIGITAL",
         "OPEN SOURCE"
-      ]
+      ],
+      "id": "000010"
     },
     {
       "name": "Inkscape",
-      "icon": "fa-solid fa-draw-polygon",
+      "icon": "https://www.google.com/s2/favicons?domain=inkscape.org&sz=28",
       "info": "Editor de gráficos vectoriales profesional. Crea logotipos, ilustraciones, diagramas y más. Alternativa a Illustrator.",
       "enlace": "https://inkscape.org/release/",
       "modal": null,
@@ -118,11 +140,12 @@
         "VECTORES",
         "DISEÑO",
         "OPEN SOURCE"
-      ]
+      ],
+      "id": "000011"
     },
     {
       "name": "DaVinci Resolve",
-      "icon": "fa-solid fa-film",
+      "icon": "https://www.google.com/s2/favicons?domain=blackmagicdesign.com&sz=28",
       "info": "Software profesional de edición de video, colorización y postproducción. Versión gratuita con funciones completas.",
       "enlace": "https://www.blackmagicdesign.com/products/davinciresolve/",
       "modal": null,
@@ -130,11 +153,12 @@
         "VIDEO",
         "EDICIÓN",
         "PROFESIONAL"
-      ]
+      ],
+      "id": "000012"
     },
     {
       "name": "Python",
-      "icon": "fa-brands fa-python",
+      "icon": "https://www.google.com/s2/favicons?domain=python.org&sz=28",
       "info": "Lenguaje de programación interpretado. Simple, potente y popular para ciencia de datos, IA, web y automatización.",
       "enlace": "https://www.python.org/downloads/",
       "modal": null,
@@ -142,11 +166,12 @@
         "PROGRAMACIÓN",
         "LENGUAJE",
         "OPEN SOURCE"
-      ]
+      ],
+      "id": "000013"
     },
     {
       "name": "Git",
-      "icon": "fa-brands fa-git-alt",
+      "icon": "https://www.google.com/s2/favicons?domain=git-scm.com&sz=28",
       "info": "Sistema de control de versiones distribuido. Esencial para desarrolladores para gestionar código y colaborar.",
       "enlace": "https://git-scm.com/downloads",
       "modal": null,
@@ -154,11 +179,12 @@
         "CONTROL VERSIONES",
         "DESARROLLO",
         "OPEN SOURCE"
-      ]
+      ],
+      "id": "000014"
     },
     {
       "name": "Node.js",
-      "icon": "fa-brands fa-node-js",
+      "icon": "https://www.google.com/s2/favicons?domain=nodejs.org&sz=28",
       "info": "Entorno de ejecución para JavaScript del lado del servidor. Ideal para aplicaciones web escalables y APIs.",
       "enlace": "https://nodejs.org/en/download/",
       "modal": null,
@@ -166,11 +192,12 @@
         "JAVASCRIPT",
         "SERVER",
         "OPEN SOURCE"
-      ]
+      ],
+      "id": "000015"
     },
     {
       "name": "XAMPP",
-      "icon": "fa-solid fa-server",
+      "icon": "https://www.google.com/s2/favicons?domain=apachefriends.org&sz=28",
       "info": "Paquete de servidor web Apache con PHP, MySQL y Perl. Entorno de desarrollo web local completo y gratuito.",
       "enlace": "https://www.apachefriends.org/download.html",
       "modal": null,
@@ -178,22 +205,24 @@
         "WEB",
         "DESARROLLO",
         "SERVIDOR"
-      ]
+      ],
+      "id": "000016"
     },
     {
       "name": "ShareX",
-      "icon": "fa-solid fa-camera",
+      "icon": "https://www.google.com/s2/favicons?domain=getsharex.com&sz=28",
       "info": "Suite de captura de pantalla y grabación avanzada. Captura, anota, graba GIFs y sube automáticamente a la nube.",
       "enlace": "https://getsharex.com/",
       "modal": null,
       "badges": [
         "CAPTURA",
         "PRODUCTIVIDAD"
-      ]
+      ],
+      "id": "000017"
     },
     {
       "name": "Greenshot",
-      "icon": "fa-solid fa-camera",
+      "icon": "https://www.google.com/s2/favicons?domain=getgreenshot.org&sz=28",
       "info": "Herramienta de captura de pantalla ligera y potente. Captura, anota y comparte fácilmente.",
       "enlace": "https://getgreenshot.org/downloads/",
       "modal": null,
@@ -201,11 +230,12 @@
         "CAPTURA",
         "PRODUCTIVIDAD",
         "OPEN SOURCE"
-      ]
+      ],
+      "id": "000018"
     },
     {
       "name": "Everything",
-      "icon": "fa-solid fa-search",
+      "icon": "https://www.google.com/s2/favicons?domain=voidtools.com&sz=28",
       "info": "Motor de búsqueda de archivos instantáneo para Windows. Encuentra cualquier archivo en segundos.",
       "enlace": "https://www.voidtools.com/downloads/",
       "modal": null,
@@ -213,11 +243,12 @@
         "BÚSQUEDA",
         "PRODUCTIVIDAD",
         "RÁPIDO"
-      ]
+      ],
+      "id": "000019"
     },
     {
       "name": "KeePassXC",
-      "icon": "fa-solid fa-key",
+      "icon": "https://www.google.com/s2/favicons?domain=keepassxc.org&sz=28",
       "info": "Gestor de contraseñas seguro y de código abierto. Almacena tus contraseñas en una base de datos encriptada.",
       "enlace": "https://keepassxc.org/download/",
       "modal": null,
@@ -225,11 +256,12 @@
         "SEGURIDAD",
         "CONTRASEÑAS",
         "OPEN SOURCE"
-      ]
+      ],
+      "id": "000020"
     },
     {
       "name": "Malwarebytes",
-      "icon": "fa-solid fa-shield-alt",
+      "icon": "https://www.google.com/s2/favicons?domain=es.malwarebytes.com&sz=28",
       "info": "Potente antivirus y anti-malware que protege contra amenazas avanzadas, ransomware y sitios web maliciosos.",
       "enlace": "https://es.malwarebytes.com/",
       "modal": null,
@@ -237,11 +269,12 @@
         "ANTIVIRUS",
         "SEGURIDAD",
         "PROTECCIÓN"
-      ]
+      ],
+      "id": "000021"
     },
     {
       "name": "qBittorrent",
-      "icon": "fa-solid fa-download",
+      "icon": "https://www.google.com/s2/favicons?domain=qbittorrent.org&sz=28",
       "info": "Cliente de BitTorrent gratuitos, de código abierto y sin anuncios. Interfaz clara y bajo consumo de recursos.",
       "enlace": "https://www.qbittorrent.org/",
       "modal": null,
@@ -249,33 +282,36 @@
         "TORRENT",
         "DESCARGAS",
         "OPEN SOURCE"
-      ]
+      ],
+      "id": "000022"
     },
     {
       "name": "FileZilla",
-      "icon": "fa-solid fa-server",
+      "icon": "https://www.google.com/s2/favicons?domain=filezilla-project.org&sz=28",
       "info": "Cliente FTP, SFTP y FTPS gratuitos. Transfiere archivos de forma rápida y segura entre tu PC y servidores web.",
       "enlace": "https://filezilla-project.org/download.php",
       "modal": null,
       "badges": [
         "FTP",
         "TRANSFERENCIA"
-      ]
+      ],
+      "id": "000023"
     },
     {
       "name": "BalenaEtcher",
-      "icon": "fa-solid fa-hard-drive",
+      "icon": "https://www.google.com/s2/favicons?domain=etcher.balena.io&sz=28",
       "info": "Herramienta confiable para grabar imágenes de sistema (ISO, IMG) en unidades USB o tarjetas SD de forma segura y sencilla.",
       "enlace": "https://etcher.balena.io/",
       "modal": null,
       "badges": [
         "USB",
         "HERRAMIENTA"
-      ]
+      ],
+      "id": "000024"
     },
     {
       "name": "Rufus (Windows)",
-      "icon": "fa-brands fa-usb",
+      "icon": "https://www.google.com/s2/favicons?domain=rufus.ie&sz=28",
       "info": "Herramienta ligera y rápida para crear unidades USB de arranque desde imágenes ISO. No requiere instalación.",
       "enlace": "https://rufus.ie/downloads/",
       "modal": null,
@@ -283,11 +319,12 @@
         "USB",
         "HERRAMIENTA",
         "PORTABLE"
-      ]
+      ],
+      "id": "000025"
     },
     {
       "name": "CPU-Z",
-      "icon": "fa-solid fa-microchip",
+      "icon": "https://upload.wikimedia.org/wikipedia/commons/thumb/2/2a/CPU-Z_Icon.svg/250px-CPU-Z_Icon.svg.png",
       "info": "Muestra información detallada sobre los componentes de tu sistema: procesador, placa base, memoria RAM y gráficos.",
       "enlace": "https://www.cpuid.com/softwares/cpu-z.html",
       "modal": null,
@@ -295,11 +332,12 @@
         "DIAGNÓSTICO",
         "HARDWARE",
         "INFORMACIÓN"
-      ]
+      ],
+      "id": "000026"
     },
     {
       "name": "CrystalDiskInfo",
-      "icon": "fa-solid fa-hard-drive",
+      "icon": "https://upload.wikimedia.org/wikipedia/commons/4/42/%D0%9B%D0%BE%D0%B3%D0%BE%D1%82%D0%B8%D0%BF_%D0%BF%D1%80%D0%BE%D0%B3%D1%80%D0%B0%D0%BC%D0%BC%D1%8B_CrystalDiskInfo.png",
       "info": "Monitoriza la salud de tus discos duros y SSD. Muestra temperatura, horas de uso y alerta de posibles fallos.",
       "enlace": "https://www.mediafire.com/file/4b5plqpogmotpmg",
       "modal": null,
@@ -307,22 +345,24 @@
         "MONITOREO",
         "DISCO",
         "SALUD"
-      ]
+      ],
+      "id": "000027"
     },
     {
       "name": "CCleaner",
-      "icon": "fa-solid fa-broom",
+      "icon": "https://www.google.com/s2/favicons?domain=ccleaner.com&sz=28",
       "info": "Herramienta de limpieza y optimización del sistema. Elimina archivos temporales y entradas de registro innecesarias.",
       "enlace": "https://www.ccleaner.com/ccleaner/download",
       "modal": null,
       "badges": [
         "LIMPIEZA",
         "OPTIMIZACIÓN"
-      ]
+      ],
+      "id": "000028"
     },
     {
       "name": "Defraggler",
-      "icon": "fa-solid fa-hard-drive",
+      "icon": "https://upload.wikimedia.org/wikipedia/en/thumb/5/57/Defraggler_icon.png/250px-Defraggler_icon.png",
       "info": "Defraggler es una herramienta de desfragmentación de disco desarrollada por Piriform. Permite desfragmentar unidades de disco duro para mejorar el rendimiento del sistema al reorganizar los datos fragmentados.",
       "enlace": "https://www.mediafire.com/file/t8u6857e4aaftez",
       "modal": null,
@@ -330,11 +370,12 @@
         "DESFRAGMENTAR",
         "OPTIMIZACIÓN",
         "DISCOS"
-      ]
+      ],
+      "id": "000029"
     },
     {
       "name": "Smart Defrag (Versión 11)",
-      "icon": "fa-solid fa-gears",
+      "icon": "https://download.iobit.com/mediaresource/icon/sd-icon.png",
       "info": "Herramienta especial para optimizar y defragmentar el disco. Compatible con Windows XP hasta el actual.",
       "enlace": "https://www.mediafire.com/file/1su7mvz3z97s4bc/Smart+Defrag+11.1.0.466.zip/file",
       "modal": null,
@@ -342,23 +383,25 @@
         "DISCOS",
         "DESFRAGMENTAR",
         "HDD"
-      ]
+      ],
+      "id": "000030"
     },
     {
       "name": "3DP Chip",
-      "icon": "fa-solid fa-gears",
+      "icon": "https://images.dwncdn.net/images/t_app-icon-l/p/5e4a8dba-6e08-4a63-82b5-8c502751f14f/3389050044/2094_4-10909920-imgingest-4198681035648170667.gif",
       "info": "Identifica automáticamente el hardware de tu PC y descarga los controladores necesarios de forma rápida y sencilla.",
-      "enlace": "https://www.3dpchip.com/",
+      "enlace": "https://www.mediafire.com/file/iqba0i3r7u65vgk/3DP_Chip_v2603.exe/file",
       "modal": null,
       "badges": [
         "DRIVERS",
         "DETECCIÓN",
         "WINDOWS"
-      ]
+      ],
+      "id": "000031"
     },
     {
-      "name": "Driver Booster (Versión 10.3)",
-      "icon": "fa-solid fa-gears",
+      "name": "Driver Booster 10.3",
+      "icon": "https://shared.fastly.steamstatic.com/community_assets/images/apps/920490/2e8714fd09ec091ddedf397ef690bed446f2ce9b.ico",
       "info": "Herramienta especial para actualizar controladores en sistemas antiguos. Compatible con Windows XP y hardware difícil.",
       "enlace": "#",
       "modal": "driverBoosterModal",
@@ -366,11 +409,12 @@
         "DRIVERS",
         "WINDOWS XP",
         "COMPATIBILIDAD"
-      ]
+      ],
+      "id": "000032"
     },
     {
       "name": "Java para Windows",
-      "icon": "fa-brands fa-java",
+      "icon": "https://cdn-icons-png.flaticon.com/512/226/226777.png",
       "info": "Entorno de ejecución necesario para aplicaciones y juegos desarrollados en Java. Selecciona tu versión.",
       "enlace": "#",
       "modal": "javaModal",
@@ -378,11 +422,12 @@
         "RUNTIME",
         "ESENCIAL",
         "WINDOWS"
-      ]
+      ],
+      "id": "000033"
     },
     {
       "name": "Instalador de Dependecias",
-      "icon": "fa-solid fa-puzzle-piece",
+      "icon": "https://static.wikia.nocookie.net/logopedia/images/9/9f/Windows_Installer_icon_%28Windows_11%29.png/revision/latest?cb=20210620182947",
       "info": "Instala automáticamente todos los requisitos (.NET, Visual C++, XNA, DirectX) para que programas y juegos funcionen.",
       "enlace": "https://www.mediafire.com/file/nii3ncqlxe1mezx/Instalador+de+Dependecias.7z/file",
       "modal": null,
@@ -390,11 +435,12 @@
         "RUNTIME",
         "ESENCIAL",
         "WINDOWS"
-      ]
+      ],
+      "id": "000034"
     },
     {
       "name": "Office Professional 2016",
-      "icon": "fa-brands fa-windows",
+      "icon": "https://upload.wikimedia.org/wikipedia/commons/thumb/0/0c/Microsoft_Office_logo_%282013%E2%80%932019%29.svg/250px-Microsoft_Office_logo_%282013%E2%80%932019%29.svg.png",
       "info": "Microsoft Office o conocido actualmente como Microsoft 365, es una suite ofimática de aplicaciones para computadoras de escritorio",
       "enlace": "https://www.mediafire.com/file/jcqeb11nhj4hs31",
       "modal": null,
@@ -402,11 +448,12 @@
         "OFIMÁTICA",
         "ESTUDIO",
         "SUITE"
-      ]
+      ],
+      "id": "000035"
     },
     {
       "name": "Bandicam",
-      "icon": "fa-solid fa-video",
+      "icon": "https://www.google.com/s2/favicons?domain=bandicam.com&sz=28",
       "info": "Es un grabador de pantalla para Windows que es famoso por ser tremendamente ligero. Si tienes una tostadora de PC o no quieres que el Minecraft se te pegue mientras grabas, Bandicam es el que es.",
       "enlace": "https://www.mediafire.com/file/qteigczejthm81g",
       "modal": null,
@@ -414,13 +461,14 @@
         "GRABADOR",
         "PORTABLE",
         "LIGERO"
-      ]
+      ],
+      "id": "000036"
     }
   ],
   "sistemas": [
     {
       "name": "Linux Mint 22.3",
-      "icon": "fa-brands fa-linux",
+      "icon": "https://www.google.com/s2/favicons?domain=linuxmint.com&sz=28",
       "info": "Sistema operativo de escritorio amigable y completamente equipado. Perfecto para usuarios que vienen de Windows.",
       "enlace": "https://linuxmint.com/download.php",
       "modal": null,
@@ -428,11 +476,12 @@
         "LINUX",
         "ESCRITORIO",
         "AMIGABLE"
-      ]
+      ],
+      "id": "000037"
     },
     {
       "name": "Arch Linux (64 bits / x86)",
-      "icon": "fa-brands fa-linux",
+      "icon": "https://www.google.com/s2/favicons?domain=archlinux.org&sz=28",
       "info": "Distribución Linux de última generación con un enfoque en la simplicidad y el control total. Perfecta para usuarios avanzados.",
       "enlace": "https://archlinux.org/download/",
       "modal": null,
@@ -440,11 +489,12 @@
         "LINUX",
         "AVANZADO",
         "SIMPLO"
-      ]
+      ],
+      "id": "000038"
     },
     {
       "name": "Ubuntu MATE",
-      "icon": "fa-brands fa-ubuntu",
+      "icon": "https://www.google.com/s2/favicons?domain=ubuntu-mate.org&sz=28",
       "info": "Distribución Linux estable y eficiente con escritorio MATE. Perfecta para revivir PCs antiguos con buen soporte.",
       "enlace": "https://ubuntu-mate.org/download/",
       "modal": null,
@@ -452,11 +502,12 @@
         "LINUX",
         "ESTABLE",
         "LIGERO"
-      ]
+      ],
+      "id": "000039"
     },
     {
       "name": "Debian (AMD64) - Instalador por red",
-      "icon": "fa-brands fa-linux",
+      "icon": "https://www.google.com/s2/favicons?domain=cdimage.debian.org&sz=28",
       "info": "Instalador por red de la versión estable de Debian para PCs de 64 bits. Sistema Linux robusto y confiable.",
       "enlace": "https://cdimage.debian.org/debian-cd/current/amd64/iso-cd/",
       "modal": null,
@@ -464,11 +515,12 @@
         "LINUX",
         "ESTABLE",
         "OFICIAL"
-      ]
+      ],
+      "id": "000040"
     },
     {
       "name": "Loc-OS Linux 24",
-      "icon": "fa-brands fa-linux",
+      "icon": "https://www.google.com/s2/favicons?domain=loc-os.com&sz=28",
       "info": "Distribución Linux muy ligera, ideal para darle vida a hardware antiguo. Incluye las aplicaciones básicas necesarias.",
       "enlace": "#",
       "modal": "locosModal",
@@ -476,11 +528,12 @@
         "LINUX",
         "LIGERO",
         "HARDWARE ANTIGUO"
-      ]
+      ],
+      "id": "000041"
     },
     {
       "name": "OPTIOS 10 (VERSIONES 2026)",
-      "icon": "fa-solid fa-compact-disc",
+      "icon": "https://www.google.com/s2/favicons?domain=optijuegos.net&sz=28",
       "info": "Bienvenido al Windows OptiOS 10 LTSC X64!",
       "enlace": "#",
       "modal": "OptiOS10Modal",
@@ -488,11 +541,12 @@
         "WINDOWS 10",
         "64 BITS",
         "OPTIMIZADO"
-      ]
+      ],
+      "id": "000042"
     },
     {
       "name": "OPTIOS 7 ULTIMATE X64",
-      "icon": "fa-solid fa-compact-disc",
+      "icon": "https://www.google.com/s2/favicons?domain=optijuegos.net&sz=28",
       "info": "Windows OptiOS 7 ULTIMATE DE 64 BITS! Una modificacion de Windows. Con mejoras de rendimiento en computadoras de bajos recursos. ES LA MISMA EDICION QUE LA DE X86 PERO X64",
       "enlace": "https://www.mediafire.com/file/bf3iidwy6e3sg4g",
       "modal": null,
@@ -504,11 +558,12 @@
       "security": {
         "verified": true,
         "note": "Archivo verificado por el equipo de FoxWeb"
-      }
+      },
+      "id": "000043"
     },
     {
       "name": "OPTIOS 7 ULTIMATE X86",
-      "icon": "fa-solid fa-compact-disc",
+      "icon": "https://www.google.com/s2/favicons?domain=optijuegos.net&sz=28",
       "info": "Windows OptiOS 7 ULTIMATE DE 32 BITS! Una modificacion de Windows. Con mejoras de rendimiento en computadoras de bajos recursos.",
       "enlace": "https://www.mediafire.com/file/4dgluhpeq19r2jh",
       "modal": null,
@@ -520,11 +575,12 @@
       "security": {
         "verified": true,
         "note": "Archivo verificado por el equipo de FoxWeb"
-      }
+      },
+      "id": "000044"
     },
     {
       "name": "OptiOS 8.1 ENTERPRISE X64",
-      "icon": "fa-solid fa-compact-disc",
+      "icon": "https://www.google.com/s2/favicons?domain=optijuegos.net&sz=28",
       "info": "Bienvenido al Windows OptiOS 8.1 ENTERPRISE X64! Una modificacion de Windows. Con mejoras de rendimiento en computadoras de bajos recursos",
       "enlace": "https://www.mediafire.com/file/qrjomhsbwwdz8rz",
       "modal": null,
@@ -536,11 +592,12 @@
       "security": {
         "verified": true,
         "note": "Archivo verificado por el equipo de FoxWeb"
-      }
+      },
+      "id": "000045"
     },
-        {
+    {
       "name": "OptiOS 8.1 ENTERPRISE X86",
-      "icon": "fa-solid fa-compact-disc",
+      "icon": "https://www.google.com/s2/favicons?domain=optijuegos.net&sz=28",
       "info": "Bienvenido al Windows OptiOS 8.1 ENTERPRISE X86! Una modificacion de Windows. Con mejoras de rendimiento en computadoras de bajos recursos",
       "enlace": "https://www.mediafire.com/file/fbgdr9993u39ik6",
       "modal": null,
@@ -552,22 +609,24 @@
       "security": {
         "verified": true,
         "note": "Archivo verificado por el equipo de FoxWeb"
-      }
+      },
+      "id": "000046"
     },
     {
       "name": "ReactOS",
-      "icon": "fa-brands fa-windows",
+      "icon": "https://www.google.com/s2/favicons?domain=reactos.org&sz=28",
       "info": "Sistema operativo de código abierto compatible con programas y controladores de Windows. Alternativa libre a Windows.",
       "enlace": "https://reactos.org/",
       "modal": null,
       "badges": [
         "OPEN SOURCE",
         "COMPATIBLE WINDOWS"
-      ]
+      ],
+      "id": "000047"
     },
     {
       "name": "GParted Live",
-      "icon": "fa-solid fa-hard-drive",
+      "icon": "https://www.google.com/s2/favicons?domain=gparted.org&sz=28",
       "info": "ISO live para gestionar particiones de disco. Redimensiona, copia, formatea y recupera particiones sin instalar sistema.",
       "enlace": "https://gparted.org/download.php",
       "modal": null,
@@ -575,11 +634,12 @@
         "PARTICIONES",
         "RESCATE",
         "HERRAMIENTA"
-      ]
+      ],
+      "id": "000048"
     },
     {
       "name": "Ventoy",
-      "icon": "fa-solid fa-layer-group",
+      "icon": "https://www.google.com/s2/favicons?domain=ventoy.net&sz=28",
       "info": "Crea un USB booteable y copia múltiples archivos ISO a la vez. Arranca cualquier sistema desde un solo dispositivo USB.",
       "enlace": "https://www.ventoy.net/en/download.html",
       "modal": null,
@@ -587,11 +647,12 @@
         "USB",
         "MULTI-ISO",
         "HERRAMIENTA"
-      ]
+      ],
+      "id": "000049"
     },
     {
-      "name": "Hiren's BootCD 15.2 (MBR)",
-      "icon": "fa-solid fa-toolbox",
+      "name": "Hirens BootCD 15.2 (MBR)",
+      "icon": "https://www.google.com/s2/favicons?domain=hirensbootcd.org&sz=28",
       "info": "Kit de rescate esencial con más de 100 herramientas para reparación, diagnóstico y recuperación de sistemas Windows.",
       "enlace": "https://www.mediafire.com/file/rd2plfxcwhocbd8/Hiren%2527s.BootCD.15.2.iso/file",
       "modal": null,
@@ -603,13 +664,14 @@
       "security": {
         "verified": true,
         "note": "Archivo verificado - Kit de herramientas de rescate conocido"
-      }
+      },
+      "id": "000050"
     }
   ],
   "juegos": [
     {
       "name": "Age of Empires II",
-      "icon": "fa-solid fa-chess-rook",
+      "icon": "https://cdn2.steamgriddb.com/logo_thumb/b19f60a0b2ec4104f1afc764060c90fe.png",
       "info": "El rey de la estrategia en tiempo real. Dirige civilizaciones históricas y conquista el mundo en esta versión optimizada.",
       "enlace": "https://www.mediafire.com/file/yyt6ko73gzq2bkx",
       "modal": null,
@@ -617,11 +679,12 @@
         "ESTRATEGIA",
         "CLÁSICO",
         "PC"
-      ]
+      ],
+      "id": "000051"
     },
     {
       "name": "Angry Birds PC",
-      "icon": "fa-solid fa-feather-pointed",
+      "icon": "https://cdn2.steamgriddb.com/icon/7b7a53e239400a13bd6be6c91c4f6c4e.png",
       "info": "Lanza pájaros con un tirachinas para destruir las estructuras de los cerdos en el clásico original.",
       "enlace": "https://www.mediafire.com/file/xbc8s3840ubro7n",
       "modal": null,
@@ -629,11 +692,12 @@
         "PUZZLE",
         "CLÁSICO",
         "DIVERTIDO"
-      ]
+      ],
+      "id": "000052"
     },
     {
       "name": "Halo: Combat Evolved",
-      "icon": "fa-solid fa-gamepad",
+      "icon": "https://cdn2.steamgriddb.com/icon_thumb/bcaad45dcf4ad3e57d8f1c22266c69c8.png",
       "info": "El inicio de la saga del Jefe Maestro. Combate alienígenas en un misterioso mundo anillo.",
       "enlace": "https://www.mediafire.com/file/h2ens2ylfk0x23a",
       "modal": null,
@@ -641,11 +705,12 @@
         "ACCIÓN",
         "FPS",
         "CLÁSICO"
-      ]
+      ],
+      "id": "000053"
     },
     {
       "name": "Assetto Corsa",
-      "icon": "fa-solid fa-car-side",
+      "icon": "https://smoothwizard.com/wp-content/uploads/2023/11/assetto_corsa___icon_by_blagoicons_datedly-375w-2x.png",
       "info": "Simulador de carreras realista con físicas avanzadas y una gran comunidad de mods.",
       "enlace": "https://www.mediafire.com/file/sqyzsm5sdcz17hq",
       "modal": null,
@@ -653,11 +718,12 @@
         "CARRERAS",
         "SIMULADOR",
         "REALISTA"
-      ]
+      ],
+      "id": "000054"
     },
     {
       "name": "Steam",
-      "icon": "fa-brands fa-steam",
+      "icon": "https://www.google.com/s2/favicons?domain=store.steampowered.com&sz=28",
       "info": "Plataforma de distribución digital de videojuegos. Miles de juegos, comunidad y funciones sociales.",
       "enlace": "https://store.steampowered.com/about/",
       "modal": null,
@@ -665,34 +731,37 @@
         "JUEGOS",
         "PLATAFORMA",
         "GRATUITO"
-      ]
+      ],
+      "id": "000055"
     },
     {
       "name": "Legacy Launcher",
-      "icon": "fa-solid fa-cubes",
+      "icon": "https://www.google.com/s2/favicons?domain=llaun.ch&sz=28",
       "info": "Lanzador alternativo para Minecraft Java Edition. Estable, rápido y con soporte para versiones antiguas del juego.",
       "enlace": "https://llaun.ch/es",
       "modal": null,
       "badges": [
         "LAUNCHER",
         "MINECRAFT"
-      ]
+      ],
+      "id": "000056"
     },
     {
       "name": "Litecraft 1.18",
-      "icon": "fa-solid fa-cube",
+      "icon": "https://cdn2.steamgriddb.com/icon/0678c572b0d5597d2d4a6b5bd135754c/32/1024x1024.png",
       "info": "Esta es una modificacion de OptiCraft Bedrock 1.18.31 para agregarle mayor contenido y mejorar el rendimiento.",
       "enlace": "https://www.mediafire.com/file/9ith69mi5mlsd84",
       "modal": null,
       "badges": [
-        "TOMEX & OPTI",
+        "TOMEX y OPTI",
         "BEDROCK",
         "OPTICRAFT"
-      ]
+      ],
+      "id": "000057"
     },
     {
       "name": "Hollow Knight",
-      "icon": "fa-solid fa-gamepad",
+      "icon": "https://cdn2.steamgriddb.com/icon/33c14ab38a8923e563e17b79e41693ba.ico",
       "info": "Hollow Knight es una aventura de acción clásica en 2D ambientada en un vasto mundo interconectado. Explora cavernas tortuosas, ciudades antiguas y páramos mortales.",
       "enlace": "https://www.mediafire.com/file/e5mm2clivttvxgk",
       "modal": null,
@@ -700,11 +769,12 @@
         "64 BITS",
         "ESTRATEGIA",
         "PLATAFORMA"
-      ]
+      ],
+      "id": "000058"
     },
     {
       "name": "Hollow Knight Silksong",
-      "icon": "fa-solid fa-gamepad",
+      "icon": "https://cdn2.steamgriddb.com/icon/f0e95622d20a747e93f5403e5193b155/32/256x256.png",
       "info": "Hollow Knight: Silksong es un videojuego metroidvania desarrollado por el estudio independiente australiano Team Cherry.",
       "enlace": "https://www.mediafire.com/file/7duqlgl7a8i0xn4",
       "modal": null,
@@ -712,11 +782,12 @@
         "64 BITS",
         "ESTRATEGIA",
         "PLATAFORMA"
-      ]
+      ],
+      "id": "000059"
     },
     {
       "name": "Fruit Ninja",
-      "icon": "fa-solid fa-gamepad",
+      "icon": "https://play-lh.googleusercontent.com/eJ9OJnbRer1jjg5ZeNAnTXKcGd2B_NEqxCp2UsefcCABeFBaj_pNl_WKYBjup2GVGGc",
       "info": "Es un juego donde tienes que cortar frutas para acomular puntos, pero ten cuidado con las bombas",
       "enlace": "https://www.mediafire.com/file/f06ldgqqbkzl0yv/Fruit_Ninja_by_pobrecraft_15.7z/file",
       "modal": null,
@@ -724,11 +795,12 @@
         "ARCADE",
         "ESTRATEGIA",
         "POBRECRAFT"
-      ]
+      ],
+      "id": "000060"
     },
     {
       "name": "Cuphead LITE",
-      "icon": "fa-solid fa-gamepad",
+      "icon": "https://cdn2.steamgriddb.com/icon/894a200a66c2b57205af564d6883882a/32/512x512.png",
       "info": "Cuphead es un videojuego perteneciente al género de corre y dispara",
       "enlace": "https://www.mediafire.com/file/n023i97wiob8jih",
       "modal": null,
@@ -736,11 +808,12 @@
         "PLATAFORMA",
         "ESTRATEGIA",
         "CAFE XD"
-      ]
+      ],
+      "id": "000061"
     },
     {
       "name": "Counter Strike 1.6",
-      "icon": "fa-solid fa-crosshairs",
+      "icon": "https://cdn2.steamgriddb.com/icon_thumb/9b04d152845ec0a378394003c96da594.png",
       "info": "El clásico de disparos tácticos que definió un género. Multijugador competitivo y miles de servidores activos.",
       "enlace": "https://www.mediafire.com/file/be2cr8yfize0w73/CS1.6.zip/file",
       "modal": null,
@@ -748,35 +821,38 @@
         "FPS",
         "MULTIJUGADOR",
         "CLÁSICO"
-      ]
+      ],
+      "id": "000062"
     },
     {
-      "name": "Geometry Dash 2.207",
-      "icon": "fa-solid fa-gear",
+      "name": "Geometry Dash 2.2081",
+      "icon": "https://cdn2.steamgriddb.com/icon/750ed96f0d56d3346cda66d24bc0cbd5/32/256x256.png",
       "info": "Juego de ritmo y plataformas desafiante. Supera obstáculos al compás de la música y crea tus propios niveles.",
-      "enlace": "https://www.mediafire.com/file/jfpbza89296aoba/GD-2.2074-%252864-Bits%2529.zip/file",
+      "enlace": "https://www.mediafire.com/file/p5jkzojm0qgzsbz/",
       "modal": null,
       "badges": [
         "RITMO",
         "PLATAFORMAS",
         "DESAFÍO"
-      ]
+      ],
+      "id": "000063"
     },
     {
       "name": "GTA: San Andreas",
-      "icon": "fa-solid fa-rocket",
+      "icon": "https://cdn2.steamgriddb.com/logo_thumb/88a199611ac2b85bd3f76e8ee7e55650.png",
       "info": "Es un juego de mundo abierto,donde tendras que completar misiones para tener el respeto de tu banda",
-      "enlace": "https://www.mediafire.com/file/sb8awx53aacf2k2/GtaSaPortable_-_TheFenix010.rar/file",
+      "enlace": "https://www.mediafire.com/file/sb8awx53aacf2k2",
       "modal": null,
       "badges": [
         "ACCIÓN",
         "ESTRATEGIA",
         "AVENTURA"
-      ]
+      ],
+      "id": "000064"
     },
     {
       "name": "GTA: Vice City",
-      "icon": "fa-solid fa-gamepad",
+      "icon": "https://cdn2.steamgriddb.com/logo_thumb/a60c71bd110ebc4d6916e16b8ca24fda.png",
       "info": "Vive la era de los 80s en este clásico de mundo abierto. Coches, crimen y una banda sonora inolvidable.",
       "enlace": "https://www.mediafire.com/file/r0x4wcpf0tqiy7v",
       "modal": null,
@@ -784,11 +860,12 @@
         "DISPAROS",
         "MUNDO ABIERTO",
         "GTA"
-      ]
+      ],
+      "id": "000065"
     },
     {
       "name": "Half Life 1",
-      "icon": "fa-solid fa-radiation",
+      "icon": "https://cdn2.steamgriddb.com/icon/31fefc0e570cb3860f2a6d4b38c6490d.png",
       "info": "El revolucionario shooter en primera persona que cambió los videojuegos. Una aventura de ciencia ficción épica.",
       "enlace": "https://www.mediafire.com/file/fpam0fdospuupxb/HL.zip/file",
       "modal": null,
@@ -796,11 +873,12 @@
         "FPS",
         "CIENCIA FICCIÓN",
         "CLÁSICO"
-      ]
+      ],
+      "id": "000066"
     },
     {
       "name": "Among Us 9.22s",
-      "icon": "fa-solid fa-user-astronaut",
+      "icon": "https://cdn2.steamgriddb.com/icon/09a69de15cf89bc7fe8c0642f906a4dd/32/256x256.png",
       "info": "Juego de deducción social. Encuentra al impostor antes de que sea tarde.",
       "enlace": "https://www.mediafire.com/file/yt0yti8x2dfl9th",
       "modal": null,
@@ -808,34 +886,24 @@
         "JUEGOS",
         "ONLINE",
         "SOCIAL"
-      ]
-    },
-    {
-      "name": "RetroArch",
-      "icon": "fa-solid fa-gamepad",
-      "info": "Frontend para emuladores y juegos retro. Soporta múltiples consolas y sistemas en una interfaz unificada.",
-      "enlace": "https://www.retroarch.com/?page=platforms",
-      "modal": null,
-      "badges": [
-        "EMULADOR",
-        "RETRO",
-        "OPEN SOURCE"
-      ]
+      ],
+      "id": "000067"
     },
     {
       "name": "Five Nights at Freddys 2",
-      "icon": "fa-solid fa-gamepad",
+      "icon": "https://cdn2.steamgriddb.com/icon_thumb/fe7ee8fc1959cc7214fa21c4840dff0a.png",
       "info": "Es un juego de sustos donde tienes que sobrevivir de los animatronico por 5 noches",
       "enlace": "https://www.mediafire.com/file/47i8xpkzvlwnryt/Five_Nights_at_Freddys_2_by_pobrecraft_15.7z/file",
       "modal": null,
       "badges": [
         "GRATIS",
         "PORTABLE"
-      ]
+      ],
+      "id": "000068"
     },
     {
       "name": "Assault Cube",
-      "icon": "fa-solid fa-cube",
+      "icon": "https://cdn2.steamgriddb.com/icon_thumb/eb4f335eb073875d0faca60ca65d2b5f.png",
       "info": "Shooter FPS gratuitos, de código abierto, estilo Counter-Strike. Multijugador online y offline con bots.",
       "enlace": "https://assault.cubers.net/download.html",
       "modal": null,
@@ -843,11 +911,12 @@
         "FPS",
         "OPEN SOURCE",
         "MULTIJUGADOR"
-      ]
+      ],
+      "id": "000069"
     },
     {
       "name": "OpenTTD",
-      "icon": "fa-solid fa-train",
+      "icon": "https://www.google.com/s2/favicons?domain=openttd.org&sz=28",
       "info": "Simulador de transporte de código abierto. Construye y gestiona tu imperio de trenes, barcos y aviones.",
       "enlace": "https://www.openttd.org/downloads/openttd-releases/latest.html",
       "modal": null,
@@ -855,11 +924,12 @@
         "SIMULACIÓN",
         "OPEN SOURCE",
         "GESTIÓN"
-      ]
+      ],
+      "id": "000070"
     },
     {
       "name": "SuperTuxKart",
-      "icon": "fa-solid fa-trophy",
+      "icon": "https://cdn2.steamgriddb.com/icon_thumb/7a576629fef88f3e636afd33b09e8289.png",
       "info": "Juego de carreras de karts en 3D, gratis y de código abierto. Divertido, con varios personajes y pistas.",
       "enlace": "https://supertuxkart.net/Download",
       "modal": null,
@@ -867,11 +937,12 @@
         "CARRERAS",
         "MULTIJUGADOR",
         "OPEN SOURCE"
-      ]
+      ],
+      "id": "000071"
     },
     {
-      "name": "Papa's Pizzeria Collection",
-      "icon": "fa-solid fa-pizza-slice",
+      "name": "Papas Pizzeria Collection",
+      "icon": "https://img.poki-cdn.com/cdn-cgi/image/q=78,scq=50,width=1200,height=1200,fit=cover,f=png/377fd7d97c2b2f4fe25618ccffcc601b/papas-pizzeria.jfif",
       "info": "Un pack de juegos de cocina que marcó la infancia. Gestiona tus propios restaurantes",
       "enlace": "https://www.mediafire.com/file/cpcxasi9cbernjs",
       "modal": null,
@@ -879,11 +950,12 @@
         "COCINA",
         "CLÁSICO",
         "GESTIÓN"
-      ]
+      ],
+      "id": "000072"
     },
     {
       "name": "60 Seconds!",
-      "icon": "fa-solid fa-clock",
+      "icon": "https://play-lh.googleusercontent.com/cACKwmvQh0O_mKDsuCCfbzs5DUvx9ayFs5xhah-2snfhoua8Qp895AkvWfHgZLyAtWG_GdI9L99-YyCSP_kZ=w240-h480-rw",
       "info": "Juego de aventura y supervivencia con comedia negra. Recoge suministros y rescata a tu familia antes de que caiga la bomba.",
       "enlace": "https://www.mediafire.com/file/drbucjhchyro239",
       "modal": null,
@@ -891,22 +963,24 @@
         "SUPERVIVENCIA",
         "ESTRATEGIA",
         "LIGERO"
-      ]
+      ],
+      "id": "000073"
     },
     {
       "name": "SCP-087-B",
-      "icon": "fa-solid fa-rocket",
+      "icon": "https://stock.wikimini.org/w/images/1/14/SCP-087-B_-_Ic%C3%B4ne.png",
       "info": "Es juego de las escaleras infinitas, en los que pueden sentir que un screamer aparecera de la nada.",
-      "enlace": "https://www.mediafire.com/file/3lldulcjlbe2ky4/SCP-087-B_by_pobrecraft_15.7z/file",
+      "enlace": "https://www.mediafire.com/file/3lldulcjlbe2ky4",
       "modal": null,
       "badges": [
         "RETRO",
         "TERROR"
-      ]
+      ],
+      "id": "000074"
     },
     {
       "name": "Undertale",
-      "icon": "fa-solid fa-heart",
+      "icon": "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a5/Undertale.png/250px-Undertale.png",
       "info": "RPG independiente donde tus decisiones determinan el destino de humanos y monstruos. Ligero, emotivo y con múltiples finales.",
       "enlace": "https://www.mediafire.com/file/yvja4a63vty0w4s",
       "modal": null,
@@ -914,23 +988,25 @@
         "RPG",
         "INDIE",
         "LIGERO"
-      ]
+      ],
+      "id": "000075"
     },
     {
       "name": "Celeste",
-      "icon": "fa-solid fa-person-running",
+      "icon": "https://upload.wikimedia.org/wikipedia/commons/thumb/b/bd/Celeste_video_game_logo.png/330px-Celeste_video_game_logo.png",
       "info": "Ayuda a Madeline a escalar la montaña Celeste en este plataformas de precisión. Una historia emotiva sobre superar desafíos.",
-      "enlace": "https://optijuegos.net/host/celeste.html",
+      "enlace": "https://www.mediafire.com/file/unzyvtejhq9k059",
       "modal": null,
       "badges": [
         "PLATAFORMAS",
         "INDIE",
         "LIGERO"
-      ]
+      ],
+      "id": "000076"
     },
     {
       "name": "Terraria",
-      "icon": "fa-solid fa-hammer",
+      "icon": "https://cdn2.steamgriddb.com/icon_thumb/912b92ae7dbedd0344a6580a7b90efc6.png",
       "info": "Sandbox de acción y aventura en 2D. Explora, construye, lucha y crea en un mundo generado proceduralmente.",
       "enlace": "https://www.mediafire.com/file/umcmdzestj6bthp",
       "modal": null,
@@ -938,11 +1014,12 @@
         "SANDBOX",
         "AVENTURA",
         "CONSTRUCCIÓN"
-      ]
+      ],
+      "id": "000077"
     },
     {
       "name": "Stardew Valley",
-      "icon": "fa-solid fa-wheat-awn",
+      "icon": "https://www.google.com/s2/favicons?domain=stardewvalley.net&sz=28",
       "info": "Crea la granja de tus sueños en este RPG de simulación. Cultiva, cría animales, pesca y establece relaciones en el valle.",
       "enlace": "https://www.mediafire.com/file/h59u1mscds6lk0a",
       "modal": null,
@@ -950,11 +1027,12 @@
         "SIMULACIÓN",
         "RPG",
         "RELAJANTE"
-      ]
+      ],
+      "id": "000078"
     },
     {
       "name": "DOOM 1 y 2",
-      "icon": "fa-solid fa-skull",
+      "icon": "https://cdn2.steamgriddb.com/logo_thumb/3be7b042979fbf48ad6f0123afc4e1e8.png",
       "info": "Los clásicos shooters de ciencia ficción que definieron el género. Dispara a demonios en Marte y en la Tierra.",
       "enlace": "https://www.mediafire.com/file/g3c0j88i26hidw6",
       "modal": null,
@@ -962,11 +1040,12 @@
         "FPS",
         "CLÁSICO",
         "ACCIÓN"
-      ]
+      ],
+      "id": "000079"
     },
     {
       "name": "Hotline Miami",
-      "icon": "fa-solid fa-gun",
+      "icon": "https://cdn2.steamgriddb.com/icon/6f20b6878aa610b128facd8aeb745c8b.ico",
       "info": "Acción arcade intensa con estética retro. Descuartiza enemigos en este juego de ritmo rápido y combate brutal.",
       "enlace": "https://www.mediafire.com/file/6b2kk83hcfbl2vb",
       "modal": null,
@@ -974,11 +1053,12 @@
         "ACCIÓN",
         "ARCADE",
         "LIGERO"
-      ]
+      ],
+      "id": "000080"
     },
     {
       "name": "FIFA (Versiones)",
-      "icon": "fa-solid fa-soccer-ball",
+      "icon": "https://cdn2.steamgriddb.com/icon/7e4ae2af91da5f03618948838b87619b/32/256x256.png",
       "info": "La icónica serie de fútbol de EA Sports. Juega con tus equipos favoritos en modos de carrera, Ultimate Team y más.",
       "enlace": "#",
       "modal": "fifaModal",
@@ -986,11 +1066,12 @@
         "DEPORTES",
         "FÚTBOL",
         "MULTIJUGADOR"
-      ]
+      ],
+      "id": "000081"
     },
     {
       "name": "Limbo",
-      "icon": "fa-solid fa-moon",
+      "icon": "https://images.icon-icons.com/1381/PNG/512/limbo_94636.png",
       "info": "Aventura de puzzles en un mundo en blanco y negro. Un niño busca a su hermana en un paisaje oscuro y atmosférico.",
       "enlace": "https://www.mediafire.com/file/s3fp7njwviv7449",
       "modal": null,
@@ -998,11 +1079,12 @@
         "AVENTURA",
         "PUZZLE",
         "ATMOSFÉRICO"
-      ]
+      ],
+      "id": "000082"
     },
     {
       "name": "Dead Cells",
-      "icon": "fa-solid fa-droplet",
+      "icon": "https://cdn2.steamgriddb.com/icon_thumb/ee96d6e14a67a9c4300568411fa3a4e6.png",
       "info": "Metroidvania rogue-like de acción. Explora un castillo en constante cambio con armas y habilidades variadas.",
       "enlace": "https://www.mediafire.com/file/yclb4giqp40jyea",
       "modal": null,
@@ -1010,11 +1092,12 @@
         "ROGUE-LIKE",
         "ACCIÓN",
         "METROIDVANIA"
-      ]
+      ],
+      "id": "000083"
     },
     {
       "name": "Portal",
-      "icon": "fa-solid fa-gamepad",
+      "icon": "https://cdn2.steamgriddb.com/icon/9a4400501febb2a95e79248486a5f6d3/32/256x256.png",
       "info": "Puzzle de física innovador con armas de portal. Resuelve acertijos usando portales para teleportarte.",
       "enlace": "https://www.mediafire.com/file/v7gzqg5mlm6cml5",
       "modal": null,
@@ -1022,11 +1105,12 @@
         "PUZZLE",
         "FÍSICA",
         "CLÁSICO"
-      ]
+      ],
+      "id": "000084"
     },
     {
       "name": "Portal 2",
-      "icon": "fa-solid fa-gamepad",
+      "icon": "https://cdn2.steamgriddb.com/icon/72a297f1ff72dc8ebb3c6b008a233873/32/128x128.png",
       "info": "Secuela del clásico de puzzle. Nuevos elementos, cooperativo multiplayer y una historia emocionante.",
       "enlace": "https://www.mediafire.com/file/0ecatjommz9rtza",
       "modal": null,
@@ -1034,11 +1118,12 @@
         "PUZZLE",
         "MULTIJUGADOR",
         "CLÁSICO"
-      ]
+      ],
+      "id": "000085"
     },
     {
       "name": "Plants vs Zombies",
-      "icon": "fa-solid fa-seedling",
+      "icon": "https://cdn2.steamgriddb.com/icon/35c6d8b3f57f2dad9ba614297dccc99c.png",
       "info": "Defiende tu jardín de zombis en este juego de torre defensa. Un clásico de PopCap Games.",
       "enlace": "https://www.mediafire.com/file/yswh4afgrs0jo9f",
       "modal": null,
@@ -1046,11 +1131,12 @@
         "DEFENSA",
         "CLÁSICO",
         "LIGERO"
-      ]
+      ],
+      "id": "000086"
     },
     {
       "name": "Bloons TD 6",
-      "icon": "fa-solid fa-chess-rook",
+      "icon": "https://cdn2.steamgriddb.com/icon/146ff1b077e7729999ed0b299a2fe639.ico",
       "info": "Torre defensa con monos y globos. Defiende tu territorio de los bloons en este juego colorido y estratégico.",
       "enlace": "https://gofile.io/d/XYinUc",
       "modal": null,
@@ -1058,11 +1144,12 @@
         "DEFENSA",
         "ESTRATEGIA",
         "MULTIJUGADOR"
-      ]
+      ],
+      "id": "000087"
     },
     {
       "name": "Brotato",
-      "icon": "fa-solid fa-gamepad",
+      "icon": "https://cdn2.steamgriddb.com/icon/91d3c8f986b1715391cc71c6c3281c94.png",
       "info": "Arena shooter rogue-like donde controlas potatoes. Dispara, esquiva y sobrevive en oleadas de enemigos.",
       "enlace": "https://www.mediafire.com/file/i3ygjlqponv68bo",
       "modal": null,
@@ -1070,11 +1157,12 @@
         "ROGUE-LIKE",
         "ARCADE",
         "LIGERO"
-      ]
+      ],
+      "id": "000088"
     },
     {
       "name": "Balatro",
-      "icon": "fa-solid fa-gamepad",
+      "icon": "https://cdn2.steamgriddb.com/icon/05af582963d938835b53d24582fdfc20.ico",
       "info": "Juego de poker roguelike deckbuilder. Combina manos de poker con efectos destructivos para vencer a rivales.",
       "enlace": "https://www.mediafire.com/file/qj1vuz1rrvu2xdq",
       "modal": null,
@@ -1082,11 +1170,12 @@
         "CARTAS",
         "ROGUE-LIKE",
         "ESTRATEGIA"
-      ]
+      ],
+      "id": "000089"
     },
     {
       "name": "Friday Night Funkin",
-      "icon": "fa-solid fa-music",
+      "icon": "https://cdn2.steamgriddb.com/icon/723e54f241827a60c1dcd34136a574d4.ico",
       "info": "Juego de ritmo freeware. Derrota a tus oponentes en batallas de freestyle musical.",
       "enlace": "https://www.mediafire.com/file/x4sgki3gplx8zx5",
       "modal": null,
@@ -1094,11 +1183,12 @@
         "RITMO",
         "INDIE",
         "LIGERO"
-      ]
+      ],
+      "id": "000090"
     },
     {
       "name": "Pizza Tower",
-      "icon": "fa-solid fa-pizza-slice",
+      "icon": "https://cdn2.steamgriddb.com/icon/b5ad9ce775f86f2a64e72c7f2c633fe0.png",
       "info": "Plataformas al estilo italiano. Recorre las torres del pizza en este juego humorístico y vertiginoso.",
       "enlace": "https://www.mediafire.com/file/tp60hkcdlfglhvu",
       "modal": null,
@@ -1106,11 +1196,12 @@
         "PLATAFORMAS",
         "INDIE",
         "HUMOR"
-      ]
+      ],
+      "id": "000091"
     },
     {
       "name": "Super Meat Boy",
-      "icon": "fa-solid fa-droplet",
+      "icon": "https://cdn2.steamgriddb.com/icon/83a5024d1d4596f0636b50abbb12d86c/32/512x512.png",
       "info": "Plataformas de precisión ultra difícil. Guía a Meat Boy a través de niveles imposibles para rescatar a su novia.",
       "enlace": "https://www.mediafire.com/file/zsaptvd4ckvbzt7",
       "modal": null,
@@ -1118,11 +1209,12 @@
         "PLATAFORMAS",
         "DIFÍCIL",
         "INDIE"
-      ]
+      ],
+      "id": "000092"
     },
     {
       "name": "Sonic Mania",
-      "icon": "fa-solid fa-bolt",
+      "icon": "https://cdn2.steamgriddb.com/icon_thumb/d840cc5d906c3e9c84374c8919d2074e.png",
       "info": "Juego clásico de Sonic con niveles remasterizados y nuevos. Velocidad, anillos y caos en este plataformas.",
       "enlace": "https://www.mediafire.com/file/eu1vbg95ewfqx2c",
       "modal": null,
@@ -1130,11 +1222,12 @@
         "PLATAFORMAS",
         "CLÁSICO",
         "ACCIÓN"
-      ]
+      ],
+      "id": "000093"
     },
     {
       "name": "Untitled Goose Game",
-      "icon": "fa-solid fa-crow",
+      "icon": "https://cdn2.steamgriddb.com/icon_thumb/96d1382d50a8e569d7ad3d9ee104a1f7.png",
       "info": "Eres un ganso terrible. Molesta a los habitantes de un pueblo inglés en este simulador de caos ave.",
       "enlace": "https://www.mediafire.com/file/o2ns3hj3suruoyc",
       "modal": null,
@@ -1142,11 +1235,12 @@
         "INDIE",
         "HUMOR",
         "LIGERO"
-      ]
+      ],
+      "id": "000094"
     },
     {
       "name": "Slime Rancher",
-      "icon": "fa-solid fa-droplet",
+      "icon": "https://cdn2.steamgriddb.com/icon/09fb05dd477d4ae6479985ca56c5a12d/32/256x256.png",
       "info": "Cría y colecciona slimes coloridos en tu rancho. Un juego relajante de exploración y gestión.",
       "enlace": "https://www.mediafire.com/file/kuwwmmpvlpl2jk9",
       "modal": null,
@@ -1154,11 +1248,12 @@
         "SIMULACIÓN",
         "RELAJANTE",
         "LIGERO"
-      ]
+      ],
+      "id": "000095"
     },
     {
       "name": "Rogue Legacy",
-      "icon": "fa-solid fa-chess-king",
+      "icon": "https://cdn2.steamgriddb.com/icon/6a81c377b5ba81a6b5dac8a2966178ea.ico",
       "info": "Metroidvania rogue-like. Cada heredero tiene defectos genéticos únicos. Explora el castillo una y otra vez.",
       "enlace": "https://www.mediafire.com/file/got4m3oe9uw1bzf",
       "modal": null,
@@ -1166,11 +1261,12 @@
         "ROGUE-LIKE",
         "METROIDVANIA",
         "INDIE"
-      ]
+      ],
+      "id": "000096"
     },
     {
       "name": "Getting Over It",
-      "icon": "fa-solid fa-mountain",
+      "icon": "https://cdn2.steamgriddb.com/icon/c2143b7ef025beb7077dae7c98f12621/32/256x256.png",
       "info": "El juego más difícil del mundo. Usa un martillo para escalar montañas y superar obstáculos imposibles.",
       "enlace": "https://www.mediafire.com/file/9f5g7ofien8ivel",
       "modal": null,
@@ -1178,11 +1274,12 @@
         "PLATAFORMAS",
         "DIFÍCIL",
         "LIGERO"
-      ]
+      ],
+      "id": "000097"
     },
     {
       "name": "Happy Wheels",
-      "icon": "fa-solid fa-wheelchair",
+      "icon": "https://cdn2.steamgriddb.com/icon_thumb/0f0ee3310223fe38a989b2c818709393.png",
       "info": "Juego de física con vehículos defectuosos. Crea niveles personalizados o juega los clásicos.",
       "enlace": "https://www.mediafire.com/file/lqymeiy6y1a8ikl",
       "modal": null,
@@ -1190,11 +1287,12 @@
         "FÍSICA",
         "MULTIJUGADOR",
         "LIGERO"
-      ]
+      ],
+      "id": "000098"
     },
     {
       "name": "The Binding of Isaac",
-      "icon": "fa-solid fa-bible",
+      "icon": "https://cdn2.steamgriddb.com/icon/bc573864331a9e42e4511de6f678aa83.ico",
       "info": "Dungeon crawler rogue-like. Un niño huye de su madre loca religiosa matando monstruos con lágrimas.",
       "enlace": "https://www.mediafire.com/file/jcumj2ocyd251yo",
       "modal": null,
@@ -1202,11 +1300,12 @@
         "ROGUE-LIKE",
         "ACCIÓN",
         "INDIE"
-      ]
+      ],
+      "id": "000099"
     },
     {
       "name": "Ravenfield",
-      "icon": "fa-solid fa-person-military-rifle",
+      "icon": "https://cdn2.steamgriddb.com/thumb/81326bdad4e65260e3558f02236b2956.jpg",
       "info": "Shooter estilo Battlefield pero indie. Combate en mapas extensos con IA y vehículos.",
       "enlace": "https://www.mediafire.com/file/v8wa3eorb7bdsla",
       "modal": null,
@@ -1214,11 +1313,12 @@
         "FPS",
         "ACCIÓN",
         "MULTIJUGADOR"
-      ]
+      ],
+      "id": "000100"
     },
     {
       "name": "Project Zomboid",
-      "icon": "fa-solid fa-biohazard",
+      "icon": "https://cdn2.steamgriddb.com/icon_thumb/30999ce1f0a35aeff9a456e4487f9924.png",
       "info": "Supervivencia zombie hardcore. Gestión de recursos, supervivencia y un apocalipsis realista.",
       "enlace": "https://www.mediafire.com/file/vxcrm23exyfvxpo",
       "modal": null,
@@ -1226,11 +1326,12 @@
         "SUPERVIVENCIA",
         "ZOMBIS",
         "SIMULACIÓN"
-      ]
+      ],
+      "id": "000101"
     },
     {
       "name": "Among Us",
-      "icon": "fa-solid fa-user-astronaut",
+      "icon": "https://cdn2.steamgriddb.com/icon/09a69de15cf89bc7fe8c0642f906a4dd/32/256x256.png",
       "info": "Juego de deducción social online. Encuentra al impostor antes de que sabotee todo.",
       "enlace": "https://www.mediafire.com/file/yt0yti8x2dfl9th",
       "modal": null,
@@ -1238,23 +1339,25 @@
         "MULTIJUGADOR",
         "SOCIAL",
         "ONLINE"
-      ]
+      ],
+      "id": "000102"
     },
     {
       "name": "Subnautica",
-      "icon": "fa-solid fa-fish",
+      "icon": "https://cdn2.steamgriddb.com/icon/087f472a3834c0b03466667b67d58982.ico",
       "info": "Aventura submarina de supervivencia. Explora océanos alienígenas y descubre secretos bajo la superficie.",
-      "enlace": "https://optijuegos.net/host/zubnautica.html",
+      "enlace": "https://www.mediafire.com/file/b5hvooqn6nh7r0i",
       "modal": null,
       "badges": [
         "SUPERVIVENCIA",
         "AVENTURA",
         "EXPLORACIÓN"
-      ]
+      ],
+      "id": "000103"
     },
     {
       "name": "Phasmophobia",
-      "icon": "fa-solid fa-ghost",
+      "icon": "https://cdn2.steamgriddb.com/grid/b8ee42f6c6733d5db34b17a5aaa5844d.png",
       "info": "Juego de horror cooperativo. Investiga fantasmas usando equipamiento paranormal y documenta evidencia.",
       "enlace": "https://www.mediafire.com/file/80d0pmzyalx2ia7",
       "modal": null,
@@ -1262,11 +1365,12 @@
         "HORROR",
         "MULTIJUGADOR",
         "COOPERATIVO"
-      ]
+      ],
+      "id": "000104"
     },
     {
       "name": "Cult of the Lamb",
-      "icon": "fa-solid fa-droplet",
+      "icon": "https://cdn2.steamgriddb.com/icon_thumb/b88f43b1f8531a436a15661bb9737c51.png",
       "info": "Juego de rogue-like y simulación. Lidera un culto de seguidores en un mundo oscuro y retorcido.",
       "enlace": "https://www.mediafire.com/file/yih794cqkdsrjwl",
       "modal": null,
@@ -1274,11 +1378,12 @@
         "ROGUE-LIKE",
         "SIMULACIÓN",
         "INDIE"
-      ]
+      ],
+      "id": "000105"
     },
     {
       "name": "Dolphin",
-      "icon": "fa-solid fa-gamepad",
+      "icon": "https://cdn2.steamgriddb.com/icon/7d2a383e54274888b4b73b97e1aaa491/32/256x256.png",
       "info": "El mejor emulador de GameCube y Wii. Juega tus juegos favoritos de Nintendo en PC con mejoras gráficoas.",
       "enlace": "https://www.mediafire.com/file/1c1pmfldbwbq03r",
       "modal": null,
@@ -1286,11 +1391,12 @@
         "EMULADOR",
         "GAMECUBE",
         "WII"
-      ]
+      ],
+      "id": "000106"
     },
     {
       "name": "PCSX2",
-      "icon": "fa-solid fa-compact-disc",
+      "icon": "https://cdn2.steamgriddb.com/icon/9a32ff36c65e8ba30915a21b7bd76506/32/256x256.png",
       "info": "Emulador de PlayStation 2 de código abierto. Juega tus juegos de PS2 en PC con compatibilidad alta.",
       "enlace": "https://www.mediafire.com/file/xz6iz1k4twpkptt",
       "modal": null,
@@ -1298,23 +1404,25 @@
         "EMULADOR",
         "PLAYSTATION 2",
         "OPEN SOURCE"
-      ]
+      ],
+      "id": "000107"
     },
     {
       "name": "PPSSPP",
-      "icon": "fa-solid fa-gamepad",
+      "icon": "https://cdn2.steamgriddb.com/grid/bf8d2c24425d6721042552f54ef1bd4d.png",
       "info": "Emulador de PSP multiplataforma. Juega juegos de PlayStation Portable en tu PC, Android o iOS.",
-      "enlace": "https://optijuegos.net/host/ppsspp.html",
+      "enlace": "https://www.ppsspp.org/download/",
       "modal": null,
       "badges": [
         "EMULADOR",
         "PSP",
         "PORTABLE"
-      ]
+      ],
+      "id": "000108"
     },
     {
       "name": "Yuzu",
-      "icon": "fa-solid fa-gamepad",
+      "icon": "https://cdn2.steamgriddb.com/logo/0ea861d8905146b734b08252bae188b2.png",
       "info": "Emulador de Nintendo Switch. Juega juegos de Switch en PC con rendimiento variable según el hardware.",
       "enlace": "https://www.mediafire.com/file/3713to8j2paltw7",
       "modal": null,
@@ -1322,11 +1430,12 @@
         "EMULADOR",
         "NINTENDO SWITCH",
         "EXPERIMENTAL"
-      ]
+      ],
+      "id": "000109"
     },
     {
       "name": "Citra",
-      "icon": "fa-solid fa-gamepad",
+      "icon": "https://cdn2.steamgriddb.com/grid/a63c2d99e705387d80753301d9211a69.png",
       "info": "Emulador de Nintendo 3DS. Juega juegos de 3DS en PC con soporte 3D y mejorar gráfico.",
       "enlace": "https://www.mediafire.com/file/u03w1u1rxgya2jt",
       "modal": null,
@@ -1334,11 +1443,12 @@
         "EMULADOR",
         "NINTENDO 3DS",
         "3D"
-      ]
+      ],
+      "id": "000110"
     },
     {
       "name": "Project64",
-      "icon": "fa-solid fa-gamepad",
+      "icon": "https://cdn2.steamgriddb.com/icon_thumb/f84d465177e84bb4e756a8319443cdcb.png",
       "info": "Emulador de Nintendo 64 popular y fácil de usar. Juega clásicos como Mario 64, Zelda OoT y más.",
       "enlace": "https://www.mediafire.com/file/8kk9gmx2u351101",
       "modal": null,
@@ -1346,11 +1456,12 @@
         "EMULADOR",
         "NINTENDO 64",
         "CLÁSICO"
-      ]
+      ],
+      "id": "000111"
     },
     {
       "name": "DeSmuME",
-      "icon": "fa-solid fa-gamepad",
+      "icon": "https://cdn2.steamgriddb.com/icon/a4ad68f61b704a2073c3952bc5ceb1c8.ico",
       "info": "Emulador de Nintendo DS de código abierto. Ideal para juegos de DS en PC.",
       "enlace": "https://www.mediafire.com/file/ops98l93qtpu9js",
       "modal": null,
@@ -1358,11 +1469,12 @@
         "EMULADOR",
         "NINTENDO DS",
         "OPEN SOURCE"
-      ]
+      ],
+      "id": "000112"
     },
     {
       "name": "MAME",
-      "icon": "fa-solid fa-desktop",
+      "icon": "https://cdn2.steamgriddb.com/icon/8612c55d2969d1f587bf1c5aaaa32964/32/256x256.png",
       "info": "Emulador de máquinas arcade. Juega cientos de juegos de arcade retro.",
       "enlace": "https://www.mediafire.com/file/t5r6n8jyjf0fyuj",
       "modal": null,
@@ -1370,11 +1482,12 @@
         "EMULADOR",
         "ARCADE",
         "RETRO"
-      ]
+      ],
+      "id": "000113"
     },
     {
       "name": "RetroArch",
-      "icon": "fa-solid fa-gamepad",
+      "icon": "https://cdn2.steamgriddb.com/icon_thumb/92b86da424c1b48b9810ce7a448e3e9f.png",
       "info": "Frontend unificado para emuladores y juegos retro. Soporta múltiples sistemas en una interfaz.",
       "enlace": "https://www.retroarch.com/?page=platforms",
       "modal": null,
@@ -1382,13 +1495,14 @@
         "EMULADOR",
         "MULTI-SISTEMA",
         "OPEN SOURCE"
-      ]
+      ],
+      "id": "000114"
     }
   ],
   "apks": [
     {
       "name": "Brave Browser",
-      "icon": "fa-brands fa-brave",
+      "icon": "https://cdn2.steamgriddb.com/icon/9cfd17551c0d1f7438895121e4fbb6e8.png",
       "info": "Navegador web rápido y seguro con bloqueo de anuncios y rastreadores integrado para una navegación más fluida.",
       "enlace": "https://www.mediafire.com/file/3v5labho35dtmwy",
       "modal": null,
@@ -1396,11 +1510,12 @@
         "NAVEGADOR",
         "ADBLOCK",
         "RÁPIDO"
-      ]
+      ],
+      "id": "000115"
     },
     {
       "name": "Es File Explorer PRO",
-      "icon": "fa-solid fa-folder-open",
+      "icon": "https://static.divxland.org/wp-content/uploads/2025/04/es-file-explorermanager-pro-thumbnail.png",
       "info": "Gestor de archivos avanzado con funciones premium desbloqueadas para organizar mejor tu almacenamiento.",
       "enlace": "https://www.mediafire.com/file/9li9v86dz56m26e",
       "modal": null,
@@ -1408,11 +1523,12 @@
         "UTILIDAD",
         "GESTIÓN",
         "PRO"
-      ]
+      ],
+      "id": "000116"
     },
     {
       "name": "IP Webcam Pro",
-      "icon": "fa-solid fa-camera",
+      "icon": "https://m.media-amazon.com/images/I/71wm935ghKL.png",
       "info": "Convierte tu dispositivo en una cámara de red con múltiples opciones de visualización y seguridad.",
       "enlace": "https://www.mediafire.com/file/0pw7lffher4ajvg",
       "modal": null,
@@ -1420,11 +1536,12 @@
         "HERRAMIENTA",
         "CÁMARA",
         "PRO"
-      ]
+      ],
+      "id": "000117"
     },
     {
       "name": "ZArchiver",
-      "icon": "fa-solid fa-file-zipper",
+      "icon": "https://play-lh.googleusercontent.com/D1POO3HtYVgSW65yv3JLMrr8F7L9RcYUfEw_ug3BhMhMgN0b2fZ414cYkmSwVRr737aY",
       "info": "Potente gestor de archivos comprimidos. Crea y extrae formatos como 7z, ZIP, RAR y muchos más.",
       "enlace": "https://www.mediafire.com/file/mim9tb3kjfgocij",
       "modal": null,
@@ -1432,7 +1549,8 @@
         "COMPRESIÓN",
         "UTILIDAD",
         "ESENCIAL"
-      ]
+      ],
+      "id": "000118"
     },
     {
       "name": "Root Booster",
@@ -1444,11 +1562,12 @@
         "OPTIMIZACIÓN",
         "ROOT",
         "RENDIMIENTO"
-      ]
+      ],
+      "id": "000119"
     },
     {
       "name": "Link2SD",
-      "icon": "fa-solid fa-sd-card",
+      "icon": "https://img.techylist.com/api/resize?url=https://techylist.com/wp-content/uploads/2022/04/link2sd.png&width=64",
       "info": "Herramienta esencial para mover aplicaciones a la tarjeta SD y liberar espacio en la memoria interna.",
       "enlace": "https://www.mediafire.com/file/l4cnpm8gbknhc1g",
       "modal": null,
@@ -1456,11 +1575,12 @@
         "ALMACENAMIENTO",
         "UTILIDAD",
         "SISTEMA"
-      ]
+      ],
+      "id": "000120"
     },
     {
       "name": "TikTok: Revanced",
-      "icon": "fa-brands fa-tiktok",
+      "icon": "https://upload.wikimedia.org/wikipedia/commons/thumb/4/40/Revanced-logo-round.svg/250px-Revanced-logo-round.svg.png",
       "info": "Versión modificada de TikTok con funciones adicionales y sin anuncios para una mejor experiencia.",
       "enlace": "https://www.mediafire.com/file/r19pwbuj4mt5n4o",
       "modal": null,
@@ -1468,11 +1588,12 @@
         "SOCIAL",
         "MOD",
         "SIN ANUNCIOS"
-      ]
+      ],
+      "id": "000121"
     },
     {
       "name": "Craftsman 0.15.10",
-      "icon": "fa-solid fa-cube",
+      "icon": "https://play-lh.googleusercontent.com/XUOPsqX7J2lsgGyd6mj8MYQhhB3nxHW4KUZRwCj9-7_LQtvv583OQAG09w76W8ussNs=w240-h480-rw",
       "info": "Una versión de construcción muy ligera basada en versiones clásicas de Minecraft, ideal para dispositivos antiguos.",
       "enlace": "https://www.mediafire.com/file/z9852njrg0awql4",
       "modal": null,
@@ -1480,11 +1601,12 @@
         "MINECRAFT",
         "CONSTRUCCIÓN",
         "ANDROID"
-      ]
+      ],
+      "id": "000122"
     },
     {
       "name": "Termux",
-      "icon": "fa-solid fa-terminal",
+      "icon": "https://www.google.com/s2/favicons?domain=wiki.termux.com&sz=28",
       "info": "Emulador de terminal y entorno Linux para Android. Ejecuta comandos, instala paquetes y realiza tareas de desarrollo.",
       "enlace": "https://f-droid.org/repo/com.termux_1002.apk",
       "modal": null,
@@ -1492,11 +1614,12 @@
         "TERMINAL",
         "LINUX",
         "DESARROLLO"
-      ]
+      ],
+      "id": "000123"
     },
     {
       "name": "F-Droid",
-      "icon": "fa-solid fa-store",
+      "icon": "https://f-droid.org/assets/favicon.png",
       "info": "Tienda de aplicaciones de código abierto para Android. Encuentra apps gratuitas, libres y sin anuncios ni rastreo.",
       "enlace": "https://f-droid.org/",
       "modal": null,
@@ -1504,11 +1627,12 @@
         "TIENDA",
         "OPEN SOURCE",
         "PRIVACIDAD"
-      ]
+      ],
+      "id": "000124"
     },
     {
       "name": "Stardew Valley APK",
-      "icon": "fa-solid fa-wheat-awn",
+      "icon": "https://www.google.com/s2/favicons?domain=stardewvalley.net&sz=28",
       "info": "Crea la granja de tus sueños en este RPG de vida rural. Versión completa optimizada para móviles.",
       "enlace": "https://www.mediafire.com/file/j27z1peebai0k8l",
       "modal": null,
@@ -1516,11 +1640,12 @@
         "SIMULACIÓN",
         "GRANJA",
         "RECOMENDADO"
-      ]
+      ],
+      "id": "000125"
     },
     {
       "name": "Aurora Store",
-      "icon": "fa-solid fa-bag-shopping",
+      "icon": "https://www.auroraoss.com/favicon.svg",
       "info": "Cliente alternativo de Google Play Store para descargar APKs de forma privada y sin servicios de Google.",
       "enlace": "https://f-droid.org/es/packages/com.aurora.store/",
       "modal": null,
@@ -1528,11 +1653,12 @@
         "APKS",
         "ANDROID",
         "TIENDA"
-      ]
+      ],
+      "id": "000126"
     },
     {
       "name": "NewPipe",
-      "icon": "fa-brands fa-youtube",
+      "icon": "https://www.google.com/s2/favicons?domain=newpipe.net&sz=28",
       "info": "Cliente alternativo de YouTube. Sin anuncios, reproduce en segundo plano, descarga videos y no requiere cuenta de Google.",
       "enlace": "https://newpipe.net/",
       "modal": null,
@@ -1540,11 +1666,12 @@
         "VIDEO",
         "PRIVACIDAD",
         "ALTERNATIVA"
-      ]
+      ],
+      "id": "000127"
     },
     {
       "name": "Kiwi Browser",
-      "icon": "fa-solid fa-globe",
+      "icon": "https://www.latestmodapks.com/wp-content/uploads/2022/09/unnamed-4-1.png",
       "info": "Navegador web basado en Chromium que permite instalar extensiones de Chrome de escritorio. Rápido y personalizable.",
       "enlace": "https://kiwibrowser.com/",
       "modal": null,
@@ -1552,11 +1679,12 @@
         "NAVEGADOR",
         "EXTENSIONES",
         "RÁPIDO"
-      ]
+      ],
+      "id": "000128"
     },
     {
       "name": "Simple Mobile Tools",
-      "icon": "fa-solid fa-mobile-alt",
+      "icon": "https://www.google.com/s2/favicons?domain=simplemobiletools.com&sz=28",
       "info": "Suite de aplicaciones simples, limpias y sin anuncios. Incluye calendario, galería, contactos, notas y más.",
       "enlace": "https://www.simplemobiletools.com/",
       "modal": null,
@@ -1564,11 +1692,12 @@
         "SUITE",
         "LIGERO",
         "SIN ANUNCIOS"
-      ]
+      ],
+      "id": "000129"
     },
     {
       "name": "PPSSPP 1.19.3",
-      "icon": "fa-solid fa-gamepad",
+      "icon": "https://www.google.com/s2/favicons?domain=ppsspp.org&sz=28",
       "info": "Emulador de PSP (PlayStation Portable) para Android. Juega tus títulos favoritos de PSP en tu móvil con alta compatibilidad.",
       "enlace": "https://www.ppsspp.org/files/1_19_3/ppsspp.apk",
       "modal": null,
@@ -1576,11 +1705,12 @@
         "EMULADOR",
         "JUEGOS",
         "PSP"
-      ]
+      ],
+      "id": "000130"
     },
     {
       "name": "Minecraft Bedrock 1.21.130",
-      "icon": "fa-solid fa-cube",
+      "icon": "https://cdn2.steamgriddb.com/icon/0678c572b0d5597d2d4a6b5bd135754c/32/1024x1024.png",
       "info": "La versión oficial de Minecraft para móviles. Construye, explora y sobrevive en mundos infinitos con todas las características.",
       "enlace": "https://www.mediafire.com/file/xc2yuu97tbyclf7/mc-be-1.21.130.apk/file",
       "modal": null,
@@ -1588,11 +1718,12 @@
         "JUEGO",
         "SANDBOX",
         "OFICIAL"
-      ]
+      ],
+      "id": "000131"
     },
     {
       "name": "PojavLauncher (Java)",
-      "icon": "fa-solid fa-cube",
+      "icon": "https://apktodo.io/uploads/2023/8/pojavlauncher-icon.jpg",
       "info": "PojavLauncher es una aplicación de código abierto que permite jugar Minecraft: Java Edition en dispositivos móviles Android",
       "enlace": "https://github.com/PojavLauncherTeam/PojavLauncher/releases",
       "modal": null,
@@ -1600,23 +1731,12 @@
         "LAUNCHER",
         "MINECRAFT",
         "GITHUB"
-      ]
-    },
-    {
-      "name": "Geometry Dash 2.207",
-      "icon": "fa-solid fa-gear",
-      "info": "Versión modificada con Geode Mod Loader. Salta y vuela al ritmo de la música en este desafío de plataformas y ritmo.",
-      "enlace": "https://bruhzstudios.itch.io/free-gd-geode-breeze-apks-mobile-only",
-      "modal": null,
-      "badges": [
-        "JUEGO",
-        "RITMO",
-        "MOD"
-      ]
+      ],
+      "id": "000132"
     },
     {
       "name": "SuperTuxKart",
-      "icon": "fa-solid fa-car-side",
+      "icon": "https://cdn2.steamgriddb.com/icon_thumb/7a576629fef88f3e636afd33b09e8289.png",
       "info": "SuperTuxKart es un videojuego libre de carreras tipo arcade en 3D basado en Mario Kart",
       "enlace": "https://github.com/supertuxkart/stk-code/releases/download/1.5/SuperTuxKart-1.5.apk",
       "modal": null,
@@ -1624,23 +1744,25 @@
         "CARRERAS",
         "MULTIPLATAFORMA",
         "OPEN SOURCE"
-      ]
+      ],
+      "id": "000133"
     },
     {
       "name": "Litecraft PE 1.18.32",
-      "icon": "fa-solid fa-cube",
+      "icon": "https://cdn2.steamgriddb.com/icon/0678c572b0d5597d2d4a6b5bd135754c/32/1024x1024.png",
       "info": "Esta es una modificacion de OptiCraft Bedrock 1.18.31 para agregarle mayor contenido y mejorar el rendimiento.",
       "enlace": "https://www.mediafire.com/file/364tionsjyudyfj",
       "modal": null,
       "badges": [
-        "TOMEX & OPTI",
+        "TOMEX y OPTI",
         "BEDROCK",
         "OPTICRAFT"
-      ]
+      ],
+      "id": "000134"
     },
     {
       "name": "Plants vs Zombies 2",
-      "icon": "fa-solid fa-seedling",
+      "icon": "https://cdn2.steamgriddb.com/icon/7edccc661418aeb5761dbcdc06ad490c.png",
       "info": "Defiende tu jardín contra hordas de zombis a través del tiempo en esta secuela optimizada.",
       "enlace": "https://www.mediafire.com/file/ih580njmotctmu6",
       "modal": null,
@@ -1648,22 +1770,11 @@
         "DEFENSA",
         "ESTRATEGIA",
         "ZOMBIS"
-      ]
+      ],
+      "id": "000135"
     }
   ],
   "extras": [
-        {
-      "name": "Version Legacy de FoxWeb",
-      "icon": "fa-brands fa-html5",
-      "info": "Vas directo a la version legacy de este sitio",
-      "enlace": "/legacy",
-      "modal": null,
-      "badges": [
-        "LIGERO",
-        "NO JAVASCRIPT",
-        "COMPATIBILIDAD"
-      ]
-    },
     {
       "name": "DriverPack para Windows XP",
       "icon": "fa-solid fa-microchip",
@@ -1674,11 +1785,12 @@
         "DRIVERS",
         "WINDOWS XP",
         "COMPATIBILIDAD"
-      ]
+      ],
+      "id": "000136"
     },
     {
       "name": "Optimizar Youtube",
-      "icon": "fa-brands fa-youtube",
+      "icon": "https://www.google.com/s2/favicons?domain=youtube.com&sz=28",
       "info": "Cambia el modo de la interfaz de Youtube magicamente",
       "enlace": "#",
       "modal": "youtubeModal",
@@ -1686,7 +1798,8 @@
         "MODOS",
         "OPTIMIZACION",
         "YOUTUBE"
-      ]
+      ],
+      "id": "000137"
     },
     {
       "name": "Tema Windows 10 para 7",
@@ -1698,11 +1811,12 @@
         "PERSONALIZACIÓN",
         "TEMAS",
         "WINDOWS 7"
-      ]
+      ],
+      "id": "000138"
     },
     {
       "name": "Corregir Píxeles Muertos",
-      "icon": "fa-solid fa-border-all",
+      "icon": "https://www.google.com/s2/favicons?domain=jscreenfix.com&sz=28",
       "info": "Utilidad web y ejecutable diseñada para intentar revivir píxeles trabados en pantallas LCD mediante ciclos de color rápidos.",
       "enlace": "https://www.jscreenfix.com/",
       "modal": null,
@@ -1710,7 +1824,8 @@
         "MONITOR",
         "REPARACIÓN",
         "WEB"
-      ]
+      ],
+      "id": "000139"
     }
   ],
   "modales": {}

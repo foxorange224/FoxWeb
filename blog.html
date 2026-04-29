@@ -11,6 +11,7 @@
         content="Explora artículos y tutoriales sobre software gratuito, Linux, juegos retro, APKs y más. Blog del centro de descargas FoxWeb.">
     <meta name="keywords" content="blog, tutoriales, software, linux, juegos retro, apks, artículos, guías">
     <meta name="theme-color" content="#FF4500">
+    
     <meta name="author" content="FoxOrange224">
     <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
     <meta name="googlebot" content="index, follow, max-snippet:-1, max-image-preview:large">
@@ -45,7 +46,8 @@
     <link rel="stylesheet" href="/assets/css/main.css">
     <link rel="stylesheet" href="/assets/css/blog.css">
     <link rel="stylesheet" href="/assets/css/bg-main.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.5.2/css/all.min.css">
+    <script src="/scripts/main-core.js" defer></script>
     <script src="/scripts/app-init.js" defer></script>
     <script src="/scripts/interface.js" defer></script>
     <script type="application/ld+json">{
@@ -74,8 +76,8 @@
     <header class="main-header" id="header-placeholder" role="banner"></header>
     <nav class="main-nav" role="navigation" aria-label="Categorías del Blog FoxWeb">
         <div class="nav-container">
-            <div class="tab-buttons" role="tablist"><button class="tablink active" id="tabTodos" role="tab"
-                    aria-selected="true" aria-controls="Todos" data-tab="Todos" onclick='openBlogTab("Todos")'
+            <div class="tab-buttons" role="tablist"><button class="tablink" id="tabTodos" role="tab"
+                    aria-selected="false" aria-controls="Todos" data-tab="Todos" onclick='openBlogTab("Todos")'
                     aria-label="Pestaña Todos"><i class="fa-solid fa-list"></i> <span>Todos</span></button> <button
                     class="tablink" id="tabLinux" role="tab" aria-selected="false" aria-controls="Linux"
                     data-tab="Linux" onclick='openBlogTab("Linux")' aria-label="Pestaña Linux"><i
@@ -100,8 +102,8 @@
         </div>
     </section>
     <main id="blog-content" class="main-content" role="main">
-        <section id="Todos" class="tab-content active" role="tabpanel" aria-labelledby="tabTodos" aria-hidden="false"
-            style="display:block">
+        <section id="Todos" class="tab-content" role="tabpanel" aria-labelledby="tabTodos" aria-hidden="true"
+            style="display:none">
             <div class="content-header">
                 <div class="header-text">
                     <h2><i class="fa-solid fa-blog"></i> Todos los Artículos <span class="category-count"
@@ -173,12 +175,90 @@
                         class="fa-solid fa-arrow-right"></i>Leer más</a></div>
         </div>
     </template><template id="badgeTemplate"><span class="item-badge" role="listitem"></span></template>
-    <div id="modales-container"></div>
-    <script src="/scripts/blog-index.js" defer></script>
-    <script src="/scripts/main-core.js" defer></script>
-    <script src="/scripts/main-features.js" defer></script>
-    <script src="/scripts/modals.js" defer></script>
-    <script>(() => { function e(t) { try { var o, e, n = document.getElementById(t); n && ((o = n.querySelector(".modal-backdrop")) || ((o = document.createElement("div")).className = "modal-backdrop", n.insertBefore(o, n.firstChild), o.addEventListener("click", function (e) { e.target === o && r(t) })), n.style.display = "flex", n.setAttribute("aria-hidden", "false"), document.body.style.overflow = "hidden", e = n.querySelector('button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])')) && e.focus() } catch (e) { console.error("Error opening modal:", e) } } function r(e) { try { var t = document.getElementById(e); t && (t.style.display = "none", t.setAttribute("aria-hidden", "true"), document.body.style.overflow = "") } catch (e) { console.error("Error closing modal:", e) } } fetch("/database/modals.html").then(function (e) { return e.text() }).then(function (e) { var t = document.getElementById("modales-container"); t && (t.innerHTML = e) }).catch(function (e) { console.error("Error cargando modals:", e) }), window.openModal = e, window.closeModal = r; var t = new URLSearchParams(window.location.search).get("openModal"); t && setTimeout(function () { e(t), history.replaceState({}, document.title, window.location.pathname) }, 500) })()</script>
+     <div id="modales-container"></div>
+      <script src="/scripts/blog-index.js" defer></script>
+      <script>
+     (function() {
+        function openModal(modalId) {
+            try {
+                var modal = document.getElementById(modalId);
+                if (!modal) {
+                    console.warn('Modal ' + modalId + ' no encontrado');
+                    return;
+                }
+                var backdrop = modal.querySelector('.modal-backdrop');
+                if (!backdrop) {
+                    backdrop = document.createElement('div');
+                    backdrop.className = 'modal-backdrop';
+                    modal.insertBefore(backdrop, modal.firstChild);
+                    backdrop.addEventListener('click', function(e) {
+                        if (e.target === backdrop) closeModal(modalId);
+                    });
+                }
+                modal.style.display = 'flex';
+                modal.setAttribute('aria-hidden', 'false');
+                document.body.style.overflow = 'hidden';
+                var focusable = modal.querySelector('button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])');
+                if (focusable) focusable.focus();
+            } catch (error) {
+                console.error('Error abriendo modal:', error);
+            }
+        }
+
+        function closeModal(modalId) {
+            try {
+                var modal = document.getElementById(modalId);
+                if (!modal) return;
+                modal.style.display = 'none';
+                modal.setAttribute('aria-hidden', 'true');
+                document.body.style.overflow = '';
+            } catch (error) {
+                console.error('Error cerrando modal:', error);
+            }
+        }
+
+        // Cargar modals con sanitización
+        fetch('/database/modals.html?v=' + Date.now())
+            .then(function(response) {
+                if (!response.ok) throw new Error('HTTP error! status: ' + response.status);
+                return response.text();
+            })
+            .then(function(html) {
+                var container = document.getElementById('modales-container');
+                if (container) {
+                    // Sanitizar HTML
+                    var sanitizeFn = window.sanitizeHTML || function(html) {
+                        var div = document.createElement('div');
+                        div.innerHTML = html;
+                        div.querySelectorAll('script').forEach(function(s) { s.remove(); });
+                        div.querySelectorAll('*').forEach(function(el) {
+                            [...el.attributes].forEach(function(attr) {
+                                if (attr.name.startsWith('on')) el.removeAttribute(attr.name);
+                            });
+                        });
+                        return div.innerHTML;
+                    };
+                    container.innerHTML = sanitizeFn(html);
+                }
+            })
+            .catch(function(error) {
+                console.error('Error cargando modals:', error);
+            });
+
+        window.openModal = openModal;
+        window.closeModal = closeModal;
+
+        // Abrir modal desde query param
+        var urlParams = new URLSearchParams(window.location.search);
+        var modalParam = urlParams.get('openModal');
+        if (modalParam) {
+            setTimeout(function() {
+                openModal(modalParam);
+                history.replaceState({}, document.title, window.location.pathname);
+            }, 500);
+        }
+     })();
+     </script>
     <div class="notification-center" id="notificationCenter" aria-hidden="true" inert>
         <div class="notification-header">
             <h4><i class="fa-solid fa-bell"></i>Notificaciones</h4><button class="notification-close"

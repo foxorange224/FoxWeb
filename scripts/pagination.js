@@ -452,20 +452,12 @@ function renderTabWithPagination(tabId) {
     // Si hay una página inicial desde query parameter, establecerla primero
     // Solo establecer si la pestaña actual coincide con la pestaña de la URL
     if (AppState.initialPage !== null && AppState.initialPage !== undefined && AppState.currentTab === tabId) {
-        console.log('[DEBUG] renderTabWithPagination - Estableciendo página inicial a:', AppState.initialPage);
-        // Establecer página inicial sin validar contra totalPages
         PaginationState.setPage(tabId, AppState.initialPage, true);
-        // Limpiar la página inicial después de usarla
         AppState.initialPage = null;
     }
 
-    // Calcular total de páginas después de establecer la página inicial
     PaginationState.calculateTotalPages(tabId, filteredItems.length);
-    console.log('[DEBUG] renderTabWithPagination - tabId:', tabId, 'AppState.initialPage:', AppState.initialPage, 'totalPages:', PaginationState.get(tabId).totalPages);
-
-    // Obtener items paginados
     const paginatedItems = PaginationState.getPaginatedItems(tabId, filteredItems);
-    console.log('[DEBUG] renderTabWithPagination - Página actual:', PaginationState.getPage(tabId), 'Items paginados:', paginatedItems.length);
 
     // Renderizar items en el grid
     const grid = document.getElementById(`grid-${tabId}`);
@@ -570,7 +562,7 @@ function initPagination() {
             }
         });
 
-        console.log('[Pagination] Sistema de paginación inicializado');
+        console.debug('[Pagination] Sistema de paginación inicializado');
     } catch (error) {
         console.error('[Pagination] Error al inicializar:', error);
     }

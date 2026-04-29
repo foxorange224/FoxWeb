@@ -1,4 +1,4 @@
-// panel.js - Carga header y footer del blog
+// interface.js - Carga header y footer del blog
 document.addEventListener('DOMContentLoaded', () => {
     // Cargar panel y footer desde archivos centralizados
     const panelUrl = '/components/panel.html';
@@ -37,7 +37,9 @@ document.addEventListener('DOMContentLoaded', () => {
         .then(data => {
             const placeholder = document.getElementById('header-placeholder');
             if (placeholder) {
-                placeholder.innerHTML = data;
+                // Sanitizar HTML del panel
+                const sanitizedData = window.sanitizeHTML ? window.sanitizeHTML(data) : data;
+                placeholder.innerHTML = sanitizedData;
                 
                 // Marcar enlace activo según la página actual
                 const navLinks = placeholder.querySelectorAll('.logo-text a, .header-actions a');
@@ -99,18 +101,9 @@ document.addEventListener('DOMContentLoaded', () => {
         .then(html => {
             const footer = document.getElementById('footer-placeholder');
             if (footer) {
-                footer.innerHTML = html;
-                
-                // Marcar enlace activo en el footer según la página actual
-                const footerLinks = footer.querySelectorAll('.footer-nav .nav-link');
-                if (footerLinks.length > 0) {
-                    footerLinks.forEach(link => {
-                        const dataPage = link.getAttribute('data-page');
-                        if (dataPage === currentPage) {
-                            link.classList.add('active');
-                        }
-                    });
-                }
+                // Sanitizar HTML del footer
+                const sanitizedHtml = window.sanitizeHTML ? window.sanitizeHTML(html) : html;
+                footer.innerHTML = sanitizedHtml;
             }
         })
         .catch(err => {

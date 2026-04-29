@@ -3,23 +3,24 @@
  */
 
 // ============================================================================
-// SISTEMA DE TEMAS (Funciones globales, pero sin activar el toggle localmente)
+// SISTEMA DE TEMAS
 // ============================================================================
 
 document.addEventListener('DOMContentLoaded', function() {
-    // Cargar tema guardado
-    const savedTheme = localStorage.getItem('foxweb_theme') || 'dark';
-    setTheme(savedTheme);
-
-    console.log('✅ FoxWeb Documentation loaded');
+    let theme = 'dark';
+    try {
+        theme = localStorage.getItem('foxweb_theme') || 'dark';
+    } catch (e) {}
+    setTheme(theme);
 });
 
 function setTheme(theme) {
     document.documentElement.setAttribute('data-theme', theme);
-    localStorage.setItem('foxweb_theme', theme);
+    try {
+        localStorage.setItem('foxweb_theme', theme);
+    } catch (e) {}
 }
 
-// Modal placeholder (mantener por si se llama desde otros scripts o enlaces)
 function showModal(type) {
     const messages = {
         privacy: 'Política de Privacidad',

@@ -11,7 +11,7 @@
     <link rel="preconnect" href="https://cdnjs.cloudflare.com">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.5.2/css/all.min.css">
     <style>
         :root {
             --primary: #b34700;
@@ -44,8 +44,9 @@
         }
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
-            font-family: inter, -apple-system, BlinkMacSystemFont, segoe ui, Roboto, sans-serif;
-            background-color: var(--bg-body);
+            font-family: inter, -apple-system, BlinkSystemFont, segoe ui, Roboto, sans-serif;
+            background: var(--bg-body) url('/assets/welcome.webp') no-repeat center center fixed;
+            background-size: cover;
             color: var(--text-main);
             min-height: 100vh;
             display: flex;
@@ -53,6 +54,17 @@
             justify-content: center;
             padding: 20px;
             transition: background-color 0.3s ease, color 0.3s ease;
+        }
+        @media (min-width: 1024px) {
+            body {
+                justify-content: flex-start;
+                padding-left: 10%;
+            }
+        }
+        @media (max-width: 768px) {
+            body {
+                background-position: left top;
+            }
         }
         .config-container {
             max-width: 420px;
@@ -179,16 +191,73 @@
         .action-btn:hover {
             background: var(--primary-hover);
         }
+        .action-btn.secondary {
+            background: var(--bg-tab);
+            color: var(--text-main);
+            border: 1px solid var(--border);
+        }
+        .action-btn.secondary:hover {
+            background: var(--primary-light);
+            border-color: var(--primary);
+        }
+        .back-btn {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            background: transparent;
+            border: none;
+            color: var(--text-main);
+            cursor: pointer;
+            font-size: 1.2rem;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            transition: color 0.2s ease;
+            z-index: 10;
+        }
+        .back-btn:hover {
+            color: var(--primary);
+        }
+        .config-container {
+            position: relative;
+            max-width: 420px;
+            width: 100%;
+            background: var(--bg-card);
+            border-radius: var(--radius-lg);
+            border: 1px solid var(--border);
+            box-shadow: var(--shadow-lg);
+            padding: 28px 24px;
+            transition: background-color 0.3s ease;
+        }
     </style>
 </head>
 
-<body>
-    <div class="config-container">
-        <div class="config-header">
-            <div class="config-icon"><i class="fas fa-face-laugh"></i></div>
-            <h1 class="config-title">¡Bienvenido a FoxWeb!</h1>
-            <p class="config-subtitle">Elige cómo quieres ver el sitio</p>
+    <body>
+        <div class="config-container" id="choiceScreen">
+            <div class="config-header">
+                <div class="config-icon"><i class="fas fa-face-laugh"></i></div>
+                <h1 class="config-title">¡Bienvenido a FoxWeb!</h1>
+                <p class="config-subtitle">Crea o importa un archivo de configuración para tener tu perfil</p>
+            </div>
+            <div class="config-section" style="display: flex; flex-direction: column; gap: 12px; margin-top: 30px;">
+                <button type="button" class="action-btn" onclick="showCreateProfile()">
+                    <i class="fas fa-user-plus"></i> Crear Perfil
+                </button>
+                <button type="button" class="action-btn secondary" onclick="showImportProfile()">
+                    <i class="fas fa-file-import"></i> Importar Perfil
+                </button>
+            </div>
         </div>
+
+        <div class="config-container" id="configScreen" style="display: none;">
+            <button type="button" class="back-btn" onclick="goBack()">
+                <i class="fas fa-arrow-left"></i> Volver
+            </button>
+            <div class="config-header">
+                <div class="config-icon"><i class="fas fa-user-plus"></i></div>
+                <h1 class="config-title">Crear Perfil</h1>
+                <p class="config-subtitle">Elige cómo quieres ver el sitio</p>
+            </div>
 
         <div class="config-section">
             <span class="config-label">Tu nombre</span>
@@ -212,16 +281,16 @@
             <div class="tabs-grid">
                 <input type="checkbox" id="tabProgramas" class="tab-checkbox" value="Programas" checked>
                 <label for="tabProgramas" class="tab-label"><i class="fas fa-laptop-code"></i> Programas</label>
-                
+
                 <input type="checkbox" id="tabSistemas" class="tab-checkbox" value="Sistemas" checked>
                 <label for="tabSistemas" class="tab-label"><i class="fas fa-server"></i> Sistemas</label>
-                
+
                 <input type="checkbox" id="tabJuegos" class="tab-checkbox" value="Juegos" checked>
                 <label for="tabJuegos" class="tab-label"><i class="fas fa-gamepad"></i> Juegos</label>
-                
+
                 <input type="checkbox" id="tabExtras" class="tab-checkbox" value="Extras" checked>
                 <label for="tabExtras" class="tab-label"><i class="fas fa-toolbox"></i> Extras</label>
-                
+
                 <input type="checkbox" id="tabAPKs" class="tab-checkbox" value="APKs" checked>
                 <label for="tabAPKs" class="tab-label"><i class="fas fa-mobile-alt"></i> APKs</label>
             </div>
@@ -261,10 +330,52 @@
         </button>
     </div>
 
+    <div class="config-container" id="importSuccessScreen" style="display: none;">
+        <div class="config-header">
+            <div class="config-icon" style="color: #28a745;"><i class="fas fa-check-circle"></i></div>
+            <h1 class="config-title">¡Importación exitosa!</h1>
+            <p class="config-subtitle">Se ha importado con éxito. Ya puede usar FoxWeb yendo al perfil.</p>
+        </div>
+        <button type="button" class="action-btn" onclick="window.location.href='/profile'">
+            Terminar
+        </button>
+    </div>
+
+    <!-- Update Info Screen (initially hidden) -->
+    <div class="config-container" id="updateScreen" style="display: none;">
+        <div class="config-header">
+            <div class="config-icon" style="color: #28a745;">
+                <i class="fas fa-wand-magic-sparkles"></i>
+            </div>
+            <h1 class="config-title">¡Nueva actualización!</h1>
+            <p class="config-subtitle">Una actualización que ahora podrás ver los iconos reales de los programas</p>
+        </div>
+
+        <div class="config-section" style="text-align: center;">
+            <!-- Update image placeholder (16:8 aspect ratio) -->
+            <div style="margin: 80px 0; display: flex; justify-content: center;">
+                <a href="/assets/demo/update_viewicons.webp" style="display: flex; justify-content: center;">
+                <img src="/assets/demo/update_viewicons.webp" alt="Nueva actualización - Iconos reales" style="
+                    width: 120%;
+                    max-width: 400px;
+                    aspect-ratio: 16 / 8;
+                    object-fit: cover;
+                    border-radius: 12px;
+                    box-shadow: 0 8px 80px rgba(179, 71, 0, 0.3);
+                "></img>
+                </a>
+            </div>
+        </div>
+        <center><p class="config-subtitle">Puede hacer clic a la imagen para verlo bien. Si esta en PC.</p></center>
+        <button type="button" class="action-btn" onclick="finishSetup()">
+            <i class="fas fa-check"></i> Ok, gracias
+        </button>
+    </div>
+
     <script>
         // Variables
         var selectedTheme = localStorage.getItem('foxweb_theme') || 'light';
-        var selectedView = localStorage.getItem('foxweb_view') || 'compact';
+        var selectedView = localStorage.getItem('foxweb_view') || 'cards';
         
         // Apply theme immediately
         document.documentElement.setAttribute('data-theme', selectedTheme);
@@ -275,6 +386,28 @@
             document.documentElement.setAttribute('data-theme', theme);
             localStorage.setItem('foxweb_theme', theme);
             updateThemeButtons();
+        };
+
+        window.showCreateProfile = function() {
+            document.getElementById('choiceScreen').style.display = 'none';
+            document.getElementById('configScreen').style.display = 'block';
+            document.title = 'Configurar Perfil';
+            const url = new URL(window.location);
+            url.searchParams.set('create', 'true');
+            history.replaceState({}, document.title, url);
+        };
+
+        window.showImportProfile = function() {
+            document.getElementById('importFile').click();
+        };
+
+        window.goBack = function() {
+            document.getElementById('configScreen').style.display = 'none';
+            document.getElementById('choiceScreen').style.display = 'block';
+            document.title = 'Bienvenido a FoxWeb';
+            const url = new URL(window.location);
+            url.searchParams.delete('create');
+            history.replaceState({}, document.title, url);
         };
 
         window.setView = function(view) {
@@ -334,11 +467,17 @@
                     if (data.view) localStorage.setItem('foxweb_view', data.view);
                     if (data.notifications) localStorage.setItem('foxweb_notifications', data.notifications);
                     if (data.categories) localStorage.setItem('foxweb_categories', data.categories);
-                    alert('Datos importados');
-                    location.reload();
+                    document.getElementById('choiceScreen').style.display = 'none';
+                    document.getElementById('importSuccessScreen').style.display = 'block';
                 } catch (err) {
                     alert('Error al importar');
                 }
+                document.title = '¡Importación Exitosa!';
+                const url = new URL(window.location);
+                url.searchParams.set('success', 'true');
+                history.replaceState({}, document.title, url);
+                document.getElementById('choiceScreen').style.display = 'none';
+                document.getElementById('importSuccessScreen').style.display = 'block';
             };
             reader.readAsText(file);
         }
@@ -352,41 +491,60 @@
             }
         }
 
-        window.saveAndContinue = function() {
-            var selectedTabs = [];
-            document.querySelectorAll('.tab-checkbox:checked').forEach(function(cb) {
-                selectedTabs.push(cb.value);
-            });
-            
-            if (selectedTabs.length === 0) {
-                alert('Selecciona al menos una pestaña');
-                return;
-            }
-            
-            localStorage.setItem('foxweb_theme', selectedTheme);
-            localStorage.setItem('foxweb_view', selectedView);
-            
-            // Clear per-tab view preferences so global preference takes effect
-            var tabIds = ['Programas', 'Sistemas', 'Juegos', 'Extras', 'APKs'];
-            tabIds.forEach(function(tabId) {
-                localStorage.removeItem('foxweb_view_mode_' + tabId);
-            });
-            
-            var username = document.getElementById('username').value.trim();
-            if (username) {
-                localStorage.setItem('foxweb_username', username);
-            }
-            
-            localStorage.setItem('foxweb_configured', 'true');
-            localStorage.setItem('foxweb_first_visit', 'false');
-            localStorage.setItem('foxweb_categories', JSON.stringify(selectedTabs));
-            
-            window.location.href = '/profile';
-        };
+         window.saveAndContinue = function() {
+             var selectedTabs = [];
+             document.querySelectorAll('.tab-checkbox:checked').forEach(function(cb) {
+                 selectedTabs.push(cb.value);
+             });
+
+             if (selectedTabs.length === 0) {
+                 alert('Selecciona al menos una pestaña');
+                 return;
+             }
+
+             localStorage.setItem('foxweb_theme', selectedTheme);
+             localStorage.setItem('foxweb_view', selectedView);
+
+             // Clear per-tab view preferences so global preference takes effect
+             var tabIds = ['Programas', 'Sistemas', 'Juegos', 'Extras', 'APKs'];
+             tabIds.forEach(function(tabId) {
+                 localStorage.removeItem('foxweb_view_mode_' + tabId);
+             });
+
+             var username = document.getElementById('username').value.trim();
+             if (username) {
+                 localStorage.setItem('foxweb_username', username);
+             }
+
+             localStorage.setItem('foxweb_configured', 'true');
+             localStorage.setItem('foxweb_first_visit', 'false');
+             localStorage.setItem('foxweb_categories', JSON.stringify(selectedTabs));
+
+             // Ocultar pantalla de configuración y mostrar pantalla de actualización
+             document.getElementById('configScreen').style.display = 'none';
+             document.getElementById('updateScreen').style.display = 'block';
+         };
+
+         window.finishSetup = function() {
+             window.location.href = '/profile';
+         };
 
         document.addEventListener('DOMContentLoaded', function() {
             updateThemeButtons();
             updateViewButtons();
+
+            // Restore screen from URL parameter
+            const urlParams = new URLSearchParams(window.location.search);
+            if (urlParams.get('create') === 'true') {
+                showCreateProfile();
+                document.title = 'Configurar Perfil';
+            } else if (urlParams.get('success') === 'true') {
+                document.title = '¡Importación Exitosa!';
+                document.getElementById('choiceScreen').style.display = 'none';
+                document.getElementById('importSuccessScreen').style.display = 'block';
+            } else {
+                document.title = 'Bienvenido a FoxWeb';
+            }
             
             // Pre-fill username
             var savedUsername = localStorage.getItem('foxweb_username');

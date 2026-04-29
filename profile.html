@@ -4,11 +4,14 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=5">
     <title>FoxWeb | Mi Perfil</title>
+    <meta name="description" content="Tu perfil en FoxWeb: gestiona tus descargas favoritas, historial y configuraciones personales.">
     <meta name="theme-color" content="#FF4500">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.5.2/css/all.min.css">
     <link rel="stylesheet" href="/assets/css/main.css">
     <link rel="stylesheet" href="/assets/css/bg-main.css">
     <style>
+        .view-btn { opacity: 0.5; transition: opacity 0.2s; }
+        .view-btn.active { opacity: 1; }
         .profile-header {
             padding: 20px 24px;
             border-bottom: 1px solid var(--border);
@@ -72,7 +75,44 @@
             background: var(--primary);
             color: white;
         }
+
+        .btn-profile-delete {
+            color: var(--text-dim) !important;
+            border-color: var(--border) !important;
+            transition: all 0.2s ease !important;
+        }
+
+        .btn-profile-delete:hover {
+            background-color: var(--error) !important;
+            color: white !important;
+            border-color: var(--error) !important;
+            transform: scale(1.1);
+        }
         
+        /* Copy button in card footer (vista de tarjetas) */
+
+        .copy-link-btn-footer {
+            width: 28px;
+            height: 28px;
+            border-radius: var(--radius-sm);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: var(--bg-tab);
+            border: 1px solid var(--border);
+            color: var(--text-dim);
+            font-size: .8rem;
+            transition: all 0.2s ease;
+            cursor: pointer;
+            padding: 0;
+        }
+
+        .copy-link-btn-footer:hover {
+            background-color: var(--primary);
+            border-color: var(--primary);
+            color: white;
+        }
+
         .content-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
@@ -80,9 +120,19 @@
             padding: 24px;
         }
         
+        /* Evitar que las tarjetas se estiren demasiado cuando hay pocos elementos */
+        .content-grid .content-card {
+            max-width: 400px;
+            width: 100%;
+        }
+        
         .content-grid.compact-view {
             grid-template-columns: 1fr;
             gap: 8px;
+        }
+
+        .content-grid.compact-view .content-card {
+            max-width: none;
         }
         
         .empty-state {
@@ -124,53 +174,143 @@
             opacity: 0.5;
             cursor: not-allowed;
         }
-        
+
+        /* Skeleton loading styles */
+        .skeleton-box {
+            background: linear-gradient(90deg, var(--bg-tab) 25%, var(--border) 50%, var(--bg-tab) 75%);
+            background-size: 200% 100%;
+            animation: skeleton-loading 1.5s infinite;
+        }
+
+        .skeleton-card {
+            animation: fadeIn 0.3s ease-out;
+        }
+
+        @keyframes skeleton-loading {
+            0% { background-position: 200% 0; }
+            100% { background-position: -200% 0; }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
         @media (max-width: 640px) {
             .content-grid { grid-template-columns: 1fr; }
             .profile-header { flex-direction: column; align-items: flex-start; }
         }
     </style>
     <script src="/scripts/app-init.js" defer></script>
-    <script src="/scripts/interface.js" defer></script>
     <script src="/scripts/main-core.js" defer></script>
+    <script src="/scripts/interface.js" defer></script>
     <script src="/scripts/main-features.js" defer></script>
     <script src="/scripts/modals.js" defer></script>
     <script src="/scripts/pagination.js" defer></script>
-<script>
+    <script>
+        // Mapeo de iconos por categoría (con keys en minúscula)
+        const CATEGORY_ICONS = {
+            'programas': 'fa-solid fa-cube',
+            'sistemas': 'fa-solid fa-desktop',
+            'juegos': 'fa-solid fa-gamepad',
+            'extras': 'fa-solid fa-star',
+            'apks': 'fa-solid fa-mobile-android'
+        };
+
+        // Fallback if loadInfoMessage not loaded
+        window.loadInfoMessage = window.loadInfoMessage || function(page) { console.log('[Info] Loading:', page); };
+        
+        // Helper function to render icon (supports Font Awesome or image URLs)
+        function renderProfileIcon(icon) {
+            if (!icon) return '<i class="fa-solid fa-folder"></i>';
+            if (icon.match(/^(http|https|\/|data:)/i)) {
+                return '<img src="'+icon+'" alt="icon" class="card-icon-img">';
+            }
+            return '<i class="'+icon+'"></i>';
+        }
+        
         document.addEventListener('DOMContentLoaded', function() {
+            // Mostrar loader mientras se cargan los datos
+            document.getElementById('profileLoading').style.display = 'flex';
+            document.getElementById('profileContent').style.display = 'none';
+
             // Load info message
             loadInfoMessage('profile');
-            
-            // Read tab from URL
+
+            // Initialize tab - check URL parameter first
             const urlParams = new URLSearchParams(window.location.search);
-            const urlTab = urlParams.get('tab');
-            if (urlTab === 'history') {
-                switchTab('history');
-            } else {
-                switchTab('favorites');
-            }
-            
-            loadData();
-            
-            document.querySelectorAll('.view-btn').forEach(btn => {
-                btn.addEventListener('click', function() {
-                    setView(this.dataset.view);
-                });
-            });
+            const tabParam = urlParams.get('tab');
+            const validTabs = ['favorites', 'history'];
+            const initialTab = validTabs.includes(tabParam) ? tabParam : 'favorites';
+            switchTab(initialTab);
+
+            // Set initial view state from localStorage
+            const savedView = localStorage.getItem('foxweb_view') || 'cards';
+            setView(savedView);
+
+            // Cargar modales primero, luego datos
+            loadModalsAndData();
         });
-        
+
+        function loadModalsAndData() {
+            // Cargar modales
+            fetch('/database/modals.html')
+                .then(r => {
+                    if (!r.ok) throw new Error('Modals file not found');
+                    return r.text();
+                })
+                .then(html => {
+                    document.getElementById('modals-container').innerHTML = html;
+                    console.log('[Profile] Modales cargados');
+                    // Después de cargar modales, cargar datos
+                    loadData();
+                })
+                .catch(err => {
+                    console.warn('[Profile] Modals no cargados:', err);
+                    // Continuar igualmente sin modales
+                    loadData();
+                });
+        }
+
         function loadData() {
             fetch('/database/data.json')
                 .then(r => r.json())
                 .then(data => {
                     dbData = data;
+                    if (typeof AppState !== 'undefined') {
+                        AppState.dbData = data;
+                    }
                     loadProfile();
+                    // Ocultar loader y mostrar contenido
+                    document.getElementById('profileLoading').style.display = 'none';
+                    document.getElementById('profileContent').style.display = 'block';
+                })
+                .catch(err => {
+                    console.error('Error cargando datos:', err);
+                    document.getElementById('profileLoading').style.display = 'none';
+                    document.getElementById('profileContent').style.display = 'block';
                 });
         }
         
         function loadProfile() {
-            const favs = JSON.parse(localStorage.getItem('foxweb_favorites')) || [];
-            const hist = JSON.parse(localStorage.getItem('foxweb_download_history')) || [];
+            let favs = JSON.parse(localStorage.getItem('foxweb_favorites')) || [];
+            let hist = JSON.parse(localStorage.getItem('foxweb_download_history')) || [];
+            
+            // Filtrar elementos que ya no existen en la base de datos
+            favs = favs.filter(f => {
+                const [name, category] = f.split('_');
+                return findItem(name, category) !== null;
+            });
+            
+            hist = hist.filter(h => findItem(h.name, h.category) !== null);
+            
+            // Si hubo cambios, actualizar localStorage para limpiar datos huérfanos
+            if (favs.length !== JSON.parse(localStorage.getItem('foxweb_favorites')?.length || '0')) {
+                localStorage.setItem('foxweb_favorites', JSON.stringify(favs));
+            }
+            if (hist.length !== JSON.parse(localStorage.getItem('foxweb_download_history')?.length || '0')) {
+                localStorage.setItem('foxweb_download_history', JSON.stringify(hist));
+            }
             
             document.getElementById('favCount').textContent = favs.length;
             document.getElementById('histCount').textContent = hist.length;
@@ -179,156 +319,163 @@
             renderHistoryWithPagination(hist);
         }
         
-        let currentFavPage = 1;
+        window.currentFavPage = 1;
+        window.currentHistPage = 1;
+        window.currentFavFilter = '';
+        window.currentHistFilter = '';
         const ITEMS_PER_PAGE = 12;
         
+        window.handleSearch = function(tab, query) {
+            if (tab === 'favorites') {
+                window.currentFavFilter = query.toLowerCase();
+                window.currentFavPage = 1;
+            } else {
+                window.currentHistFilter = query.toLowerCase();
+                window.currentHistPage = 1;
+            }
+            loadProfile();
+        }
+        
         function renderFavoritesWithPagination(items, tabId) {
-            if (!items.length) {
-                document.getElementById('favoritesList').innerHTML = '<div class="empty-state"><i class="fa-regular fa-heart"></i><p>¡No tienes favoritos!, marca como favorito cualquier contenido en la sección de descargas y aparecerán aqui.</p><a href="/downloads" class="btn" style="margin-top:16px;display:inline-flex;padding:12px 24px;background:var(--primary);color:white;border-radius:8px;text-decoration:none;">Explorar</a></div>';
+            const listContainer = document.getElementById('favoritesList');
+            
+            const filteredItems = items.filter(f => {
+                const [name] = f.split('_');
+                return name.toLowerCase().includes(window.currentFavFilter);
+            });
+
+            if (!filteredItems.length) {
+                listContainer.innerHTML = '<div class="empty-state"><i class="fa-regular fa-heart"></i><p>¡No hay favoritos que coincidan con tu búsqueda!</p><a href="/downloads" class="btn" style="margin-top:16px;display:inline-flex;padding:12px 24px;background:var(--primary);color:white;border-radius:8px;text-decoration:none;">Explorar</a></div>';
                 return;
             }
             
-            const totalPages = Math.ceil(items.length / ITEMS_PER_PAGE);
-            const start = (currentFavPage - 1) * ITEMS_PER_PAGE;
-            const end = start + ITEMS_PER_PAGE;
-            const pageItems = items.slice(start, end);
+            listContainer.innerHTML = '<div id="favoritesGrid" class="content-grid"></div><div id="favoritesPagination"></div>';
             
-            renderFavorites(pageItems, 'favorites', currentFavPage, totalPages, items.length, start);
+            const totalPages = Math.ceil(filteredItems.length / ITEMS_PER_PAGE);
+            const start = (window.currentFavPage - 1) * ITEMS_PER_PAGE;
+            const end = start + ITEMS_PER_PAGE;
+            const pageItems = filteredItems.slice(start, end);
+            
+            renderFavorites(pageItems, 'favorites', window.currentFavPage, totalPages, filteredItems.length, start);
         }
         
         function renderHistoryWithPagination(items) {
-            if (!items.length) {
-                document.getElementById('historyList').innerHTML = '<div class="empty-state"><i class="fa-solid fa-clock-rotate-left"></i><p>No hay historial, intenta abrir cualquier contenido y aparecerán aqui.</p></div>';
+            const listContainer = document.getElementById('historyList');
+            
+            const filteredItems = items.filter(h => {
+                return h.name.toLowerCase().includes(window.currentHistFilter);
+            });
+
+            if (!filteredItems.length) {
+                listContainer.innerHTML = '<div class="empty-state"><i class="fa-solid fa-clock-rotate-left"></i><p>No hay historial que coincida con tu búsqueda.</p></div>';
                 return;
             }
             
-            const totalPages = Math.ceil(items.length / ITEMS_PER_PAGE);
-            const start = (currentFavPage - 1) * ITEMS_PER_PAGE;
-            const end = start + ITEMS_PER_PAGE;
-            const pageItems = items.slice(start, end);
+            listContainer.innerHTML = '<div id="historyGrid" class="content-grid"></div><div id="historyPagination"></div>';
             
-            renderHistory(pageItems, 'history', currentFavPage, totalPages, items.length, start);
+            const totalPages = Math.ceil(filteredItems.length / ITEMS_PER_PAGE);
+            const start = (window.currentHistPage - 1) * ITEMS_PER_PAGE;
+            const end = start + ITEMS_PER_PAGE;
+            const pageItems = filteredItems.slice(start, end);
+            
+            renderHistory(pageItems, 'history', window.currentHistPage, totalPages, filteredItems.length, start);
         }
         
         function renderFavorites(items, gridId, page, totalPages, totalItems, startIndex = 0) {
-            const container = document.getElementById('favoritesList');
-            const view = localStorage.getItem('profile_view') || 'cards';
-            const isCompact = view === 'compact';
             const grid = document.getElementById('favoritesGrid');
+            const view = localStorage.getItem('foxweb_view') || 'cards';
             
-            if (isCompact) {
+            grid.innerHTML = '';
+            
+            if (view === 'compact') {
                 grid.classList.add('compact-view');
             } else {
                 grid.classList.remove('compact-view');
             }
-            
-            grid.innerHTML = items.map((f, i) => {
+
+            items.forEach((f, i) => {
                 const [name, category] = f.split('_');
                 const item = findItem(name, category);
-                const icon = item?.icon || CATEGORY_ICONS[category] || 'fa-solid fa-folder';
-                const info = item?.info || 'Sin descripción';
-                const enlace = item?.enlace || '#';
-                const modal = item?.modal || null;
-                const hasModal = modal && modal !== 'null';
+                if (!item) return;
+
+                const itemId = item.id;
+                const card = createCardManually(item, category, itemId, view);
                 
-                let btnHtml = '';
-                if (hasModal) {
-                    btnHtml = `<button class="download-btn" style="flex:1" onclick="openModal('${modal}')">
-                        <i class="fa-solid fa-circle-info"></i>Ver
-                    </button>`;
-                } else if (enlace && enlace !== '#') {
-                    btnHtml = `<button class="download-btn" onclick="copyLink('${enlace}')" title="Copiar enlace">
-                        <i class="fa-solid fa-link"></i>Copiar
-                    </button>
-                    <button class="download-btn" style="flex:1" onclick="window.open('${enlace}', '_blank')">
-                        <i class="fa-solid fa-download"></i>Abrir
-                    </button>`;
+                const favBtn = card.querySelector('.favorite-btn');
+                if (favBtn) {
+                    favBtn.classList.add('btn-profile-delete');
+                    favBtn.innerHTML = '<i class="fa-solid fa-trash"></i>';
+                    favBtn.title = 'Eliminar de favoritos';
+                    favBtn.ariaLabel = 'Eliminar de favoritos';
+                    favBtn.onclick = (e) => {
+                        e.stopPropagation();
+                        removeFav(i);
+                    };
                 }
                 
-                return `
-                <div class="content-card">
-                    <div class="card-header">
-                        <div class="card-icon"><i class="${icon}"></i></div>
-                        <div class="card-actions">
-                            <button class="card-action-btn" onclick="removeFav(${startIndex + i})" title="Eliminar">
-                                <i class="fa-solid fa-trash"></i>
-                            </button>
-                        </div>
-                    </div>
-                    <div class="card-content">
-                        <h3 class="card-title">${name}</h3>
-                        <p class="card-description">${info}</p>
-                    </div>
-                    <div class="card-footer">
-                        ${btnHtml}
-                    </div>
-                </div>`;
-            }).join('') + renderPaginationControls('favorites', page, totalPages, totalItems);
+                grid.appendChild(card);
+            });
+
+            document.getElementById('favoritesPagination').innerHTML = renderPaginationControls('favorites', page, totalPages, totalItems);
         }
         
         function renderHistory(items, gridId, page, totalPages, totalItems, startIndex = 0) {
-            const container = document.getElementById('historyList');
-            const view = localStorage.getItem('profile_view') || 'cards';
-            const idx = (page - 1) * ITEMS_PER_PAGE;
-            
-            const isCompact = view === 'compact';
             const grid = document.getElementById('historyGrid');
+            const view = localStorage.getItem('foxweb_view') || 'cards';
             
-            if (isCompact) {
+            grid.innerHTML = '';
+            
+            if (view === 'compact') {
                 grid.classList.add('compact-view');
             } else {
                 grid.classList.remove('compact-view');
             }
-            
-            grid.innerHTML = items.map((h, i) => {
+
+            items.forEach((h, i) => {
                 const item = findItem(h.name, h.category);
-                const icon = item?.icon || CATEGORY_ICONS[h.category] || 'fa-solid fa-folder';
-                const info = item?.info || 'Sin descripción';
-                const enlace = item?.enlace || '#';
+                if (!item) return;
+
+                const itemId = item.id;
+                const card = createCardManually(item, h.category, itemId, view);
                 
-                return `
-                <div class="content-card">
-                    <div class="card-header">
-                        <div class="card-icon"><i class="${icon}"></i></div>
-                        <div class="card-actions">
-                            <button class="card-action-btn" onclick="removeHist(${idx + i})" title="Eliminar">
-                                <i class="fa-solid fa-trash"></i>
-                            </button>
-                        </div>
-                    </div>
-                    <div class="card-content">
-                        <h3 class="card-title">${h.name}</h3>
-                        <p class="card-description">${info}</p>
-                    </div>
-                    <div class="card-footer">
-                        ${enlace && enlace !== '#' ? `
-                        <button class="download-btn" onclick="copyLink('${enlace}')" title="Copiar enlace">
-                            <i class="fa-solid fa-link"></i>Copiar
-                        </button>
-                        <button class="download-btn" style="flex:1" onclick="window.open('${enlace}', '_blank')">
-                            <i class="fa-solid fa-download"></i>Abrir
-                        </button>` : ''}
-                    </div>
-                </div>`;
-            }).join('') + renderPaginationControls('history', page, totalPages, totalItems);
+                const favBtn = card.querySelector('.favorite-btn');
+                if (favBtn) {
+                    favBtn.classList.add('btn-profile-delete');
+                    favBtn.innerHTML = '<i class="fa-solid fa-trash"></i>';
+                    favBtn.title = 'Eliminar del historial';
+                    favBtn.ariaLabel = 'Eliminar del historial';
+                    favBtn.onclick = (e) => {
+                        e.stopPropagation();
+                        removeHist(i);
+                    };
+                }
+                
+                grid.appendChild(card);
+            });
+
+            document.getElementById('historyPagination').innerHTML = renderPaginationControls('history', page, totalPages, totalItems);
         }
         
         function findItem(name, category) {
             if (!dbData || !category) return null;
-            
             const catKey = category.toLowerCase();
             const items = dbData[catKey];
             if (!items) return null;
-            
             return items.find(item => item.name === name);
         }
         
         function setView(view) {
-            localStorage.setItem('profile_view', view);
-            document.querySelectorAll('.view-btn').forEach(btn => {
-                btn.classList.toggle('active', btn.dataset.view === view);
-            });
-            loadProfile();
+            try {
+                localStorage.setItem('foxweb_view', view);
+                document.querySelectorAll('.view-btn').forEach(btn => {
+                    btn.classList.toggle('active', btn.dataset.view === view);
+                });
+                if (typeof dbData !== 'undefined' && dbData) {
+                    loadProfile();
+                }
+            } catch(e) {
+                console.error('Error setView:', e);
+            }
         }
         
         function goToPage(tab, page) {
@@ -336,21 +483,18 @@
                 currentFavPage = page;
                 renderFavoritesWithPagination(JSON.parse(localStorage.getItem('foxweb_favorites')) || [], 'Favoritos');
             } else if (tab === 'history') {
-                currentFavPage = page;
+                currentHistPage = page;
                 renderHistoryWithPagination(JSON.parse(localStorage.getItem('foxweb_download_history')) || []);
             }
         }
         
         function renderPaginationControls(tab, page, totalPages, totalItems) {
             if (totalPages <= 1) return '';
-            
             let pageButtons = '';
             for (let i = 1; i <= totalPages; i++) {
                 pageButtons += `<button class="pagination-btn ${page === i ? 'pagination-btn--active' : ''}" onclick="goToPage('${tab}', ${i})" ${page === i ? 'aria-current="page"' : ''} style="padding:8px 12px;margin:0 2px;background:${page === i ? 'var(--primary)' : 'var(--bg-card)'};border:1px solid var(--border);border-radius:4px;color:var(--text-main);cursor:pointer;">${i}</button>`;
             }
-            
-            return `
-            <div style="padding:20px;text-align:center;">
+            return `<div style="padding:20px;text-align:center;">
                 <button onclick="goToPage('${tab}', ${page > 1 ? page - 1 : 1})" ${page === 1 ? 'disabled' : ''} style="padding:8px 12px;margin:0 4px;background:var(--bg-card);border:1px solid var(--border);border-radius:4px;color:var(--text-dim);cursor:pointer;"><i class="fa-solid fa-chevron-left"></i> Atrás</button>
                 ${pageButtons}
                 <button onclick="goToPage('${tab}', ${page < totalPages ? page + 1 : totalPages})" ${page === totalPages ? 'disabled' : ''} style="padding:8px 12px;margin:0 4px;background:var(--bg-card);border:1px solid var(--border);border-radius:4px;color:var(--text-dim);cursor:pointer;">Siguiente <i class="fa-solid fa-chevron-right"></i></button>
@@ -361,9 +505,20 @@
             const favs = JSON.parse(localStorage.getItem('foxweb_favorites')) || [];
             favs.splice(index, 1);
             localStorage.setItem('foxweb_favorites', JSON.stringify(favs));
+            
+            const totalPages = Math.ceil(favs.length / ITEMS_PER_PAGE);
+            if (window.currentFavPage > totalPages && totalPages > 0) {
+                window.currentFavPage = totalPages;
+            }
+            
             loadProfile();
+            
             if (typeof window.showToast === 'function') {
-                window.showToast('Eliminado de favoritos', 'info');
+                if (favs.length === 0) {
+                    window.showToast('Ya no tienes favoritos', 'info');
+                } else {
+                    window.showToast('Eliminado de favoritos', 'info');
+                }
             }
         }
         
@@ -371,51 +526,40 @@
             const hist = JSON.parse(localStorage.getItem('foxweb_download_history')) || [];
             hist.splice(index, 1);
             localStorage.setItem('foxweb_download_history', JSON.stringify(hist));
+            
+            const totalPages = Math.ceil(hist.length / ITEMS_PER_PAGE);
+            if (window.currentHistPage > totalPages && totalPages > 0) {
+                window.currentHistPage = totalPages;
+            }
+            
             loadProfile();
+            
             if (typeof window.showToast === 'function') {
-                window.showToast('Eliminado del historial', 'info');
+                if (hist.length === 0) {
+                    window.showToast('El historial ahora está vacío', 'info');
+                } else {
+                    window.showToast('Eliminado del historial', 'info');
+                }
             }
         }
         
         function clearHist() {
+
             const hist = JSON.parse(localStorage.getItem('foxweb_download_history')) || [];
             if (hist.length === 0) {
-                if (typeof window.showToast === 'function') {
-                    window.showToast('No es necesario, ya está vacío el historial', 'warning');
-                }
+                if (typeof window.showToast === 'function') window.showToast('No es necesario, ya está vacío el historial', 'warning');
                 return;
             }
             if (confirm('¿Limpiar todo el historial?')) {
                 localStorage.removeItem('foxweb_download_history');
                 loadProfile();
-                if (typeof window.showToast === 'function') {
-                    window.showToast('Historial limpiado', 'success');
-                }
+                if (typeof window.showToast === 'function') window.showToast('Historial limpiado', 'success');
             }
         }
         
         function openModal(modalId) {
             window.openModal(modalId);
         }
-        
-        function copyLink(url) {
-            navigator.clipboard.writeText(url).then(() => {
-                if (typeof window.showToast === 'function') {
-                    window.showToast('Enlace copiado', 'success');
-                }
-            }).catch(() => {
-                if (typeof window.showToast === 'function') {
-                    window.showToast('Error al copiar', 'error');
-                }
-            });
-        }
-        
-        // Load modals when page loads
-        fetch('/database/modals.html')
-            .then(r => r.text())
-            .then(html => {
-                document.getElementById('modals-container').innerHTML = html;
-            });
     </script>
 </head>
 
@@ -423,6 +567,126 @@
     <header class="main-header" id="header-placeholder"></header>
     
     <main style="padding-top: 20px;">
+        <!-- Loading skeleton -->
+        <div id="profileLoading" style="display: flex; flex-direction: column; gap: 24px; padding: 24px;">
+            <div style="display: flex; align-items: center; gap: 16px;">
+                <div class="skeleton-box" style="width: 48px; height: 48px; border-radius: 50%;"></div>
+                <div style="display: flex; flex-direction: column; gap: 8px;">
+                    <div class="skeleton-box" style="width: 120px; height: 24px; border-radius: 4px;"></div>
+                    <div class="skeleton-box" style="width: 160px; height: 16px; border-radius: 4px;"></div>
+                </div>
+            </div>
+            <div class="skeleton-grid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 16px;">
+                <!-- 12 skeleton cards -->
+                <div class="skeleton-card" style="background: var(--bg-card); border: 1px solid var(--border); border-radius: 8px; padding: 16px; display: flex; flex-direction: column; gap: 12px;">
+                    <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+                        <div class="skeleton-box" style="width: 40px; height: 40px; border-radius: 8px;"></div>
+                        <div class="skeleton-box" style="width: 32px; height: 32px; border-radius: 4px;"></div>
+                    </div>
+                    <div class="skeleton-box" style="width: 70%; height: 20px; border-radius: 4px;"></div>
+                    <div class="skeleton-box" style="width: 100%; height: 40px; border-radius: 4px;"></div>
+                </div>
+                <div class="skeleton-card" style="background: var(--bg-card); border: 1px solid var(--border); border-radius: 8px; padding: 16px; display: flex; flex-direction: column; gap: 12px;">
+                    <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+                        <div class="skeleton-box" style="width: 40px; height: 40px; border-radius: 8px;"></div>
+                        <div class="skeleton-box" style="width: 32px; height: 32px; border-radius: 4px;"></div>
+                    </div>
+                    <div class="skeleton-box" style="width: 70%; height: 20px; border-radius: 4px;"></div>
+                    <div class="skeleton-box" style="width: 100%; height: 40px; border-radius: 4px;"></div>
+                </div>
+                <div class="skeleton-card" style="background: var(--bg-card); border: 1px solid var(--border); border-radius: 8px; padding: 16px; display: flex; flex-direction: column; gap: 12px;">
+                    <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+                        <div class="skeleton-box" style="width: 40px; height: 40px; border-radius: 8px;"></div>
+                        <div class="skeleton-box" style="width: 32px; height: 32px; border-radius: 4px;"></div>
+                    </div>
+                    <div class="skeleton-box" style="width: 70%; height: 20px; border-radius: 4px;"></div>
+                    <div class="skeleton-box" style="width: 100%; height: 40px; border-radius: 4px;"></div>
+                </div>
+                <div class="skeleton-card" style="background: var(--bg-card); border: 1px solid var(--border); border-radius: 8px; padding: 16px; display: flex; flex-direction: column; gap: 12px;">
+                    <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+                        <div class="skeleton-box" style="width: 40px; height: 40px; border-radius: 8px;"></div>
+                        <div class="skeleton-box" style="width: 32px; height: 32px; border-radius: 4px;"></div>
+                    </div>
+                    <div class="skeleton-box" style="width: 70%; height: 20px; border-radius: 4px;"></div>
+                    <div class="skeleton-box" style="width: 100%; height: 40px; border-radius: 4px;"></div>
+                </div>
+                <div class="skeleton-card" style="background: var(--bg-card); border: 1px solid var(--border); border-radius: 8px; padding: 16px; display: flex; flex-direction: column; gap: 12px;">
+                    <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+                        <div class="skeleton-box" style="width: 40px; height: 40px; border-radius: 8px;"></div>
+                        <div class="skeleton-box" style="width: 32px; height: 32px; border-radius: 4px;"></div>
+                    </div>
+                    <div class="skeleton-box" style="width: 70%; height: 20px; border-radius: 4px;"></div>
+                    <div class="skeleton-box" style="width: 100%; height: 40px; border-radius: 4px;"></div>
+                </div>
+                <div class="skeleton-card" style="background: var(--bg-card); border: 1px solid var(--border); border-radius: 8px; padding: 16px; display: flex; flex-direction: column; gap: 12px;">
+                    <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+                        <div class="skeleton-box" style="width: 40px; height: 40px; border-radius: 8px;"></div>
+                        <div class="skeleton-box" style="width: 32px; height: 32px; border-radius: 4px;"></div>
+                    </div>
+                    <div class="skeleton-box" style="width: 70%; height: 20px; border-radius: 4px;"></div>
+                    <div class="skeleton-box" style="width: 100%; height: 40px; border-radius: 4px;"></div>
+                </div>
+                <div class="skeleton-card" style="background: var(--bg-card); border: 1px solid var(--border); border-radius: 8px; padding: 16px; display: flex; flex-direction: column; gap: 12px;">
+                    <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+                        <div class="skeleton-box" style="width: 40px; height: 40px; border-radius: 8px;"></div>
+                        <div class="skeleton-box" style="width: 32px; height: 32px; border-radius: 4px;"></div>
+                    </div>
+                    <div class="skeleton-box" style="width: 70%; height: 20px; border-radius: 4px;"></div>
+                    <div class="skeleton-box" style="width: 100%; height: 40px; border-radius: 4px;"></div>
+                </div>
+                <div class="skeleton-card" style="background: var(--bg-card); border: 1px solid var(--border); border-radius: 8px; padding: 16px; display: flex; flex-direction: column; gap: 12px;">
+                    <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+                        <div class="skeleton-box" style="width: 40px; height: 40px; border-radius: 8px;"></div>
+                        <div class="skeleton-box" style="width: 32px; height: 32px; border-radius: 4px;"></div>
+                    </div>
+                    <div class="skeleton-box" style="width: 70%; height: 20px; border-radius: 4px;"></div>
+                    <div class="skeleton-box" style="width: 100%; height: 40px; border-radius: 4px;"></div>
+                </div>
+                <div class="skeleton-card" style="background: var(--bg-card); border: 1px solid var(--border); border-radius: 8px; padding: 16px; display: flex; flex-direction: column; gap: 12px;">
+                    <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+                        <div class="skeleton-box" style="width: 40px; height: 40px; border-radius: 8px;"></div>
+                        <div class="skeleton-box" style="width: 32px; height: 32px; border-radius: 4px;"></div>
+                    </div>
+                    <div class="skeleton-box" style="width: 70%; height: 20px; border-radius: 4px;"></div>
+                    <div class="skeleton-box" style="width: 100%; height: 40px; border-radius: 4px;"></div>
+                </div>
+                <div class="skeleton-card" style="background: var(--bg-card); border: 1px solid var(--border); border-radius: 8px; padding: 16px; display: flex; flex-direction: column; gap: 12px;">
+                    <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+                        <div class="skeleton-box" style="width: 40px; height: 40px; border-radius: 8px;"></div>
+                        <div class="skeleton-box" style="width: 32px; height: 32px; border-radius: 4px;"></div>
+                    </div>
+                    <div class="skeleton-box" style="width: 70%; height: 20px; border-radius: 4px;"></div>
+                    <div class="skeleton-box" style="width: 100%; height: 40px; border-radius: 4px;"></div>
+                </div>
+                <div class="skeleton-card" style="background: var(--bg-card); border: 1px solid var(--border); border-radius: 8px; padding: 16px; display: flex; flex-direction: column; gap: 12px;">
+                    <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+                        <div class="skeleton-box" style="width: 40px; height: 40px; border-radius: 8px;"></div>
+                        <div class="skeleton-box" style="width: 32px; height: 32px; border-radius: 4px;"></div>
+                    </div>
+                    <div class="skeleton-box" style="width: 70%; height: 20px; border-radius: 4px;"></div>
+                    <div class="skeleton-box" style="width: 100%; height: 40px; border-radius: 4px;"></div>
+                </div>
+                <div class="skeleton-card" style="background: var(--bg-card); border: 1px solid var(--border); border-radius: 8px; padding: 16px; display: flex; flex-direction: column; gap: 12px;">
+                    <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+                        <div class="skeleton-box" style="width: 40px; height: 40px; border-radius: 8px;"></div>
+                        <div class="skeleton-box" style="width: 32px; height: 32px; border-radius: 4px;"></div>
+                    </div>
+                    <div class="skeleton-box" style="width: 70%; height: 20px; border-radius: 4px;"></div>
+                    <div class="skeleton-box" style="width: 100%; height: 40px; border-radius: 4px;"></div>
+                </div>
+                <div class="skeleton-card" style="background: var(--bg-card); border: 1px solid var(--border); border-radius: 8px; padding: 16px; display: flex; flex-direction: column; gap: 12px;">
+                    <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+                        <div class="skeleton-box" style="width: 40px; height: 40px; border-radius: 8px;"></div>
+                        <div class="skeleton-box" style="width: 32px; height: 32px; border-radius: 4px;"></div>
+                    </div>
+                    <div class="skeleton-box" style="width: 70%; height: 20px; border-radius: 4px;"></div>
+                    <div class="skeleton-box" style="width: 100%; height: 40px; border-radius: 4px;"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Actual content (hidden initially) -->
+        <div id="profileContent" style="display: none;">
         <div class="profile-header">
             <div class="profile-user">
                 <div class="profile-avatar"><i class="fa-solid fa-user"></i></div>
@@ -432,12 +696,12 @@
                         <span id="favCount">0</span> favoritos · <span id="histCount">0</span> en historial
                     </div>
                     <div class="profile-version" style="font-size: 0.75rem; color: var(--text-dim); margin-top: 4px;">
-                        FoxWeb v<span id="foxwebVersion">--</span>
+                        Versión <span id="foxwebVersion">-.-.-</span>
                     </div>
                 </div>
             </div>
             <div class="view-toggle">
-                <button class="view-btn active" data-view="cards" onclick="setView('cards')">
+                <button class="view-btn" data-view="cards" onclick="setView('cards')">
                     <i class="fa-solid fa-th-large"></i>
                 </button>
                 <button class="view-btn" data-view="compact" onclick="setView('compact')">
@@ -447,32 +711,46 @@
         </div>
         
         <div class="profile-tabs" style="display:flex;gap:8px;padding:0 24px;border-bottom:1px solid var(--border);overflow-x:auto;">
-            <button class="profile-tab active" data-tab="favorites" onclick="switchTab('favorites')" style="padding:16px 20px;background:none;border:none;color:var(--text-main);font-weight:600;cursor:pointer;border-bottom:2px solid var(--primary);white-space:nowrap;">
+            <button class="profile-tab" data-tab="favorites" onclick="switchTab('favorites')" style="padding:16px 20px;background:none;border:none;border-bottom:2px solid transparent;color:var(--text-dim);cursor:pointer;white-space:nowrap;font-weight:normal;">
                 <i class="fa-solid fa-heart"></i> Favoritos
             </button>
-            <button class="profile-tab" data-tab="history" onclick="switchTab('history')" style="padding:16px 20px;background:none;border:none;color:var(--text-dim);cursor:pointer;white-space:nowrap;">
+            <button class="profile-tab" data-tab="history" onclick="switchTab('history')" style="padding:16px 20px;background:none;border:none;border-bottom:2px solid transparent;color:var(--text-dim);cursor:pointer;white-space:nowrap;font-weight:normal;">
                 <i class="fa-solid fa-clock-rotate-left"></i> Historial
             </button>
         </div>
         
         <section id="section-favorites" class="profile-section active" style="display:block;">
+            <div style="padding: 16px 24px 16px; display: flex; gap: 8px;">
+                <div class="search-input-wrapper" style="flex: 1; display: flex; align-items: center; background-color: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-md); padding: var(--space-sm) var(--space-md); gap: var(--space-sm);">
+                    <i class="fa-solid fa-magnifying-glass search-icon" style="color: var(--text-dim); font-size: .9rem;"></i>
+                    <input type="text" id="searchFavs" placeholder="Buscar en favoritos..." oninput="handleSearch('favorites', this.value)" style="flex: 1; border: none; background: transparent; color: var(--text-main); font-size: .9rem; outline: none;">
+                </div>
+            </div>
             <div id="favoritesList">
                 <div id="favoritesGrid" class="content-grid"></div>
+                <div id="favoritesPagination"></div>
             </div>
         </section>
         
         <section id="section-history" class="profile-section" style="display:none;">
-            <div style="padding:16px 24px;text-align:right;">
-                <button onclick="clearHist()" style="padding:8px 16px;background:var(--bg-card);border:1px solid var(--border);border-radius:8px;color:var(--text-dim);cursor:pointer;">
+            <div style="padding: 16px 24px; display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap;">
+                <div class="search-input-wrapper" style="flex: 1; display: flex; align-items: center; background-color: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-md); padding: var(--space-sm) var(--space-md); gap: var(--space-sm); min-width: 200px;">
+                    <i class="fa-solid fa-magnifying-glass search-icon" style="color: var(--text-dim); font-size: .9rem;"></i>
+                    <input type="text" id="searchHist" placeholder="Buscar en historial..." oninput="handleSearch('history', this.value)" style="flex: 1; border: none; background: transparent; color: var(--text-main); font-size: .9rem; outline: none;">
+                </div>
+                <button onclick="clearHist()" style="padding:8px 16px;background:var(--bg-card);border:1px solid var(--border);border-radius:8px;color:var(--text-dim);cursor:pointer;white-space:nowrap;">
                     <i class="fa-solid fa-trash"></i> Limpiar historial
                 </button>
             </div>
             <div id="historyList">
                 <div id="historyGrid" class="content-grid"></div>
+                <div id="historyPagination"></div>
             </div>
         </section>
         
         <div id="modals-container"></div>
+
+        </div>
     </main>
     
     <footer class="main-footer" id="footer-placeholder"></footer>
@@ -485,13 +763,19 @@
         document.getElementById('profileName').textContent = getUsername();
         
         function switchTab(tab) {
-            currentFavPage = 1;
+            window.currentFavPage = 1;
+            window.currentHistPage = 1;
             document.querySelectorAll('.profile-tab').forEach(btn => {
-                btn.style.borderBottom = 'none';
-                btn.style.color = 'var(--text-dim)';
+                btn.classList.remove('active');
                 if (btn.dataset.tab === tab) {
+                    btn.classList.add('active');
                     btn.style.borderBottom = '2px solid var(--primary)';
                     btn.style.color = 'var(--text-main)';
+                    btn.style.fontWeight = '600';
+                } else {
+                    btn.style.borderBottom = '2px solid transparent';
+                    btn.style.color = 'var(--text-dim)';
+                    btn.style.fontWeight = 'normal';
                 }
             });
             document.querySelectorAll('.profile-section').forEach(s => s.style.display = 'none');
@@ -500,7 +784,7 @@
             const url = new URL(window.location);
             url.searchParams.set('tab', tab);
             window.history.replaceState({}, '', url);
-}
+        }
 
         // Load FoxWeb version
         fetch('/version.json').then(r => r.json()).then(data => {
@@ -508,6 +792,21 @@
         }).catch(() => {
             document.getElementById('foxwebVersion').textContent = localStorage.getItem('foxweb_version') || '1.0.0';
         });
+    </script>
+
+    <!-- Load modals (for youtubeModal, etc) -->
+    <div id="modals-container"></div>
+    <script>
+        // Cargar modals dinámicamente
+        fetch('/database/modals.html')
+            .then(r => {
+                if (!r.ok) throw new Error('Modals file not found');
+                return r.text();
+            })
+            .then(html => {
+                document.getElementById('modals-container').innerHTML = html;
+            })
+            .catch(err => console.warn('Modals no cargados:', err));
     </script>
 </body>
 </html>

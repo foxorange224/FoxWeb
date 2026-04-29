@@ -39,6 +39,12 @@ function renderAllTabs() {
     if (!AppState.dbData) return;
     try {
         TABS_CONFIG.forEach(({ key, id }) => renderTab(id, AppState.dbData[key]));
+        // Actualizar iconos de favoritos después de renderizar
+        TABS_CONFIG.forEach(({ id }) => {
+            if (typeof updateAllFavoriteIconsInTab === 'function') {
+                updateAllFavoriteIconsInTab(id);
+            }
+        });
         setTimeout(() => activateCurrentTab(), 50);
     } catch (error) {
         console.error('Error renderizando pestañas:', error);
@@ -59,6 +65,11 @@ function activateCurrentTab() {
         });
         
         updateHash(AppState.currentTab);
+        
+        // Actualizar iconos de favoritos al cambiar de pestaña
+        if (typeof updateAllFavoriteIconsInTab === 'function') {
+            updateAllFavoriteIconsInTab(AppState.currentTab);
+        }
 
         // Si la pestaña es 'Programas' y la página se cargó sin query parameters,
         // nos aseguramos de que la URL esté limpia.
@@ -142,6 +153,10 @@ function renderTab(tabId, items) {
         // Si el sistema de paginación está disponible, usarlo
         if (window.PaginationSystem && window.PaginationSystem.renderTab) {
             window.PaginationSystem.renderTab(tabId);
+            // Actualizar iconos de favoritos después de renderizar
+            requestAnimationFrame(() => {
+                try { updateAllFavoriteIconsInTab(tabId); } catch(e) {}
+            });
             return;
         }
 
@@ -169,15 +184,18 @@ function renderTab(tabId, items) {
         initContentCardsEvents();
     } catch (error) {
         console.error(`Error renderizando pestaña ${tabId}:`, error); 
-        grid.innerHTML = `
-            <div class="empty-state" role="status">
-                <i class="fa-solid fa-exclamation-triangle" aria-hidden="true"></i>
-                <h3>Error cargando contenido</h3>
-                <p>Intenta recargar la página.</p>
-            </div>
-        `;
+        grid.innerHTML = '<div class="empty-state" role="status"><i class="fa-solid fa-exclamation-triangle"></i><h3>Error cargando contenido</h3><p>Intenta recargar la página.</p></div>';
     }
-}
+        // Actualizar iconos de favoritos después de renderizar
+        requestAnimationFrame(() => {
+            try { updateAllFavoriteIconsInTab(tabId); } catch(e) {}
+        });
+
+        // Cargar iconos de programas si hay conexión
+        if (window.reloadIcons) {
+            window.reloadIcons();
+        }
+    }
 
 function createContentCard(item, category, itemId, viewMode = 'cards') {
     try {
@@ -189,6 +207,19 @@ function createContentCard(item, category, itemId, viewMode = 'cards') {
     }
 }
 
+// Render icon - supports Font Awesome classes or image URLs
+function renderIcon(icon) {
+    if (!icon) return '<i class="fa-solid fa-folder"></i>';
+    
+    // Check if it's a URL (starts with http, https, /, or data:)
+    if (icon.match(/^(http|https|\/|data:)/i)) {
+        return `<img src="${icon}" alt="icon" class="card-icon-img">`;
+    }
+    
+    // Otherwise treat as Font Awesome class
+    return `<i class="${icon}" aria-hidden="true"></i>`;
+}
+
 function createCardFromTemplate(template, item, category, itemId) {
     try {
         const clone = template.content.cloneNode(true); 
@@ -197,8 +228,8 @@ function createCardFromTemplate(template, item, category, itemId) {
         card.dataset.id = itemId; 
         card.dataset.category = category.toLowerCase(); 
         card.dataset.type = getItemType(item); 
-        const icon = card.querySelector('.card-icon i'); 
-        if (icon) { icon.className = item.icon; }
+        const iconContainer = card.querySelector('.card-icon'); 
+        if (iconContainer) { iconContainer.innerHTML = renderIcon(item.icon); }
         const titleText = card.querySelector('.card-title-text'); 
         const mainBadge = card.querySelector('.main-badge'); 
         if (titleText) { titleText.textContent = item.name; }
@@ -229,16 +260,16 @@ function createCardFromTemplate(template, item, category, itemId) {
                 copyLinkBtn.remove(); 
             } 
         }
-        const downloadBtn = card.querySelector('.download-btn'); 
-        const cardFooter = card.querySelector('.card-footer'); 
-        if (downloadBtn && cardFooter) { 
-            if (item.modal && item.modal !== 'null') { 
-                downloadBtn.onclick = () => openModal(item.modal); 
-            } else if (item.enlace && item.enlace !== '#') { 
-                downloadBtn.onclick = () => window.open(item.enlace, '_blank'); 
-            } else { 
-                downloadBtn.disabled = true; 
-                downloadBtn.innerHTML = '<i class="fa-solid fa-ban" aria-hidden="true"></i> No disponible'; 
+        const downloadBtn = card.querySelector('.download-btn');
+        const cardFooter = card.querySelector('.card-footer');
+        if (downloadBtn && cardFooter) {
+            if (item.modal && item.modal !== 'null') {
+                downloadBtn.onclick = () => openModal(item.modal);
+            } else if (item.enlace && item.enlace !== '#') {
+                downloadBtn.onclick = () => window.open(item.enlace, '_blank');
+            } else {
+                downloadBtn.disabled = true;
+                downloadBtn.innerHTML = '<i class="fa-solid fa-ban" aria-hidden="true"></i> No disponible';
             }
             // Añadir badge de seguridad si existe
             if (item.security && item.security.verified) {
@@ -276,60 +307,87 @@ function createCardManually(item, category, itemId, viewMode = 'cards') {
             // Vista compacta: [icono] [fav] Nombre Badge Descripcion -------- [Copiar] [Detalles] [Abrir enlace]
             const showCopyLink = item.enlace && item.enlace !== '#';
             const hasModal = item.modal && item.modal !== 'null';
+            const iconHtml = renderIcon(item.icon);
             
             card.innerHTML = `
-                <div class="card-header">
-                    <div class="card-icon">
-                        <i class="${escapeHtml(item.icon)}" aria-hidden="true"></i>
+                <div class="card-compact-container" style="display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 8px 0; width: 100%;">
+                    <div style="display: flex; align-items: center; gap: 12px; min-width: 0; flex: 1;">
+                        <div class="card-icon" style="flex-shrink: 0;">
+                            ${iconHtml}
+                        </div>
+                        <div style="display: flex; align-items: center; gap: 8px; min-width: 0; overflow: hidden;">
+                            <h3 class="card-title" style="margin: 0; font-size: 0.9rem; line-height: 1.2; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; flex-shrink: 1;">
+                                ${escapeHtml(item.name)}
+                            </h3>
+                            ${mainBadge ? `<span class="main-badge" style="width: fit-content; font-size: 0.6rem; flex-shrink: 0;">${escapeHtml(mainBadge)}</span>` : ''}
+                            <p class="card-description" style="margin: 0; font-size: 0.8rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; color: var(--text-dim);">
+                                ${escapeHtml(item.info)}
+                            </p>
+                        </div>
                     </div>
-                    <div class="card-actions">
+                    <div class="card-actions" style="display: flex; gap: 8px; align-items: center; flex-shrink: 0; margin-left: auto;">
                         <button class="card-action-btn favorite-btn" aria-label="Agregar a favoritos" title="Favorito">
                             <i class="fa-regular fa-heart"></i>
                         </button>
+                        ${hasModal ? `
+                            <button class="download-btn details-btn" data-modal="${escapeHtml(item.modal)}">
+                                <i class="fa-solid fa-circle-info"></i><span>Detalles</span>
+                            </button>
+                        ` : `
+                            ${showCopyLink ? `
+                                <button class="download-btn copy-link-btn" data-item-id="${escapeHtml(itemId)}" title="Copiar enlace">
+                                    <i class="fa-solid fa-link"></i>
+                                </button>
+                            ` : ''}
+                            ${item.enlace && item.enlace !== '#' ? `
+                                <button class="download-btn" data-url="${escapeHtml(item.enlace)}">
+                                    <i class="fa-solid fa-download"></i><span>Abrir</span>
+                                </button>
+                            ` : ''}
+                        `}
                     </div>
                 </div>
-                <div class="card-content">
-                    ${mainBadge ? `<span class="main-badge">${escapeHtml(mainBadge)}</span>` : ''}
-                    <h3 class="card-title">
-                        <span class="card-title-text">${escapeHtml(item.name)}</span>
-                    </h3>
-                    <p class="card-description">${escapeHtml(item.info)}</p>
-                </div>
-                <div class="card-footer">
-                    ${showCopyLink ? `
-                    <button class="download-btn copy-link-btn" data-item-id="${escapeHtml(itemId)}" title="Copiar enlace">
-                        <i class="fa-solid fa-link"></i>
-                    </button>` : ''}
-                    ${hasModal ? `
-                    <button class="download-btn details-btn" data-modal="${escapeHtml(item.modal)}">
-                        <i class="fa-solid fa-circle-info"></i><span>Detalles</span>
-                    </button>` : ''}
-                    ${item.enlace && item.enlace !== '#' ? `
-                    <button class="download-btn" data-url="${escapeHtml(item.enlace)}">
-                        <i class="fa-solid fa-download"></i><span>Abrir</span>
-                    </button>` : ''}
-                    ${!item.enlace && !item.modal ? `
-                    <button class="download-btn" disabled>
-                        <i class="fa-solid fa-ban"></i><span>No disponible</span>
-                    </button>` : ''}
-                </div>
             `;
+
             
             // Event listeners para vista compacta (evita XSS en onclick)
-            const copyLinkBtn = card.querySelector('.copy-link-btn');
-            if (copyLinkBtn) {
-                copyLinkBtn.addEventListener('click', () => copyItemLink(itemId));
+            const favoriteBtnCompact = card.querySelector('button.favorite-btn');
+            if (favoriteBtnCompact) {
+                favoriteBtnCompact.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    e.preventDefault();
+                    toggleFavorite(itemId);
+                    updateFavoriteIcon(favoriteBtnCompact, itemId);
+                });
             }
-            
-            const detailsBtn = card.querySelector('.details-btn');
-            if (detailsBtn) {
-                detailsBtn.addEventListener('click', () => openModal(item.modal));
-            }
-            
-            const downloadBtn = card.querySelector('.download-btn[data-url]');
-            if (downloadBtn) {
-                downloadBtn.addEventListener('click', () => window.open(item.enlace, '_blank'));
-            }
+
+            const copyLinkBtn = card.querySelector('button.copy-link-btn[data-item-id]');
+
+        if (copyLinkBtn) {
+            copyLinkBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                e.preventDefault();
+                copyItemLink(itemId);
+            });
+        }
+
+        const detailsBtnCompact = card.querySelector('button.details-btn[data-modal]');
+        if (detailsBtnCompact) {
+            detailsBtnCompact.addEventListener('click', (e) => {
+                e.stopPropagation();
+                e.preventDefault();
+                openModal(item.modal);
+            });
+        }
+
+        const downloadBtnCompact = card.querySelector('button.download-btn[data-url]');
+        if (downloadBtnCompact) {
+            downloadBtnCompact.addEventListener('click', (e) => {
+                e.stopPropagation();
+                e.preventDefault();
+                window.open(item.enlace, '_blank');
+            });
+        }
         } else {
             // Vista de tarjetas normal
             const hasModal = item.modal && item.modal !== 'null';
@@ -338,39 +396,36 @@ function createCardManually(item, category, itemId, viewMode = 'cards') {
             // Escapar contenido dinámico para prevenir XSS
             const safeName = escapeHtml(item.name);
             const safeInfo = escapeHtml(item.info);
-            const safeIcon = escapeHtml(item.icon);
             const safeModal = item.modal ? escapeHtml(item.modal) : '';
             const safeEnlace = item.enlace ? escapeHtml(item.enlace) : '';
             const safeBadge = mainBadge ? escapeHtml(mainBadge) : '';
             const safeRemainingBadges = remainingBadges.map(b => escapeHtml(b));
             const safeSecurityNote = item.security && item.security.note ? escapeHtml(item.security.note) : '';
+            const iconHtml = renderIcon(item.icon);
             
             card.innerHTML = `
-                <div class="card-header">
-                    <div class="card-icon">
-                        <i class="${safeIcon}" aria-hidden="true"></i>
+                <div class="card-body" style="display: flex; flex-direction: column; gap: 4px;">
+                    <div style="display: flex; gap: 8px; align-items: flex-start;">
+                        <div class="card-icon" style="flex-shrink: 0; margin-top: 2px;">
+                            ${iconHtml}
+                        </div>
+                        <div style="flex: 1; min-width: 0;">
+                            <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 4px;">
+                                <div style="display: flex; flex-direction: column; gap: 2px;">
+                                    <h3 class="card-title" style="margin: 0; font-size: 0.95rem; line-height: 1.2;">
+                                    <span class="card-title-text">${safeName}</span>
+                                    </h3>
+                                    ${safeBadge ? `<span class="main-badge" style="width: fit-content; font-size: 0.65rem;">${safeBadge}</span>` : ''}
+                                </div>
+                                <button class="card-action-btn favorite-btn" aria-label="Agregar a favoritos" title="Favorito">
+                                    <i class="fa-regular fa-heart"></i>
+                                </button>
+                            </div>
+                        </div>
                     </div>
-                    <div class="card-actions">
-                        <button class="card-action-btn favorite-btn" aria-label="Agregar a favoritos" title="Favorito">
-                            <i class="fa-regular fa-heart"></i>
-                        </button>
-                        ${showCopyLink ? `
-                        <button class="card-action-btn" 
-                                data-item-id="${escapeHtml(itemId)}" 
-                                aria-label="Copiar enlace">
-                            <i class="fa-solid fa-link"></i>
-                        </button>
-                        ` : ''}
-                    </div>
-                </div>
-                <div class="card-body">
-                    <h3 class="card-title">
-                        <span class="card-title-text">${safeName}</span>
-                        ${safeBadge ? `<span class="main-badge">${safeBadge}</span>` : ''}
-                    </h3>
-                    <p class="card-description">${safeInfo}</p>
+                    <p class="card-description" style="margin: 0; padding-left: 0;">${safeInfo}</p>
                     ${safeRemainingBadges.length > 0 ? `
-                    <div class="card-badges">
+                    <div class="card-badges" style="margin-top: 4px; padding-left: 0;">
                         ${safeRemainingBadges.map(b => `<span class="item-badge">${b}</span>`).join('')}
                     </div>
                     ` : ''}
@@ -378,13 +433,19 @@ function createCardManually(item, category, itemId, viewMode = 'cards') {
                 <div class="card-footer">
                     ${hasModal ? `
                     <button class="download-btn details-btn" data-modal="${safeModal}">
-                        <i class="fa-solid fa-circle-info"></i>Detalles
+                        <i class="fa-solid fa-circle-info"></i><span>Detalles</span>
                     </button>` : ''}
                     ${item.enlace && item.enlace !== '#' ? `
-                    <button class="download-btn" ${hasModal ? '' : 'style="flex:1"'} data-url="${safeEnlace}">
-                        <i class="fa-solid fa-download"></i>
-                        ${hasModal ? 'Abrir enlace' : 'Descargar'}
-                    </button>` : (!hasModal ? `
+                    <div style="display: inline-flex; gap: 8px; align-items: center;">
+                        ${showCopyLink ? `
+                        <button class="copy-link-btn copy-link-btn-footer" data-item-id="${escapeHtml(itemId)}" title="Copiar enlace">
+                            <i class="fa-solid fa-link"></i>
+                        </button>` : ''}
+                        <button class="download-btn" ${hasModal ? '' : 'style="flex:1"'} data-url="${safeEnlace}">
+                            <i class="fa-solid fa-download"></i>
+                            ${hasModal ? 'Abrir' : 'Descargar'}
+                        </button>
+                    </div>` : (!hasModal ? `
                     <button class="download-btn" disabled style="flex:1">
                         <i class="fa-solid fa-ban"></i>No disponible
                     </button>` : '')}
@@ -397,19 +458,45 @@ function createCardManually(item, category, itemId, viewMode = 'cards') {
             `;
             
             // Añadir event listeners para vista normal (evita XSS en onclick)
-            const copyLinkBtn = card.querySelector('.card-action-btn');
+            // Botón de COPIAR en footer - selector específico
+            const copyLinkBtn = card.querySelector('button.copy-link-btn-footer[data-item-id]');
             if (copyLinkBtn) {
-                copyLinkBtn.addEventListener('click', () => copyItemLink(itemId));
+                copyLinkBtn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    e.preventDefault();
+                    copyItemLink(itemId);
+                });
             }
-            
-            const detailsBtn = card.querySelector('.details-btn');
-            if (detailsBtn && hasModal) {
-                detailsBtn.addEventListener('click', () => openModal(item.modal));
+
+            // Botón de FAVORITOS - selector específico
+            const favoriteBtn = card.querySelector('button.favorite-btn');
+            if (favoriteBtn) {
+                favoriteBtn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    e.preventDefault();
+                    toggleFavorite(itemId);
+                    updateFavoriteIcon(favoriteBtn, itemId);
+                });
             }
-            
-            const mainDownloadBtn = card.querySelector('.download-btn[data-url]');
-            if (mainDownloadBtn && !mainDownloadBtn.disabled && item.enlace && item.enlace !== '#') {
-                mainDownloadBtn.addEventListener('click', () => window.open(item.enlace, '_blank'));
+
+            // Botón de DETALLES (modal)
+            const detailsBtnNormal = card.querySelector('button.details-btn[data-modal]');
+            if (detailsBtnNormal && hasModal) {
+                detailsBtnNormal.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    e.preventDefault();
+                    openModal(item.modal);
+                });
+            }
+
+            // Botón de ABRIR/DESCARGAR
+            const mainDownloadBtnNormal = card.querySelector('button.download-btn[data-url]');
+            if (mainDownloadBtnNormal && !mainDownloadBtnNormal.disabled && item.enlace && item.enlace !== '#') {
+                mainDownloadBtnNormal.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    e.preventDefault();
+                    window.open(item.enlace, '_blank');
+                });
             }
         }
         
@@ -427,6 +514,37 @@ function getItemType(item) {
     if (item.badges && item.badges.some(b => b.toLowerCase().includes('driver') || b.toLowerCase().includes('utilidad'))) return 'utilidad';
     return 'standard';
 }
+
+/**
+ * Busca un item por su ID en AppState.dbData
+ * @param {string} itemId - ID del item (ej: "programas_0")
+ * @returns {Object|null} Item encontrado o null
+ */
+function findItemById(itemId) {
+    if (!AppState || !AppState.dbData) {
+        console.warn('AppState.dbData no disponible');
+        return null;
+    }
+    try {
+        // 1. Intentar buscar por ID único (formato "000001")
+        for (const category in AppState.dbData) {
+            if (category === 'modales') continue;
+            const item = AppState.dbData[category].find(i => i.id === itemId);
+            if (item) return item;
+        }
+        
+        // 2. Fallback: Buscar por formato antiguo "categoria_indice"
+        const [category, indexStr] = itemId.split('_');
+        const index = parseInt(indexStr, 10);
+        if (AppState.dbData[category] && AppState.dbData[category][index]) {
+            return AppState.dbData[category][index];
+        }
+    } catch (e) {
+        console.warn('Error buscando item:', itemId, e);
+    }
+    return null;
+}
+
 
 // =============================================================================
 // BÚSQUEDA
@@ -570,14 +688,21 @@ function handleSearchEmptyState(tabId, isEmpty, query) {
             grid.appendChild(msg);
         }
         // Actualizar el mensaje con el query actual
-        msg.innerHTML = `<i class="fa-solid fa-face-frown"></i> No hay resultados de "${query}"`;
+        const safeQuery = escapeHtml(query);
+        msg.innerHTML = `<i class="fa-solid fa-face-frown"></i> No hay resultados de "${safeQuery}"`;
     } else if (msg) {
         msg.remove();
     }
 }
 
 function openTab(tabName) {
-    if (AppState.navigationLock || AppState.currentTab === tabName) return; 
+     // Guard: AppState might not be loaded yet (race condition with inline scripts)
+     if (typeof AppState === 'undefined') {
+         console.warn('[openTab] AppState not yet loaded, deferring tab open:', tabName);
+         setTimeout(() => openTab(tabName), 50);
+         return;
+     }
+     if (AppState.navigationLock || AppState.currentTab === tabName) return;
     try {
         AppState.currentTab = tabName; 
         document.querySelectorAll('.tab-content').forEach(tab => { tab.classList.remove('active'); tab.setAttribute('aria-hidden', 'true'); }); 
@@ -651,142 +776,6 @@ function handleScroll() {
 // MODALES Y SUGERENCIAS
 // =============================================================================
 
-function initModals() {
-    try {
-        document.addEventListener('click', (e) => {
-            // Find the closest parent with the class 'modal' that is currently displayed
-            const openModalElement = e.target.closest('.modal[style*="display: flex"]');
-            
-            // If an open modal exists and the click target is exactly that modal element (the backdrop)
-            if (openModalElement && e.target === openModalElement) {
-                closeModal();
-            }
-        });
-        document.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape') closeModal();
-        });
-        initSuggestionForm();
-    } catch (error) {
-        console.error('Error inicializando modales:', error);
-    }
-}
-
-// Variable para guardar el elemento que abrió el modal (para devolver el foco al cerrar)
-let focusedElementBeforeModal = null;
-
-function openModal(modalId) {
-    try {
-        const modal = document.getElementById(modalId);
-        if (!modal) {
-            console.warn(`Modal ${modalId} no encontrado`);
-            return;
-        }
-        
-        // Guardar el elemento activo actual antes de abrir el modal
-        focusedElementBeforeModal = document.activeElement;
-        
-        // Crear backdrop si no existe
-        let backdrop = modal.querySelector('.modal-backdrop');
-        if (!backdrop) {
-            backdrop = document.createElement('div');
-            backdrop.className = 'modal-backdrop';
-            backdrop.setAttribute('role', 'presentation');
-            modal.insertBefore(backdrop, modal.firstChild);
-            
-            // Cerrar modal al hacer clic en el backdrop
-            backdrop.addEventListener('click', function(e) {
-                if (e.target === backdrop) {
-                    closeModal(modalId);
-                }
-            });
-        }
-        
-        modal.style.display = 'flex';
-        modal.setAttribute('aria-hidden', 'false');
-        modal.removeAttribute('inert');
-        document.body.style.overflow = 'hidden';
-        
-        // Enfocar elemento enfocable dentro del modal
-        const focusable = modal.querySelector('button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])');
-        if (focusable) {
-            focusable.focus();
-        } else {
-            // Si no hay elementos enfocables, enfocar el modal mismo
-            modal.setAttribute('tabindex', '-1');
-            modal.focus();
-        }
-        
-        // Agregar listener para trapping de foco dentro del modal
-        modal.addEventListener('keydown', handleModalKeyDown);
-        
-        if (modalId === 'sugerenciaModal') {
-            initSuggestionForm();
-        }
-    } catch (error) {
-        console.error('Error abriendo modal:', error);
-    }
-}
-
-// Función para manejar teclado dentro del modal (focus trapping)
-function handleModalKeyDown(e) {
-    const modal = e.currentTarget;
-    
-    // Manejar Escape para cerrar modal
-    if (e.key === 'Escape') {
-        closeModal(modal.id);
-        return;
-    }
-    
-    // Manejar Tab para trapping de foco
-    if (e.key === 'Tab') {
-        const focusableElements = modal.querySelectorAll(
-            'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
-        );
-        
-        if (focusableElements.length === 0) {
-            e.preventDefault();
-            return;
-        }
-        
-        const firstElement = focusableElements[0];
-        const lastElement = focusableElements[focusableElements.length - 1];
-        
-        // Si Shift+Tab y estamos en el primer elemento, ir al último
-        if (e.shiftKey && document.activeElement === firstElement) {
-            e.preventDefault();
-            lastElement.focus();
-        }
-        // Si Tab y estamos en el último elemento, ir al primero
-        else if (!e.shiftKey && document.activeElement === lastElement) {
-            e.preventDefault();
-            firstElement.focus();
-        }
-    }
-}
-
-function closeModal(modalId) {
-    try {
-        const modal = modalId ? document.getElementById(modalId) : document.querySelector('.modal[style*="display: flex"]');
-        if (!modal) return;
-        
-        // Remover listener de teclado
-        modal.removeEventListener('keydown', handleModalKeyDown);
-        
-        modal.style.display = 'none';
-        modal.setAttribute('aria-hidden', 'true');
-        modal.setAttribute('inert', '');
-        document.body.style.overflow = '';
-        
-        // Devolver el foco al elemento que abrió el modal
-        if (focusedElementBeforeModal && focusedElementBeforeModal.focus) {
-            focusedElementBeforeModal.focus();
-            focusedElementBeforeModal = null;
-        }
-    } catch (error) {
-        console.error('Error cerrando modal:', error);
-    }
-}
-
 function checkUrlForModal() {
     try {
         const urlParams = new URLSearchParams(window.location.search);
@@ -817,14 +806,27 @@ function initSuggestionForm() {
     });
 }
 
+// Rate limiting for suggestions
+const suggestionRateLimit = {
+    lastSubmit: 0,
+    limit: 60000 // 1 minute between submissions
+};
+
 function submitSuggestion() {
     const form = document.getElementById('suggestionForm');
     if (!form) return;
     
-    const nombre = document.getElementById('suggestionName')?.value.trim() || '';
-    const email = document.getElementById('suggestionEmail')?.value.trim() || '';
-    const tipo = document.getElementById('suggestionType')?.value || 'programa';
-    const mensaje = document.getElementById('suggestionMessage')?.value.trim() || '';
+    // Rate limiting check
+    const now = Date.now();
+    if (now - suggestionRateLimit.lastSubmit < suggestionRateLimit.limit) {
+        showToast('Por favor, espera un momento antes de enviar otra sugerencia', 'warning');
+        return;
+    }
+    
+    const nombre = (document.getElementById('suggestionName')?.value.trim() || '').slice(0, 100);
+    const email = (document.getElementById('suggestionEmail')?.value.trim() || '').slice(0, 100);
+    const tipo = (document.getElementById('suggestionType')?.value || 'programa').slice(0, 50);
+    const mensaje = (document.getElementById('suggestionMessage')?.value.trim() || '').slice(0, 1000);
     
     if (!mensaje) {
         showToast('Por favor, escribe tu sugerencia', 'warning');
@@ -837,18 +839,19 @@ function submitSuggestion() {
         return;
     }
     
-    // Simular envío (en un sitio real, esto enviaría a un servidor)
+    // Sanitize inputs to prevent XSS
+    const sanitize = (str) => str.replace(/[<>]/g, '');
+    
     const suggestion = {
-        nombre: nombre || 'Anónimo',
-        email: email || 'No proporcionado',
-        tipo,
-        mensaje,
+        nombre: sanitize(nombre) || 'Anónimo',
+        email: sanitize(email) || 'No proporcionado',
+        tipo: sanitize(tipo),
+        mensaje: sanitize(mensaje),
         fecha: new Date().toISOString()
     };
     
-    console.log('Sugerencia enviada:', suggestion);
+    suggestionRateLimit.lastSubmit = now;
     
-    // Mostrar mensaje de éxito
     showToast('¡Gracias por tu sugerencia! La Tendremos en cuenta.', 'success');
     
     // Cerrar modal y resetear formulario
@@ -1060,19 +1063,11 @@ function initFloatingButtons() {
         
         // Click para volver arriba
         scrollTopBtn.addEventListener('click', () => {
-            window.scrollTo({
-                top: 0,
-                behavior: 'smooth'
-            });
+            window.scrollTo({ top: 0, behavior: 'smooth' });
         });
         
-        console.log('Botones flotantes inicializados correctamente');
+        console.debug('Botones flotantes inicializados correctamente');
     }, 100);
-}
-
-// Inicializar sidebar
-function initSidebar() {
-    // Aquí puedes agregar funcionalidad para sidebar si lo hay
 }
 
 // =============================================================================
@@ -1085,11 +1080,14 @@ function showToast(message, type = 'info', persistent = false) {
         const existingToast = document.querySelector('.toast-notification');
         if (existingToast) existingToast.remove();
         
+        // Sanitizar mensaje
+        const safeMessage = escapeHtml(String(message));
+        
         const toast = document.createElement('div');
         toast.className = `toast-notification toast-${type}`;
         toast.innerHTML = `
             <i class="${getToastIcon(type)}" aria-hidden="true"></i>
-            <span>${message}</span>
+            <span>${safeMessage}</span>
             <button onclick="this.parentElement.remove()" aria-label="Cerrar">
                 <i class="fa-solid fa-times"></i>
             </button>
@@ -1109,6 +1107,8 @@ window.getToastIcon = getToastIcon;
 window.showErrorScreen = showErrorScreen;
 window.closeErrorScreen = closeErrorScreen;
 window.hideLoading = hideLoading;
+window.openTab = openTab;
+window.renderTab = renderTab;
 
 function getToastIcon(type) { 
     const icons = { 
@@ -1224,6 +1224,132 @@ function initContentCardsEvents() {
 }
 
 // =============================================================================
+// DETAIL MODAL (para mostrar descripción completa en "Ver más")
+// =============================================================================
+
+/**
+ * Trunca una descripción si es muy larga y añade el enlace "Ver más"
+ * @param {string} text - Texto a truncar
+ * @param {number} maxLength - Longitud máxima antes de truncar (default: 200)
+ * @returns {Object} { hasMore, text, truncated }
+ */
+function truncateDescription(text, maxLength = 100) {
+    if (!text || text.length <= maxLength) {
+        return { hasMore: false, text: text || '', truncated: text };
+    }
+    const truncated = text.substring(0, maxLength).trim();
+    return { hasMore: true, text, truncated };
+}
+
+/**
+ * Crea y muestra un modal con el detalle completo del item
+ * @param {Object} item - Datos del item (name, info, enlace, etc.)
+ * @param {string} itemId - ID del item
+ */
+window.showDetailModal = function(item, itemId) {
+    try {
+        const safeName = escapeHtml(item.name || 'Sin título');
+        const safeInfo = escapeHtml(item.info || '');
+        const enlace = item.enlace && item.enlace !== '#' ? item.enlace : null;
+        const hasModal = item.modal && item.modal !== 'null';
+
+        // Generar un ID único para este modal temporal
+        const modalId = 'detailModal_' + Date.now();
+
+        const modalHTML = `
+        <div id="${modalId}" class="modal" role="dialog" aria-modal="true" aria-labelledby="${modalId}_title">
+            <div class="modal-content modal-wide">
+                <button type="button" class="close" onclick="closeModal('${modalId}')" aria-label="Cerrar modal">&times;</button>
+                <h2 id="${modalId}_title" style="color:var(--primary);margin-bottom:15px;display:flex;align-items:center;justify-content:center;gap:10px;">${renderIcon(item.icon)} <span>${safeName}</span></h2>
+                <div class="detail-modal-body" style="max-height:60vh;overflow-y:auto;padding:10px 0;">
+                    <p style="white-space:pre-line;line-height:1.6;font-size:1.05em;">${safeInfo}</p>
+                </div>
+                </div>
+            </div>
+        </div>
+        `;
+
+        // Insertar el modal en el contenedor de modales
+        const container = document.getElementById('modales-container');
+        if (!container) {
+            console.error('No se encontró el contenedor de modales');
+            return;
+        }
+
+        // Crear elemento temporal para parsear
+        const temp = document.createElement('div');
+        temp.innerHTML = modalHTML;
+        const modalEl = temp.firstElementChild;
+        container.appendChild(modalEl);
+
+        // Mostrar el modal
+        openModal(modalId);
+
+        // Limpiar el modal al cerrarlo usando MutationObserver
+        const observer = new MutationObserver((mutations) => {
+            mutations.forEach((m) => {
+                if (m.type === 'attributes' && m.attributeName === 'style') {
+                    const el = document.getElementById(modalId);
+                    if (el && el.style.display === 'none') {
+                        setTimeout(() => el.remove(), 100);
+                        observer.disconnect();
+                    }
+                }
+            });
+        });
+        setTimeout(() => observer.observe(modalEl, { attributes: true }), 100);
+
+    } catch (error) {
+        console.error('Error mostrando modal de detalle:', error);
+        showErrorScreen('Error al mostrar detalles. Por favor, recarga la página.');
+    }
+};
+
+/**
+ * Renderiza el HTML de descripción con "Ver más" si aplica
+ * @param {string} text - Texto completo
+ * @param {Object} item - Item completo para el modal
+ * @param {string} itemId - ID del item
+ * @returns {string} HTML renderizado
+ */
+window.renderDescriptionWithReadMore = function(text, item, itemId) {
+    const result = truncateDescription(text || '', 100);
+    const safeTruncated = escapeHtml(result.truncated);
+    const hasContent = result.text && result.text.trim().length > 0;
+    
+    if (!result.hasMore) {
+        if (!hasContent) {
+            return `<p class="card-description"><span style="color:var(--text-dim)">Sin descripción disponible</span></p>`;
+        }
+        return `<p class="card-description">${safeTruncated}</p>`;
+    }
+
+    // Escapar el texto truncado y añadir "Ver más" en naranja
+    const moreSuffix = `<span class="read-more-trigger" data-item-id="${itemId}" style="color:var(--primary);cursor:pointer;font-weight:600;">... Ver más</span>`;
+    
+    return `<p class="card-description">${safeTruncated}<span style="display:none">${escapeHtml(result.text)}</span>${moreSuffix}</p>`;
+};
+
+// Manejador global de clics en "Ver más" (delegación de eventos)
+document.addEventListener('click', function(e) {
+    const trigger = e.target.closest('.read-more-trigger');
+    if (trigger) {
+        e.preventDefault();
+        const itemId = trigger.dataset.itemId;
+        if (!itemId || typeof findItemById !== 'function') {
+            console.warn('No se pudo obtener el item ID o la función findItemById');
+            return;
+        }
+        const item = findItemById(itemId);
+        if (item) {
+            window.showDetailModal(item, itemId);
+        } else {
+            console.warn('Item no encontrado:', itemId);
+        }
+    }
+});
+
+// =============================================================================
 // EXPORTAR API PÚBLICA
 // =============================================================================
 
@@ -1243,11 +1369,7 @@ window.FoxWeb = {
     closeErrorScreen: typeof closeErrorScreen !== 'undefined' ? closeErrorScreen : null
 };
 
-/** Alias para funciones globales usadas en HTML */
-window.openModal = openModal;
-window.closeModal = closeModal;
-window.resetSugerenciaForm = resetSugerenciaForm;
-window.handleSugerenciaSubmit = handleSugerenciaSubmit;
+
 
 // Función para actualizar contadores durante búsqueda
 function updateCounterOnSearch(tabId) {
@@ -1262,3 +1384,6 @@ function updateCounterOnSearch(tabId) {
         countElement.textContent = `(${count})`;
     }
 }
+
+// Exponer globalmente
+window.loadAppState = loadAppState;
