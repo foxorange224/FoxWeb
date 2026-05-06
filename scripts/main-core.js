@@ -96,22 +96,22 @@ window.addEventListener('unhandledrejection', function (e) {
     showToast('Error inesperado en la aplicación', 'error');
 });
 
-document.addEventListener('DOMContentLoaded', function () {
+document.addEventListener('DOMContentLoaded', async function () {
     try {
         // Check if we're on the main page (downloads)
         const isMainPage = document.getElementById('grid-Programas') !== null;
         
         AppState.hasInitialHash = window.location.search !== '' || window.location.hash !== '';
-
+        
         checkFirstVisit();
         checkBrowserFeatures();
         initTheme();
         initEventListeners();
-        loadNotifications();
+        await loadNotifications();
         loadFavorites();
         initUIComponents();
         initAccessibility();
-
+        
         // Only initialize main app if we're on the main page
         if (isMainPage) {
             if (typeof FoxWebDB !== 'undefined') {
@@ -122,10 +122,10 @@ document.addEventListener('DOMContentLoaded', function () {
             }
         } else {
             // For other pages (like blog), still initialize notification center
-            loadNotifications();
+            await loadNotifications();
             initNotificationCenter();
         }
-
+        
         if (AppState.firstVisit) {
             setTimeout(() => {
                 showToast('Bienvenido a FoxWeb', 'info');
@@ -288,7 +288,8 @@ function validateJSONData(data) {
             enlace: item.enlace || '#',
             icon: item.icon || '',
             badges: Array.isArray(item.badges) ? item.badges.slice(0, 10).map(String).slice(0, 100) : [],
-            modal: item.modal || null
+            modal: item.modal || null,
+            security: item.security || null
         }));
     }
     
@@ -346,7 +347,8 @@ function normalizeDataItem(item, category) {
         info: escapeHTML(item.info || 'Descripción no disponible'),
         enlace: sanitizeURL(item.enlace || '#'),
         modal: item.modal || null,
-        badges: (item.badges || []).map(b => escapeHTML(b))
+        badges: (item.badges || []).map(b => escapeHTML(b)),
+        security: item.security || null
     };
 }
 
@@ -1173,19 +1175,27 @@ function closeModal(modalId) {
     try {
         const modal = modalId ? document.getElementById(modalId) : document.querySelector('.modal[style*="display: flex"]');
         if (!modal) return;
-        
-        modal.style.display = 'none';
-        modal.setAttribute('aria-hidden', 'true');
+
+        modal.classList.add('modal-closing');
+
+        modal.addEventListener('animationend', function handleAnimationEnd() {
+            modal.style.display = 'none';
+            modal.classList.remove('modal-closing');
+            modal.removeAttribute('inert');
+            
+            if (focusedElementBeforeModal && focusedElementBeforeModal.focus) {
+                focusedElementBeforeModal.focus();
+                focusedElementBeforeModal = null;
+            }
+            modal.removeEventListener('animationend', handleAnimationEnd);
+        }, { once: true });
+
         document.body.style.overflow = '';
-        
-        if (focusedElementBeforeModal && focusedElementBeforeModal.focus) {
-            focusedElementBeforeModal.focus();
-            focusedElementBeforeModal = null;
-        }
     } catch (error) {
         console.error('Error closing modal:', error);
     }
 }
+
 
 function initModals() {
     try {
@@ -1482,29 +1492,115 @@ const DEFAULT_NOTIFICATIONS = [
     { id: 2, type: 'success', title: '📦 Contenido disponible', message: 'Explora nuestro catálogo con software, juegos y APKs verificadas.', date: new Date(Date.now() - 3600000).toISOString(), read: false }
 ];
 
-function loadNotifications() {
+async function loadNotifications() {
     try {
-        const saved = Storage.getJSON('foxweb_notifications', null);
-        if (!saved) {
-            AppState.notifications = DEFAULT_NOTIFICATIONS.slice();
-        } else {
-            const parsedNotifications = saved;
-            const hasNewContent = parsedNotifications.some(n => n.message && n.message.includes('15 APKs'));
-            if (!hasNewContent && parsedNotifications.length < 3) {
-                AppState.notifications = DEFAULT_NOTIFICATIONS.slice();
-            } else {
-                AppState.notifications = parsedNotifications;
-            }
-        }
+        // 1. Fetch notifications from JSON file
+        const response = await fetch('/database/notifications.json?v=' + Date.now());
+        if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+        const data = await response.json();
+        const serverNotifications = data.notifications || [];
+
+        // 2. Load user state from localStorage
+        const readStatuses = Storage.getJSON('foxweb_notif_read', {});
+        const deletedIds = Storage.getJSON('foxweb_notif_deleted', []);
+        
+        // Calculate 2 months ago date
+        const twoMonthsAgo = new Date();
+        twoMonthsAgo.setMonth(twoMonthsAgo.getMonth() - 2);
+
+        // 3. Merge server data with user state and filter expired/deleted
+        AppState.notifications = serverNotifications
+            .filter(notif => {
+                const notifDate = new Date(notif.date);
+                const isNotDeleted = !deletedIds.includes(notif.id);
+                const isNotExpired = notifDate >= twoMonthsAgo;
+                return isNotDeleted && isNotExpired;
+            })
+            .map(notif => ({
+                ...notif,
+                // Use the 'message' field if 'message' is missing (compatibility)
+                message: notif.message || notif.msg,
+                read: !!readStatuses[notif.id]
+            }));
+
     } catch (error) {
-        console.error('Error cargando notificaciones:', error);
+        console.error('Error loading notifications from JSON:', error);
+        // Fallback to defaults if fetch fails
         AppState.notifications = DEFAULT_NOTIFICATIONS.slice();
     }
 }
 
 function saveNotifications() {
     try {
-        Storage.setJSON('foxweb_notifications', AppState.notifications);
+        // Save read statuses
+        const readStatuses = {};
+        const deletedIds = [];
+
+        AppState.notifications.forEach(notif => {
+            if (notif.id) readStatuses[notif.id] = notif.read;
+        });
+
+        // We need a way to track deleted IDs separately since they are gone from AppState.notifications
+        const currentDeleted = Storage.getJSON('foxweb_notif_deleted', []);
+        // This is tricky. Since we don't have the full list of server IDs here,
+        // we'll manage deletions in a separate function.
+        
+        Storage.setJSON('foxweb_notif_read', readStatuses);
+    } catch (error) {
+        console.error('Error saving notifications state:', error);
+    }
+}
+
+function deleteNotification(id) {
+    try {
+        // 1. Update current state
+        AppState.notifications = AppState.notifications.filter(n => n.id !== id);
+        
+        // 2. Persistent deletion
+        const deletedIds = Storage.getJSON('foxweb_notif_deleted', []);
+        if (!deletedIds.includes(id)) {
+            deletedIds.push(id);
+            Storage.setJSON('foxweb_notif_deleted', deletedIds);
+        }
+        
+        updateNotificationBadge();
+        renderNotifications();
+        // Removed showToast per user request
+    } catch (error) {
+        console.error('Error deleting notification:', error);
+    }
+}
+
+function markNotificationsAsRead() { 
+    try { 
+        const readStatuses = {};
+        AppState.notifications.forEach(notif => { 
+            notif.read = true; 
+            if (notif.id) readStatuses[notif.id] = true;
+        }); 
+        
+        // Merge with existing read statuses to avoid overwriting
+        const existingRead = Storage.getJSON('foxweb_notif_read', {});
+        Storage.setJSON('foxweb_notif_read', { ...existingRead, ...readStatuses });
+        
+        updateNotificationBadge(); 
+    } catch (error) { 
+        console.error('Error marcando notificaciones como leídas:', error); 
+    } 
+}
+
+function saveNotifications() {
+    try {
+        // Save read statuses
+        const readStatuses = {};
+        const deletedIds = [];
+
+        AppState.notifications.forEach(notif => {
+            if (notif.id) readStatuses[notif.id] = notif.read;
+        });
+        
+        const existingRead = Storage.getJSON('foxweb_notif_read', {});
+        Storage.setJSON('foxweb_notif_read', { ...existingRead, ...readStatuses });
     } catch (error) {
         console.error('Error guardando notificaciones:', error);
     }
@@ -1685,6 +1781,58 @@ function markNotificationsAsRead() {
     } 
 }
 
+function deleteNotification(id) {
+    try {
+        // 1. Update current state
+        AppState.notifications = AppState.notifications.filter(n => n.id !== id);
+        
+        // 2. Persistent deletion
+        const deletedIds = Storage.getJSON('foxweb_notif_deleted', []);
+        if (Array.isArray(deletedIds) && !deletedIds.includes(id)) {
+            deletedIds.push(id);
+            Storage.setJSON('foxweb_notif_deleted', deletedIds);
+        }
+        
+        updateNotificationBadge();
+        renderNotifications();
+    } catch (error) {
+        console.error('Error eliminando notificación:', error);
+    }
+}
+
+function clearAllNotifications() {
+    try {
+        if (AppState.notifications.length === 0) {
+            showToast('No hay notificaciones, no es necesario', 'info');
+            return;
+        }
+        // 1. Clear current state
+        AppState.notifications = [];
+        
+        // 2. Mark all known IDs as deleted in localStorage
+        // We need to fetch the server list again to get all possible IDs
+        fetch('/database/notifications.json')
+            .then(r => r.json())
+            .then(data => {
+                const allIds = (data.notifications || []).map(n => n.id);
+                Storage.setJSON('foxweb_notif_deleted', allIds);
+                updateNotificationBadge();
+                renderNotifications();
+            })
+            .catch(e => {
+                console.error('Error clearing all notifications:', e);
+                // Fallback: just update UI if fetch fails
+                updateNotificationBadge();
+                renderNotifications();
+            });
+    } catch (error) {
+        console.error('Error clearing all notifications:', error);
+    }
+}
+
+window.deleteNotification = deleteNotification;
+window.clearAllNotifications = clearAllNotifications;
+
 let isFirstBadgeUpdate = true;
 
 function updateNotificationBadge() { 
@@ -1693,12 +1841,6 @@ function updateNotificationBadge() {
         if (!badge) return; 
         const unreadCount = AppState.notifications.filter(n => !n.read).length; 
         
-        if (isFirstBadgeUpdate) {
-            badge.style.display = 'none';
-            isFirstBadgeUpdate = false;
-            return;
-        }
-
         badge.textContent = unreadCount; 
         badge.style.display = unreadCount > 0 ? 'flex' : 'none'; 
     } catch (error) { 
@@ -1715,7 +1857,7 @@ function renderNotifications() {
             container.innerHTML = `
                 <div class="notification-empty" role="status">
                     <i class="fa-solid fa-bell-slash" aria-hidden="true"></i>
-                    <p>No hay notificaciones</p>
+                    <p>No hay notificaciones, ¡estas al dia!</p>
                 </div>
             `; 
             return;
@@ -1754,7 +1896,17 @@ function createNotificationElement(notification) {
                 <p>${safeMessage}</p>
                 <small>${safeTime}</small>
             </div>
+            <button class="delete-notification-btn" aria-label="Eliminar notificación" title="Eliminar">
+                <i class="fa-solid fa-trash-can"></i>
+            </button>
         `; 
+        
+        const deleteBtn = div.querySelector('.delete-notification-btn');
+        deleteBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            deleteNotification(notification.id);
+        });
+
         return div;
     } catch (error) { 
         console.error('Error creando elemento de notificación:', error); 

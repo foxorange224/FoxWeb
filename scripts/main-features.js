@@ -245,7 +245,7 @@ function renderIcon(icon) {
     
     // Check if it's a URL (starts with http, https, /, or data:)
     if (icon.match(/^(http|https|\/|data:)/i)) {
-        return `<img src="${icon}" alt="icon" class="card-icon-img">`;
+        return `<img src="${icon}" alt="icon" class="card-icon-img" referrerpolicy="no-referrer">`;
     }
     
     // Otherwise treat as Font Awesome class
@@ -348,36 +348,36 @@ function createCardManually(item, category, itemId, viewMode = 'cards') {
                             ${iconHtml}
                         </div>
                         <div style="display: flex; align-items: center; gap: 8px; min-width: 0; overflow: hidden;">
-                            <h3 class="card-title" style="margin: 0; font-size: 0.9rem; line-height: 1.2; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; flex-shrink: 1;">
-                                ${escapeHtml(item.name)}
-                            </h3>
+                                <h3 class="card-title" style="margin: 0; font-size: 0.9rem; line-height: 1.2; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; flex-shrink: 1; display: flex; align-items: center; gap: 6px;">
+                                    ${escapeHtml(item.name)}
+                                </h3>
                             ${mainBadge ? `<span class="main-badge" style="width: fit-content; font-size: 0.6rem; flex-shrink: 0;">${escapeHtml(mainBadge)}</span>` : ''}
                             <p class="card-description" style="margin: 0; font-size: 0.8rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; color: var(--text-dim);">
                                 ${escapeHtml(item.info)}
                             </p>
                         </div>
                     </div>
-                    <div class="card-actions" style="display: flex; gap: 8px; align-items: center; flex-shrink: 0; margin-left: auto;">
-                        <button class="card-action-btn favorite-btn" aria-label="Agregar a favoritos" title="Favorito">
-                            <i class="fa-regular fa-heart"></i>
+                <div class="card-actions" style="display: flex; gap: 8px; align-items: center; flex-shrink: 0; margin-left: auto;">
+                    <button class="card-action-btn favorite-btn" aria-label="Agregar a favoritos" title="Favorito">
+                        <i class="fa-regular fa-heart"></i>
+                    </button>
+                    ${hasModal ? `
+                        <button class="download-btn details-btn" data-modal="${escapeHtml(item.modal)}">
+                            <i class="fa-solid fa-circle-info"></i><span>Detalles</span>
                         </button>
-                        ${hasModal ? `
-                            <button class="download-btn details-btn" data-modal="${escapeHtml(item.modal)}">
-                                <i class="fa-solid fa-circle-info"></i><span>Detalles</span>
+                    ` : `
+                        ${showCopyLink ? `
+                            <button class="download-btn copy-link-btn" data-item-id="${escapeHtml(itemId)}" title="Copiar enlace">
+                                <i class="fa-solid fa-link"></i>
                             </button>
-                        ` : `
-                            ${showCopyLink ? `
-                                <button class="download-btn copy-link-btn" data-item-id="${escapeHtml(itemId)}" title="Copiar enlace">
-                                    <i class="fa-solid fa-link"></i>
-                                </button>
-                            ` : ''}
-                            ${item.enlace && item.enlace !== '#' ? `
-                                <button class="download-btn" data-url="${escapeHtml(item.enlace)}">
-                                    <i class="fa-solid fa-download"></i><span>Abrir</span>
-                                </button>
-                            ` : ''}
-                        `}
-                    </div>
+                        ` : ''}
+                        ${item.enlace && item.enlace !== '#' ? `
+                            <button class="download-btn" data-url="${escapeHtml(item.enlace)}">
+                                <i class="fa-solid fa-download"></i><span>Abrir</span>
+                            </button>
+                        ` : ''}
+                    `}
+                </div>
                 </div>
             `;
 
@@ -443,12 +443,12 @@ function createCardManually(item, category, itemId, viewMode = 'cards') {
                         </div>
                         <div style="flex: 1; min-width: 0;">
                             <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 4px;">
-                                <div style="display: flex; flex-direction: column; gap: 2px;">
-                                    <h3 class="card-title" style="margin: 0; font-size: 0.95rem; line-height: 1.2;">
-                                    <span class="card-title-text">${safeName}</span>
-                                    </h3>
-                                    ${safeBadge ? `<span class="main-badge" style="width: fit-content; font-size: 0.65rem;">${safeBadge}</span>` : ''}
-                                </div>
+                                 <div style="display: flex; flex-direction: column; gap: 2px;">
+                                     <h3 class="card-title" style="margin: 0; font-size: 0.95rem; line-height: 1.2; display: flex; align-items: center; gap: 6px;">
+                                     <span class="card-title-text">${safeName}</span>
+                                     </h3>
+                                     ${safeBadge ? `<span class="main-badge" style="width: fit-content; font-size: 0.65rem;">${safeBadge}</span>` : ''}
+                                 </div>
                                 <button class="card-action-btn favorite-btn" aria-label="Agregar a favoritos" title="Favorito">
                                     <i class="fa-regular fa-heart"></i>
                                 </button>
@@ -481,11 +481,6 @@ function createCardManually(item, category, itemId, viewMode = 'cards') {
                     <button class="download-btn" disabled style="flex:1">
                         <i class="fa-solid fa-ban"></i>No disponible
                     </button>` : '')}
-                    ${item.security && item.security.verified ? `
-                    <div class="security-badge" title="${safeSecurityNote || 'Archivo verificado'}">
-                        <i class="fa-solid fa-shield-check"></i> Verificado
-                    </div>
-                    ` : ''}
                 </div>
             `;
             
@@ -1031,6 +1026,7 @@ function showToast(message, type = 'info', persistent = false) {
 
 // Exponer funciones globalmente para que estén disponibles antes de que otros scripts las llamen
 window.showToast = showToast;
+window.deleteNotification = deleteNotification;
 window.getToastIcon = getToastIcon;
 window.showErrorScreen = showErrorScreen;
 window.closeErrorScreen = closeErrorScreen;

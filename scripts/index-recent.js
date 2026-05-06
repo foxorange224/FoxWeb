@@ -14,7 +14,7 @@ function escapeHtml(text) {
 function renderRecentIcon(icon) {
     if (!icon) return '<i class="fa-solid fa-folder"></i>';
     if (icon.match(/^(http|https|\/|data:)/i)) {
-        return '<img src="'+icon+'" alt="icon" class="recent-icon-img">';
+        return '<img src="'+icon+'" alt="icon" class="recent-icon-img" referrerpolicy="no-referrer">';
     }
     return '<i class="'+escapeHtml(icon)+'"></i>';
 }

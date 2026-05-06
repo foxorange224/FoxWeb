@@ -43,6 +43,14 @@
             --shadow-lg: 0 4px 12px rgba(0, 0, 0, 0.5);
         }
         * { margin: 0; padding: 0; box-sizing: border-box; }
+        html, body {
+            overflow: hidden;
+            scrollbar-width: none;
+            -ms-overflow-style: none;
+        }
+        body::-webkit-scrollbar {
+            display: none;
+        }
         body {
             font-family: inter, -apple-system, BlinkSystemFont, segoe ui, Roboto, sans-serif;
             background: var(--bg-body) url('/assets/welcome.webp') no-repeat center center fixed;
@@ -54,6 +62,10 @@
             justify-content: center;
             padding: 20px;
             transition: background-color 0.3s ease, color 0.3s ease;
+            user-select: none;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
         }
         @media (min-width: 1024px) {
             body {
@@ -78,9 +90,160 @@
             animation: slideUp 0.6s ease-out;
             backdrop-filter: var(--glass-blur);
         }
-        @keyframes slideUp {
-            from { opacity: 0; transform: translateY(30px); }
-            to { opacity: 1; transform: translateY(0); }
+        @keyframes scaleUp {
+            from { opacity: 0; transform: scale(0.8); }
+            to { opacity: 1; transform: scale(1); }
+        }
+        @keyframes scaleDown {
+            from { opacity: 1; transform: scale(1); }
+            to { opacity: 0; transform: scale(0.8); }
+        }
+        
+        /* Welcome Animation Styles */
+        .google-spinner {
+            width: 50px;
+            height: 50px;
+            border: 5px solid var(--bg-tab);
+            border-top: 5px solid var(--primary);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .intro-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+            overflow: hidden;
+        }
+
+        .intro-panel {
+            position: absolute;
+            left: 0;
+            width: 100%;
+            height: 50%;
+            background: #0a0a0a;
+            transition: transform 0.8s cubic-bezier(0.65, 0, 0.35, 1);
+            z-index: 1;
+        }
+
+        .intro-panel-top {
+            top: 0;
+        }
+
+        .intro-panel-bottom {
+            bottom: 0;
+        }
+
+        .intro-content-wrapper {
+            position: relative;
+            z-index: 10;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            transition: opacity 0.4s ease;
+        }
+
+        .fade-out .intro-panel-top {
+            transform: translateY(-100%);
+        }
+
+        .fade-out .intro-panel-bottom {
+            transform: translateY(100%);
+        }
+
+        .fade-out .intro-content-wrapper {
+            opacity: 0;
+        }
+
+        .fade-out {
+            pointer-events: none;
+        }
+
+
+        .intro-animation {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Inter', sans-serif;
+            font-weight: 900;
+            font-size: 5rem;
+            color: #f0f0f0;
+            text-transform: uppercase;
+        }
+
+        @keyframes boingIn {
+            0% { transform: translateX(100vw); opacity: 0; }
+            70% { transform: translateX(-20px); opacity: 1; }
+            85% { transform: translateX(10px); }
+            100% { transform: translateX(0); opacity: 1; }
+        }
+
+        .anim-step {
+            position: absolute;
+            opacity: 0;
+            pointer-events: none;
+            text-align: center;
+            transition: none;
+        }
+        .anim-step.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+ 
+        .step-welcome {
+            transform: translateX(100vw);
+            font-style: italic;
+            color: var(--primary);
+        }
+        .step-welcome.active {
+            animation: boingIn 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+        }
+
+
+        .step-to {
+            transform: scale(0.5);
+            transition: none;
+        }
+        .step-to.active {
+            opacity: 1;
+            transform: scale(1);
+        }
+        .step-to.exit {
+            opacity: 0;
+            transform: scale(0);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .step-logo {
+            transform: scale(0);
+            transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.3s;
+        }
+        .step-logo img {
+            width: 350px;
+            height: auto;
+            display: block;
+        }
+        .step-logo.active {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        .fade-out {
+            pointer-events: none;
         }
         .config-header {
             text-align: center;
@@ -252,10 +415,31 @@
             padding: 28px 24px;
             transition: background-color 0.3s ease;
         }
+        @media (pointer: fine) {
+            .config-container {
+                cursor: grab;
+            }
+            .config-container:active {
+                cursor: grabbing;
+            }
+        }
     </style>
 </head>
 
     <body>
+        <div class="intro-overlay" id="introOverlay">
+            <div class="intro-panel intro-panel-top"></div>
+            <div class="intro-panel intro-panel-bottom"></div>
+            <div class="intro-content-wrapper">
+                <div id="introSpinner" class="google-spinner"></div>
+                <div id="introAnimation" class="intro-animation">
+                    <div class="anim-step step-welcome">WELCOME</div>
+                    <div class="anim-step step-to">To</div>
+                    <div class="anim-step step-logo"><img src="/assets/logo.webp" alt="FoxWeb Logo"></div>
+                </div>
+            </div>
+        </div>
+
         <div class="config-container" id="choiceScreen">
             <div class="config-header">
                 <div class="config-icon"><i class="fas fa-face-laugh"></i></div>
@@ -400,6 +584,36 @@
         var selectedTheme = localStorage.getItem('foxweb_theme') || 'light';
         var selectedView = localStorage.getItem('foxweb_view') || 'cards';
         
+        // Draggable State
+        const containers = document.querySelectorAll('.config-container');
+        const translations = new Map();
+        
+        async function transitionScreen(fromId, toId) {
+            const fromEl = document.getElementById(fromId);
+            const toEl = document.getElementById(toId);
+
+            // Reset all positions
+            containers.forEach(c => {
+                translations.set(c, { x: 0, y: 0 });
+                c.style.transform = '';
+            });
+
+            if (fromEl) {
+                fromEl.style.animation = 'scaleDown 0.3s ease-in forwards';
+                await new Promise(r => setTimeout(r, 300));
+                fromEl.style.display = 'none';
+                fromEl.style.animation = '';
+            }
+
+            if (toEl) {
+                toEl.style.display = 'block';
+                toEl.style.animation = 'scaleUp 0.4s ease-out forwards';
+                toEl.onanimationend = () => {
+                    toEl.style.animation = '';
+                };
+            }
+        }
+
         // Apply theme immediately
         document.documentElement.setAttribute('data-theme', selectedTheme);
         
@@ -411,9 +625,8 @@
             updateThemeButtons();
         };
 
-        window.showCreateProfile = function() {
-            document.getElementById('choiceScreen').style.display = 'none';
-            document.getElementById('configScreen').style.display = 'block';
+        window.showCreateProfile = async function() {
+            await transitionScreen('choiceScreen', 'configScreen');
             document.title = 'Configurar Perfil';
             const url = new URL(window.location);
             url.searchParams.set('create', 'true');
@@ -424,9 +637,8 @@
             document.getElementById('importFile').click();
         };
 
-        window.goBack = function() {
-            document.getElementById('configScreen').style.display = 'none';
-            document.getElementById('choiceScreen').style.display = 'block';
+        window.goBack = async function() {
+            await transitionScreen('configScreen', 'choiceScreen');
             document.title = 'Bienvenido a FoxWeb';
             const url = new URL(window.location);
             url.searchParams.delete('create');
@@ -479,7 +691,7 @@
             var file = input.files[0];
             if (!file) return;
             var reader = new FileReader();
-            reader.onload = function(e) {
+            reader.onload = async function(e) {
                 try {
                     var data = JSON.parse(e.target.result);
                     if (data.favorites) localStorage.setItem('foxweb_favorites', data.favorites);
@@ -490,8 +702,7 @@
                     if (data.view) localStorage.setItem('foxweb_view', data.view);
                     if (data.notifications) localStorage.setItem('foxweb_notifications', data.notifications);
                     if (data.categories) localStorage.setItem('foxweb_categories', data.categories);
-                    document.getElementById('choiceScreen').style.display = 'none';
-                    document.getElementById('importSuccessScreen').style.display = 'block';
+                    await transitionScreen('choiceScreen', 'importSuccessScreen');
                 } catch (err) {
                     alert('Error al importar');
                 }
@@ -499,8 +710,6 @@
                 const url = new URL(window.location);
                 url.searchParams.set('success', 'true');
                 history.replaceState({}, document.title, url);
-                document.getElementById('choiceScreen').style.display = 'none';
-                document.getElementById('importSuccessScreen').style.display = 'block';
             };
             reader.readAsText(file);
         }
@@ -514,39 +723,39 @@
             }
         }
 
-         window.saveAndContinue = function() {
-             var selectedTabs = [];
-             document.querySelectorAll('.tab-checkbox:checked').forEach(function(cb) {
-                 selectedTabs.push(cb.value);
-             });
+          window.saveAndContinue = async function() {
+              var selectedTabs = [];
+              document.querySelectorAll('.tab-checkbox:checked').forEach(function(cb) {
+                  selectedTabs.push(cb.value);
+              });
+ 
+              if (selectedTabs.length === 0) {
+                  alert('Selecciona al menos una pestaña');
+                  return;
+              }
+ 
+              localStorage.setItem('foxweb_theme', selectedTheme);
+              localStorage.setItem('foxweb_view', selectedView);
+ 
+              // Clear per-tab view preferences so global preference takes effect
+              var tabIds = ['Programas', 'Sistemas', 'Juegos', 'Extras', 'APKs'];
+              tabIds.forEach(function(tabId) {
+                  localStorage.removeItem('foxweb_view_mode_' + tabId);
+              });
+ 
+              var username = document.getElementById('username').value.trim();
+              if (username) {
+                  localStorage.setItem('foxweb_username', username);
+              }
+ 
+              localStorage.setItem('foxweb_configured', 'true');
+              localStorage.setItem('foxweb_first_visit', 'false');
+              localStorage.setItem('foxweb_categories', JSON.stringify(selectedTabs));
+ 
+              // Ocultar pantalla de configuración y mostrar pantalla de actualización
+              await transitionScreen('configScreen', 'updateScreen');
+          };
 
-             if (selectedTabs.length === 0) {
-                 alert('Selecciona al menos una pestaña');
-                 return;
-             }
-
-             localStorage.setItem('foxweb_theme', selectedTheme);
-             localStorage.setItem('foxweb_view', selectedView);
-
-             // Clear per-tab view preferences so global preference takes effect
-             var tabIds = ['Programas', 'Sistemas', 'Juegos', 'Extras', 'APKs'];
-             tabIds.forEach(function(tabId) {
-                 localStorage.removeItem('foxweb_view_mode_' + tabId);
-             });
-
-             var username = document.getElementById('username').value.trim();
-             if (username) {
-                 localStorage.setItem('foxweb_username', username);
-             }
-
-             localStorage.setItem('foxweb_configured', 'true');
-             localStorage.setItem('foxweb_first_visit', 'false');
-             localStorage.setItem('foxweb_categories', JSON.stringify(selectedTabs));
-
-             // Ocultar pantalla de configuración y mostrar pantalla de actualización
-             document.getElementById('configScreen').style.display = 'none';
-             document.getElementById('updateScreen').style.display = 'block';
-         };
 
          window.finishSetup = function() {
              window.location.href = '/profile';
@@ -555,9 +764,10 @@
         document.addEventListener('DOMContentLoaded', function() {
             updateThemeButtons();
             updateViewButtons();
-
+ 
             // Restore screen from URL parameter
             const urlParams = new URLSearchParams(window.location.search);
+
             if (urlParams.get('create') === 'true') {
                 showCreateProfile();
                 document.title = 'Configurar Perfil';
@@ -598,6 +808,95 @@
                 statsEl.textContent = favs.length + ' favoritos · ' + hist.length + ' en historial';
             }
         }
+
+        (function() {
+            let activeContainer = null;
+            let startX = 0;
+            let startY = 0;
+ 
+            if (!window.matchMedia('(pointer: fine)').matches) return;
+ 
+            containers.forEach(container => {
+                translations.set(container, { x: 0, y: 0 });
+                container.addEventListener('mousedown', (e) => {
+                    activeContainer = container;
+                    const currentPos = translations.get(container);
+                    startX = e.clientX - currentPos.x;
+                    startY = e.clientY - currentPos.y;
+                    container.style.cursor = 'grabbing';
+                });
+            });
+ 
+            window.addEventListener('mousemove', (e) => {
+                if (!activeContainer) return;
+                
+                let translateX = e.clientX - startX;
+                let translateY = e.clientY - startY;
+                
+                const containerWidth = activeContainer.offsetWidth;
+                const windowWidth = window.innerWidth;
+                
+                const minX = (containerWidth - windowWidth) / 2;
+                const maxX = (windowWidth - containerWidth) / 2;
+                
+                translateX = Math.max(minX, Math.min(maxX, translateX));
+                
+                translations.set(activeContainer, { x: translateX, y: translateY });
+                activeContainer.style.transform = `translate(${translateX}px, ${translateY}px)`;
+            });
+ 
+            window.addEventListener('mouseup', () => {
+                if (activeContainer) {
+                    activeContainer.style.cursor = 'grab';
+                    activeContainer = null;
+                }
+            });
+        })();
+ 
+        window.addEventListener('load', async () => {
+            const spinner = document.getElementById('introSpinner');
+            const animation = document.getElementById('introAnimation');
+            const overlay = document.getElementById('introOverlay');
+            const stepWelcome = document.querySelector('.step-welcome');
+            const stepTo = document.querySelector('.step-to');
+            const stepLogo = document.querySelector('.step-logo');
+ 
+            if (!overlay) return;
+ 
+            // 1. Hide spinner, show animation container
+            if (spinner) spinner.style.display = 'none';
+            if (animation) animation.style.display = 'flex';
+ 
+            // 2. WELCOME slides in
+            if (stepWelcome) {
+                stepWelcome.classList.add('active');
+                await new Promise(r => setTimeout(r, 800));
+                stepWelcome.classList.remove('active');
+                // Instant transition to "To"
+            }
+            
+            // 3. "To" appears instantly
+            if (stepTo) {
+                stepTo.classList.add('active');
+                await new Promise(r => setTimeout(r, 600));
+                
+                // 4. "To" scales out
+                stepTo.classList.add('exit');
+                await new Promise(r => setTimeout(r, 400));
+                stepTo.classList.remove('active');
+            }
+ 
+            // 5. Logo scales in
+            if (stepLogo) {
+                stepLogo.classList.add('active');
+                await new Promise(r => setTimeout(r, 1200));
+            }
+ 
+            // 6. Fade out overlay
+            overlay.classList.add('fade-out');
+        });
+
+
     </script>
 </body>
 </html>

@@ -345,7 +345,10 @@
             });
 
             if (!filteredItems.length) {
-                listContainer.innerHTML = '<div class="empty-state"><i class="fa-regular fa-heart"></i><p>¡No hay favoritos que coincidan con tu búsqueda!</p><a href="/downloads" class="btn" style="margin-top:16px;display:inline-flex;padding:12px 24px;background:var(--primary);color:white;border-radius:8px;text-decoration:none;">Explorar</a></div>';
+                const isSearch = window.currentFavFilter !== '';
+                const message = isSearch ? '¡No hay favoritos que coincidan con tu búsqueda!' : 'Aún no tienes favoritos guardados';
+                
+                listContainer.innerHTML = `<div class="empty-state"><i class="fa-regular fa-heart"></i><p>${message}</p><a href="/downloads" class="btn" style="margin-top:16px;display:inline-flex;padding:12px 24px;background:var(--primary);color:white;border-radius:8px;text-decoration:none;">Explorar</a></div>`;
                 return;
             }
             
@@ -367,7 +370,10 @@
             });
 
             if (!filteredItems.length) {
-                listContainer.innerHTML = '<div class="empty-state"><i class="fa-solid fa-clock-rotate-left"></i><p>No hay historial que coincida con tu búsqueda.</p></div>';
+                const isSearch = window.currentHistFilter !== '';
+                const message = isSearch ? 'No hay historial que coincida con tu búsqueda.' : 'No tienes historial de descargas';
+                
+                listContainer.innerHTML = `<div class="empty-state"><i class="fa-solid fa-clock-rotate-left"></i><p>${message}</p></div>`;
                 return;
             }
             

@@ -289,11 +289,15 @@
         class="floating-btn scroll-top" id="scrollTopBtn" aria-label="Volver al inicio de la página FoxWeb"
         title="Ir arriba"><i class="fa-solid fa-arrow-up"></i></button>
     <div class="notification-center" id="notificationCenter" aria-hidden="true" inert>
-        <div class="notification-header">
-            <h4><i class="fa-solid fa-bell"></i>Notificaciones</h4><button class="notification-close"
-                onclick="closeNotificationCenter()" aria-label="Cerrar notificaciones"><i
-                    class="fa-solid fa-times"></i></button>
-        </div>
+<div class="notification-header">
+    <h4><i class="fa-solid fa-bell"></i>Notificaciones</h4>
+    <div style="display: flex; gap: 8px;">
+        <button class="clear-notifications-btn" onclick="clearAllNotifications()" aria-label="Borrar todas las notificaciones" title="Borrar todas">
+            <i class="fa-solid fa-trash-can"></i>
+        </button>
+        <button class="notification-close" onclick="closeNotificationCenter()" aria-label="Cerrar notificaciones"><i class="fa-solid fa-times"></i></button>
+    </div>
+</div>
         <div class="notification-list" role="list"></div>
     </div><template id="contentCardTemplate">
         <div class="content-card" role="article">

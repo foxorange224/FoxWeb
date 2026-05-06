@@ -545,28 +545,11 @@
       "id": "000042"
     },
     {
-      "name": "OPTIOS 7 ULTIMATE X64",
-      "icon": "https://www.google.com/s2/favicons?domain=optijuegos.net&sz=28",
-      "info": "Windows OptiOS 7 ULTIMATE DE 64 BITS! Una modificacion de Windows. Con mejoras de rendimiento en computadoras de bajos recursos. ES LA MISMA EDICION QUE LA DE X86 PERO X64",
-      "enlace": "https://www.mediafire.com/file/bf3iidwy6e3sg4g",
-      "modal": null,
-      "badges": [
-        "WINDOWS 7",
-        "SP1",
-        "OPTIMIZADO"
-      ],
-      "security": {
-        "verified": true,
-        "note": "Archivo verificado por el equipo de FoxWeb"
-      },
-      "id": "000043"
-    },
-    {
       "name": "OPTIOS 7 ULTIMATE X86",
       "icon": "https://www.google.com/s2/favicons?domain=optijuegos.net&sz=28",
-      "info": "Windows OptiOS 7 ULTIMATE DE 32 BITS! Una modificacion de Windows. Con mejoras de rendimiento en computadoras de bajos recursos.",
-      "enlace": "https://www.mediafire.com/file/4dgluhpeq19r2jh",
-      "modal": null,
+      "info": "Windows OptiOS 7 ULTIMATE SP1! Una modificacion de Windows. Con mejoras de rendimiento en computadoras de bajos recursos.",
+      "enlace": "#",
+      "modal": "OptiOS7Modal",
       "badges": [
         "WINDOWS 7",
         "SP1",
@@ -582,8 +565,8 @@
       "name": "OptiOS 8.1 ENTERPRISE X64",
       "icon": "https://www.google.com/s2/favicons?domain=optijuegos.net&sz=28",
       "info": "Bienvenido al Windows OptiOS 8.1 ENTERPRISE X64! Una modificacion de Windows. Con mejoras de rendimiento en computadoras de bajos recursos",
-      "enlace": "https://www.mediafire.com/file/qrjomhsbwwdz8rz",
-      "modal": null,
+      "enlace": "#",
+      "modal": "OptiOS8Modal",
       "badges": [
         "OPTIOS",
         "OPTIMIZADO",
@@ -594,23 +577,6 @@
         "note": "Archivo verificado por el equipo de FoxWeb"
       },
       "id": "000045"
-    },
-    {
-      "name": "OptiOS 8.1 ENTERPRISE X86",
-      "icon": "https://www.google.com/s2/favicons?domain=optijuegos.net&sz=28",
-      "info": "Bienvenido al Windows OptiOS 8.1 ENTERPRISE X86! Una modificacion de Windows. Con mejoras de rendimiento en computadoras de bajos recursos",
-      "enlace": "https://www.mediafire.com/file/fbgdr9993u39ik6",
-      "modal": null,
-      "badges": [
-        "OPTIOS",
-        "OPTIMIZADO",
-        "WINDOWS 8"
-      ],
-      "security": {
-        "verified": true,
-        "note": "Archivo verificado por el equipo de FoxWeb"
-      },
-      "id": "000046"
     },
     {
       "name": "ReactOS",

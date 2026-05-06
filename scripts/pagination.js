@@ -11,7 +11,7 @@ const PAGINATION_CONFIG = {
     maxVisiblePages: 5, // Máximo de páginas visibles en la navegación
     showFirstLast: true, // Mostrar botones primera/última página
     showEllipsis: true, // Mostrar elipsis cuando hay muchas páginas
-    animateTransition: true, // Animar transiciones entre páginas
+    animateTransition: false, // Animar transiciones entre páginas
     transitionDuration: 300 // Duración de la animación en ms
 };
 

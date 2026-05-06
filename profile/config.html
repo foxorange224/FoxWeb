@@ -46,51 +46,54 @@
         body {
             font-family: inter, -apple-system, BlinkMacSystemFont, segoe ui, Roboto, sans-serif;
             background-color: var(--bg-body);
-            background-image: 
-                radial-gradient(circle at 10% 20%, rgba(179, 71, 0, 0.1) 0%, transparent 30%),
-                radial-gradient(circle at 90% 80%, rgba(179, 71, 0, 0.1) 0%, transparent 30%),
-                linear-gradient(135deg, var(--bg-body) 0%, var(--bg-tab) 100%);
-            background-attachment: fixed;
             color: var(--text-main);
             min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 20px;
+            display: block;
+            padding: 40px 20px;
             transition: background-color 0.3s ease, color 0.3s ease;
+            user-select: none;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
         }
         @keyframes float-icon {
             0%, 100% { transform: translateY(0) rotate(0deg); }
             50% { transform: translateY(-10px) rotate(5deg); }
         }
         .config-container {
-            max-width: 420px;
+            max-width: 800px;
+            margin: 0 auto;
             width: 100%;
-            background: var(--bg-card);
-            border-radius: var(--radius-lg);
-            border: 1px solid var(--border);
-            box-shadow: var(--shadow-lg);
-            padding: 28px 24px;
+            background: transparent;
+            border: none;
+            box-shadow: none;
+            padding: 0;
             transition: background-color 0.3s ease;
-            backdrop-filter: blur(10px);
-            background-color: rgba(var(--bg-card-rgb), 0.8);
         }
         .config-header {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
             text-align: center;
-            margin-bottom: 24px;
+            margin-bottom: 20px;
+            gap: 4px;
+        }
+        .config-header-top {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
         }
         .config-icon {
-            font-size: 40px;
+            font-size: 32px;
             color: var(--primary);
-            margin-bottom: 12px;
             display: inline-block;
-            animation: float-icon 3s ease-in-out infinite;
         }
         .config-title {
             font-size: 1.5rem;
             font-weight: 700;
             color: var(--text-main);
-            margin-bottom: 4px;
+            margin: 0;
         }
         .config-subtitle {
             color: var(--text-secondary);
@@ -217,8 +220,10 @@
                 <i class="fas fa-arrow-left"></i> Volver
             </button>
             <div class="config-header">
-                <div class="config-icon"><i class="fas fa-face-laugh"></i></div>
-                <h1 class="config-title">Configurar FoxWeb</h1>
+                <div class="config-header-top">
+                    <div class="config-icon"><i class="fas fa-gear"></i></div>
+                    <h1 class="config-title">Configurar FoxWeb</h1>
+                </div>
                 <p class="config-subtitle">Elige cómo quieres ver el sitio</p>
             </div>
 
@@ -412,7 +417,7 @@
             localStorage.setItem('foxweb_first_visit', 'false');
             localStorage.setItem('foxweb_categories', JSON.stringify(selectedTabs));
             
-            window.location.href = '/downloads';
+            window.history.back();
         };
 
         document.addEventListener('DOMContentLoaded', function() {
