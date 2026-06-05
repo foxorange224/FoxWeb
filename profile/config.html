@@ -42,7 +42,7 @@
             --shadow-md: 0 2px 6px rgba(0, 0, 0, 0.4);
             --shadow-lg: 0 4px 12px rgba(0, 0, 0, 0.5);
         }
-        * { margin: 0; padding: 0; box-sizing: border-box; }
+        * { margin: 0; padding: 0; box-sizing: border-box; cursor: url('/assets/cursor.webp'), auto !important; }
         body {
             font-family: inter, -apple-system, BlinkMacSystemFont, segoe ui, Roboto, sans-serif;
             background-color: var(--bg-body);
@@ -277,7 +277,19 @@
         </div>
 
         <div class="config-section">
-            <span class="config-label">Datos</span>
+            <span class="config-label">Preferencias de anuncios (Ayuda al proyecto)</span>
+            <div class="theme-toggle" style="flex-direction: column; align-items: flex-start; gap: 12px;">
+                <label style="display: flex; align-items: center; gap: 8px; cursor: pointer; color: var(--text-main); font-size: 0.9rem; width: 100%; padding: 10px 16px;">
+                    <input type="checkbox" id="adsToggle" style="accent-color: var(--primary);">
+                    <span>Habilitar anuncios</span>
+                </label>
+                <label style="display: flex; align-items: center; gap: 8px; cursor: pointer; color: var(--text-main); font-size: 0.9rem; width: 100%; padding: 10px 16px;">
+                    <input type="checkbox" id="redirectAdsToggle" style="accent-color: var(--primary);">
+                    <span>Activar Redirects con Anuncios</span>
+                </label>
+                <p style="display: flex; align-items: center; gap: 8px; cursor: pointer; color: var(--text-main); font-size: 0.9rem; width: 100%; padding: 10px 16px;">Si quiere saber mas informacion sobre los anuncios, Ve <a href="/blog/sobre-los-anuncios" style="color: var(--primary)">aqui</a></p>
+            </div>
+        </div>
             <div id="dataStats" style="margin-bottom:10px;color:var(--text-secondary);font-size:0.85rem;">0 favoritos · 0 en historial</div>
             <div style="display:flex;gap:8px;flex-wrap:wrap;">
                 <button type="button" class="theme-btn" onclick="exportData()" style="flex:1;">
@@ -413,9 +425,16 @@
                 localStorage.setItem('foxweb_username', username);
             }
             
-            localStorage.setItem('foxweb_configured', 'true');
-            localStorage.setItem('foxweb_first_visit', 'false');
-            localStorage.setItem('foxweb_categories', JSON.stringify(selectedTabs));
+               localStorage.setItem('foxweb_configured', 'true');
+               localStorage.setItem('foxweb_first_visit', 'false');
+               localStorage.setItem('foxweb_categories', JSON.stringify(selectedTabs));
+               
+                const adsEnabled = document.getElementById('adsToggle')?.checked;
+                localStorage.setItem('foxweb_ads_enabled', adsEnabled !== false);
+                
+                const redirectAdsEnabled = document.getElementById('redirectAdsToggle')?.checked;
+                localStorage.setItem('foxweb_redirect_ads_enabled', redirectAdsEnabled !== false);
+
             
             window.history.back();
         };
@@ -424,6 +443,15 @@
             updateThemeButtons();
             updateViewButtons();
             
+            // Load ads preference
+            const adsEnabled = localStorage.getItem('foxweb_ads_enabled') !== 'false';
+            const adsToggle = document.getElementById('adsToggle');
+            if (adsToggle) adsToggle.checked = adsEnabled;
+
+            const redirectAdsEnabled = localStorage.getItem('foxweb_redirect_ads_enabled') !== 'false';
+            const redirectAdsToggle = document.getElementById('redirectAdsToggle');
+            if (redirectAdsToggle) redirectAdsToggle.checked = redirectAdsEnabled;
+
             // Pre-fill username
             var savedUsername = localStorage.getItem('foxweb_username');
             if (savedUsername) {

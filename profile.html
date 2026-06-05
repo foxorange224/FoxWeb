@@ -13,13 +13,32 @@
         .view-btn { opacity: 0.5; transition: opacity 0.2s; }
         .view-btn.active { opacity: 1; }
         .profile-header {
-            padding: 20px 24px;
+            padding: 10px 24px;
             border-bottom: 1px solid var(--border);
             display: flex;
             align-items: center;
             justify-content: space-between;
             flex-wrap: wrap;
             gap: 16px;
+        }
+        
+        .header-ad {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            max-width: 728px;
+        }
+
+        .ad-wrapper {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            padding: 0;
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
         }
         
         .profile-user {
@@ -230,24 +249,31 @@
         }
         
         document.addEventListener('DOMContentLoaded', function() {
+            // Manejar visibilidad de anuncios
+            const adsEnabled = localStorage.getItem('foxweb_ads_enabled') !== 'false';
+            const adContainer = document.getElementById('profileHeaderAd');
+            if (adContainer) {
+                adContainer.style.display = adsEnabled ? 'flex' : 'none';
+            }
+
             // Mostrar loader mientras se cargan los datos
             document.getElementById('profileLoading').style.display = 'flex';
             document.getElementById('profileContent').style.display = 'none';
-
+            
             // Load info message
             loadInfoMessage('profile');
-
+            
             // Initialize tab - check URL parameter first
             const urlParams = new URLSearchParams(window.location.search);
             const tabParam = urlParams.get('tab');
             const validTabs = ['favorites', 'history'];
             const initialTab = validTabs.includes(tabParam) ? tabParam : 'favorites';
             switchTab(initialTab);
-
+            
             // Set initial view state from localStorage
             const savedView = localStorage.getItem('foxweb_view') || 'cards';
             setView(savedView);
-
+            
             // Cargar modales primero, luego datos
             loadModalsAndData();
         });
@@ -702,8 +728,16 @@
                         <span id="favCount">0</span> favoritos · <span id="histCount">0</span> en historial
                     </div>
                     <div class="profile-version" style="font-size: 0.75rem; color: var(--text-dim); margin-top: 4px;">
-                        Versión <span id="foxwebVersion">-.-.-</span>
+                        Versión <span id="foxwebVersion">-.-</span>
                     </div>
+                </div>
+            </div>
+            <div class="header-ad" id="profileHeaderAd">
+                <div class="ad-wrapper">
+                    <!-- BEGIN AADS AD UNIT 2437150 -->
+                    <iframe data-aa='2437150' src='//acceptable.a-ads.com/2437150/?size=Adaptive'
+                                style='border:0; padding:0; width:100%; height:auto; overflow:hidden;display: block;margin: auto'></iframe>
+                    <!-- END AADS AD UNIT 2437150 -->
                 </div>
             </div>
             <div class="view-toggle">

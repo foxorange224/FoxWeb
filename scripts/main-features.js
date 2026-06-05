@@ -208,7 +208,7 @@ function renderTab(tabId, items) {
         const viewMode = grid.classList.contains('compact-view') ? 'compact' : 'cards';
         const fragment = document.createDocumentFragment(); 
         items.forEach((item, index) => { 
-            const itemId = `${tabId.toLowerCase()}_${index}`; 
+            const itemId = item.id || `${tabId.toLowerCase()}_${index}`; 
             const card = createContentCard(item, tabId, itemId, viewMode); 
             if (card) fragment.appendChild(card); 
         }); 
@@ -397,29 +397,30 @@ function createCardManually(item, category, itemId, viewMode = 'cards') {
 
         if (copyLinkBtn) {
             copyLinkBtn.addEventListener('click', (e) => {
-                e.stopPropagation();
-                e.preventDefault();
-                copyItemLink(itemId);
-            });
+                    e.stopPropagation();
+                    e.preventDefault();
+                    window.handleItemRedirect(item, itemId);
+                });
         }
 
         const detailsBtnCompact = card.querySelector('button.details-btn[data-modal]');
         if (detailsBtnCompact) {
             detailsBtnCompact.addEventListener('click', (e) => {
-                e.stopPropagation();
-                e.preventDefault();
-                openModal(item.modal);
-            });
+                    e.stopPropagation();
+                    e.preventDefault();
+                    window.handleItemRedirect(item, itemId);
+                });
         }
 
-        const downloadBtnCompact = card.querySelector('button.download-btn[data-url]');
-        if (downloadBtnCompact) {
-            downloadBtnCompact.addEventListener('click', (e) => {
-                e.stopPropagation();
-                e.preventDefault();
-                window.open(item.enlace, '_blank');
-            });
-        }
+            const downloadBtnCompact = card.querySelector('button.download-btn[data-url]');
+            if (downloadBtnCompact) {
+                downloadBtnCompact.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    e.preventDefault();
+                    window.handleItemRedirect(item, itemId);
+                });
+            }
+
         } else {
             // Vista de tarjetas normal
             const hasModal = item.modal && item.modal !== 'null';
@@ -522,7 +523,7 @@ function createCardManually(item, category, itemId, viewMode = 'cards') {
                 mainDownloadBtnNormal.addEventListener('click', (e) => {
                     e.stopPropagation();
                     e.preventDefault();
-                    window.open(item.enlace, '_blank');
+                    window.handleItemRedirect(item, itemId);
                 });
             }
         }

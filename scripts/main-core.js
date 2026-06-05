@@ -282,15 +282,17 @@ function validateJSONData(data) {
             if (!item || typeof item !== 'object') return false;
             if (!item.name || typeof item.name !== 'string') return false;
             return true;
-        }).map(item => ({
-            name: String(item.name).slice(0, 500),
-            info: String(item.info || '').slice(0, 2000),
-            enlace: item.enlace || '#',
-            icon: item.icon || '',
-            badges: Array.isArray(item.badges) ? item.badges.slice(0, 10).map(String).slice(0, 100) : [],
-            modal: item.modal || null,
-            security: item.security || null
-        }));
+            }).map(item => ({
+                id: item.id || null,
+                name: String(item.name).slice(0, 500),
+                info: String(item.info || '').slice(0, 2000),
+                enlace: item.enlace || '#',
+                icon: item.icon || '',
+                badges: Array.isArray(item.badges) ? item.badges.slice(0, 10).map(String).slice(0, 100) : [],
+                modal: item.modal || null,
+                security: item.security || null
+            }));
+
     }
     
     return validData;
@@ -342,6 +344,7 @@ function escapeHTML(str) {
 // Normalizar datos con valores por defecto
 function normalizeDataItem(item, category) {
     return {
+        id: item.id || null,
         name: escapeHTML(item.name || 'Sin título'),
         icon: item.icon || DEFAULT_ICONS[category] || 'fa-solid fa-folder',
         info: escapeHTML(item.info || 'Descripción no disponible'),
@@ -1355,6 +1358,24 @@ function updateAllFavoriteIconsInTab(tabId) {
         }
     });
 }
+ 
+/**
+ * Handles the redirection of an item based on user preferences.
+ * If redirects with ads are disabled, it opens the direct link.
+ */
+window.handleItemRedirect = function(item, itemId) {
+    const redirectAdsEnabled = localStorage.getItem('foxweb_redirect_ads_enabled') !== 'false';
+    if (redirectAdsEnabled) {
+        window.open('/redirect?id=' + itemId, '_blank');
+    } else if (item && item.enlace && item.enlace !== '#') {
+        window.open(item.enlace, '_blank');
+    } else {
+        console.error('No valid link found for item:', itemId);
+        if (typeof window.showToast === 'function') {
+            window.showToast('El enlace no está disponible', 'error');
+        }
+    }
+};
 
 function copyItemLink(itemId) {
     try {
@@ -1364,20 +1385,7 @@ function copyItemLink(itemId) {
             return;
         }
 
-        let urlToCopy = item.enlace || '';
-
-        if (!urlToCopy || urlToCopy === '#') {
-            if (item.modal && item.modal !== 'null') {
-                showToast('Este contenido no tiene enlace directo para copiar', 'warning');
-            } else {
-                showToast('Este item no tiene enlace para copiar', 'warning');
-            }
-            return;
-        }
-
-        if (urlToCopy.startsWith('/redirect?url=')) {
-            urlToCopy = decodeURIComponent(urlToCopy.replace('/redirect?url=', ''));
-        }
+        const urlToCopy = `/redirect?id=${itemId}`;
 
         navigator.clipboard.writeText(urlToCopy).then(() => {
             showToast('Enlace copiado', 'success');

@@ -662,6 +662,19 @@
       "id": "000052"
     },
     {
+      "name": "Half-Life 2",
+      "icon": "https://cdn2.steamgriddb.com/icon/d244da6f35a9195bf35fc957adf9b9d1.ico",
+      "info": "Half-Life 2 es la continuación del videojuego Half-Life, una videoaventura de disparos en primera persona.",
+      "enlace": "#",
+      "modal": "hl2Modal",
+      "badges": [
+        "ACCIÓN",
+        "AVENTURA",
+        "DISPAROS"
+      ],
+      "id": "000140"
+    },
+    {
       "name": "Halo: Combat Evolved",
       "icon": "https://cdn2.steamgriddb.com/icon_thumb/bcaad45dcf4ad3e57d8f1c22266c69c8.png",
       "info": "El inicio de la saga del Jefe Maestro. Combate alienígenas en un misterioso mundo anillo.",
@@ -781,7 +794,7 @@
       "name": "Counter Strike 1.6",
       "icon": "https://cdn2.steamgriddb.com/icon_thumb/9b04d152845ec0a378394003c96da594.png",
       "info": "El clásico de disparos tácticos que definió un género. Multijugador competitivo y miles de servidores activos.",
-      "enlace": "https://www.mediafire.com/file/be2cr8yfize0w73/CS1.6.zip/file",
+      "enlace": "https://www.mediafire.com/file/f5sd48trmx0jgbs/cs-1.6.tar.gz/file",
       "modal": null,
       "badges": [
         "FPS",
@@ -794,7 +807,7 @@
       "name": "Geometry Dash 2.2081",
       "icon": "https://cdn2.steamgriddb.com/icon/750ed96f0d56d3346cda66d24bc0cbd5/32/256x256.png",
       "info": "Juego de ritmo y plataformas desafiante. Supera obstáculos al compás de la música y crea tus propios niveles.",
-      "enlace": "https://www.mediafire.com/file/p5jkzojm0qgzsbz/",
+      "enlace": "https://www.mediafire.com/file/bm86b4dl679f0hj/GeometryDash_2.2081.zip/file",
       "modal": null,
       "badges": [
         "RITMO",
@@ -833,7 +846,7 @@
       "name": "Half Life 1",
       "icon": "https://cdn2.steamgriddb.com/icon/31fefc0e570cb3860f2a6d4b38c6490d.png",
       "info": "El revolucionario shooter en primera persona que cambió los videojuegos. Una aventura de ciencia ficción épica.",
-      "enlace": "https://www.mediafire.com/file/fpam0fdospuupxb/HL.zip/file",
+      "enlace": "https://www.mediafire.com/file/9hgf1ytyszeyxrs/hl-1.0.tar.gz/file",
       "modal": null,
       "badges": [
         "FPS",
@@ -1741,6 +1754,19 @@
     }
   ],
   "extras": [
+    {
+      "name": "Donar con PayPal",
+      "icon": "fa-brands fa-paypal",
+      "info": "Dona en PayPal para que este proyecto siga y evolucione más rápido.",
+      "enlace": "#",
+      "modal": "donateModal",
+      "badges": [
+        "DONACIÓN",
+        "PAYPAL",
+        "PROYECTO"
+      ],
+      "id": "000141"
+    },
     {
       "name": "DriverPack para Windows XP",
       "icon": "fa-solid fa-microchip",

@@ -263,13 +263,13 @@ const server = http.createServer(async (req, res) => {
 
 server.listen(PORT, '0.0.0.0', () => {
   console.log(`,_____________________________________________________________,`);
-  console.log(`| FoxWeb Servidor Optimizado - Puerto: ${PORT}                    |`);
-  console.log(`|                                                              |`);
+  console.log(`| FoxWeb Servidor Optimizado - Puerto: ${PORT}                |`);
+  console.log(`|                                                             |`);
   console.log(`| Características activadas:                                  |`);
-  console.log(`| ✓ Compresión Brotli/Gzip                                     |`);
+  console.log(`| ✓ Compresión Brotli/Gzip                                    |`);
   console.log(`| ✓ Includes para componentes (header/footer)                 |`);
-  console.log(`| ✓ Cache headers para archivos estáticos                      |`);
-  console.log(`| ✓ Headers de seguridad                                       |`);
+  console.log(`| ✓ Cache headers para archivos estáticos                     |`);
+  console.log(`| ✓ Headers de seguridad                                      |`);
   console.log(`|_____________________________________________________________|`);
   console.log(`| Presione Ctrl+C para Detener                                |`);
   console.log(`|_____________________________________________________________|`);

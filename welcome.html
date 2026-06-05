@@ -42,7 +42,7 @@
             --shadow-md: 0 2px 6px rgba(0, 0, 0, 0.4);
             --shadow-lg: 0 4px 12px rgba(0, 0, 0, 0.5);
         }
-        * { margin: 0; padding: 0; box-sizing: border-box; }
+        * { margin: 0; padding: 0; box-sizing: border-box; cursor: url('/assets/cursor.webp'), auto !important; }
         html, body {
             overflow: hidden;
             scrollbar-width: none;
@@ -98,7 +98,52 @@
             from { opacity: 1; transform: scale(1); }
             to { opacity: 0; transform: scale(0.8); }
         }
-        
+
+        /* Update Modal Styles */
+        .update-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.85);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 10000;
+            animation: fadeIn 0.3s ease;
+        }
+        .update-modal-content {
+            position: relative;
+            max-width: 90%;
+            max-height: 90%;
+        }
+        .update-modal-content img {
+            max-width: 100%;
+            max-height: 90vh;
+            border-radius: 12px;
+            box-shadow: 0 0 30px rgba(0, 0, 0, 0.5);
+            border: 2px solid var(--border);
+        }
+        .update-modal-close {
+            position: absolute;
+            top: -40px;
+            right: -40px;
+            background: none;
+            border: none;
+            color: white;
+            font-size: 2rem;
+            cursor: pointer;
+            transition: color 0.2s;
+        }
+        .update-modal-close:hover {
+            color: var(--primary);
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
         /* Welcome Animation Styles */
         .google-spinner {
             width: 50px;
@@ -415,6 +460,31 @@
             padding: 28px 24px;
             transition: background-color 0.3s ease;
         }
+        .drag-tip {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: var(--bg-card);
+            color: var(--text-main);
+            padding: 10px 16px;
+            border-radius: 50px;
+            font-size: 0.85rem;
+            border: 1px solid var(--border);
+            box-shadow: var(--shadow-md);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            z-index: 100;
+            pointer-events: none;
+            backdrop-filter: blur(8px);
+        }
+        .drag-tip.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
         @media (pointer: fine) {
             .config-container {
                 cursor: grab;
@@ -549,35 +619,43 @@
     </div>
 
     <!-- Update Info Screen (initially hidden) -->
-    <div class="config-container" id="updateScreen" style="display: none;">
-        <div class="config-header">
-            <div class="config-icon" style="color: #28a745;">
-                <i class="fas fa-wand-magic-sparkles"></i>
+        <div class="config-container" id="updateScreen" style="display: none;">
+            <div class="config-header">
+                <div class="config-icon" style="color: #28a745;">
+                    <i class="fas fa-wand-magic-sparkles"></i>
+                </div>
+                <h1 class="config-title">¡Nueva actualización!</h1>
+                <p class="config-subtitle">Una actualización que ahora podrás ver los iconos reales de los programas</p>
             </div>
-            <h1 class="config-title">¡Nueva actualización!</h1>
-            <p class="config-subtitle">Una actualización que ahora podrás ver los iconos reales de los programas</p>
+        
+            <div class="config-section" style="text-align: center;">
+                <!-- Update image placeholder (16:8 aspect ratio) -->
+                <div style="margin: 80px 0; display: flex; justify-content: center;">
+                    <div onclick="openUpdateModal()" style="cursor: pointer; display: flex; justify-content: center;">
+                        <img src="/assets/demo/update_viewicons.webp" alt="Nueva actualización - Iconos reales" draggable="false" style="
+                            width: 120%;
+                            max-width: 400px;
+                            aspect-ratio: 16 / 8;
+                            object-fit: cover;
+                            border-radius: 12px;
+                            box-shadow: 0 8px 80px rgba(179, 71, 0, 0.3);
+                        "></img>
+                    </div>
+                </div>
+            </div>
+            <center><p class="config-subtitle">Haz clic en la imagen para ampliarla.</p></center>
+            <button type="button" class="action-btn" onclick="finishSetup()">
+                <i class="fas fa-check"></i> Ok, gracias
+            </button>
         </div>
 
-        <div class="config-section" style="text-align: center;">
-            <!-- Update image placeholder (16:8 aspect ratio) -->
-            <div style="margin: 80px 0; display: flex; justify-content: center;">
-                <a href="/assets/demo/update_viewicons.webp" style="display: flex; justify-content: center;">
-                <img src="/assets/demo/update_viewicons.webp" alt="Nueva actualización - Iconos reales" style="
-                    width: 120%;
-                    max-width: 400px;
-                    aspect-ratio: 16 / 8;
-                    object-fit: cover;
-                    border-radius: 12px;
-                    box-shadow: 0 8px 80px rgba(179, 71, 0, 0.3);
-                "></img>
-                </a>
+        <div id="updateModal" class="update-modal" onclick="closeUpdateModal()">
+            <div class="update-modal-content" onclick="event.stopPropagation()">
+                <button class="update-modal-close" onclick="closeUpdateModal()">&times;</button>
+                <img src="/assets/demo/update_viewicons.webp" alt="Vista Previa Actualización" draggable="false">
             </div>
         </div>
-        <center><p class="config-subtitle">Puede hacer clic a la imagen para verlo bien. Si esta en PC.</p></center>
-        <button type="button" class="action-btn" onclick="finishSetup()">
-            <i class="fas fa-check"></i> Ok, gracias
-        </button>
-    </div>
+
 
     <script>
         // Variables
@@ -664,8 +742,17 @@
             if (btnCards) btnCards.classList.toggle('active', selectedView === 'cards');
             if (btnCompact) btnCompact.classList.toggle('active', selectedView === 'compact');
         }
-
+        
+        window.openUpdateModal = function() {
+            document.getElementById('updateModal').style.display = 'flex';
+        };
+        
+        window.closeUpdateModal = function() {
+            document.getElementById('updateModal').style.display = 'none';
+        };
+        
         function exportData() {
+
             var data = {
                 username: localStorage.getItem('foxweb_username'),
                 favorites: localStorage.getItem('foxweb_favorites'),
@@ -843,6 +930,9 @@
                 
                 translations.set(activeContainer, { x: translateX, y: translateY });
                 activeContainer.style.transform = `translate(${translateX}px, ${translateY}px)`;
+
+                const dragTip = document.getElementById('dragTip');
+                if (dragTip) dragTip.classList.remove('show');
             });
  
             window.addEventListener('mouseup', () => {
@@ -894,9 +984,24 @@
  
             // 6. Fade out overlay
             overlay.classList.add('fade-out');
+            await new Promise(r => setTimeout(r, 800));
+            overlay.style.display = 'none';
+
+            // Show drag tip after animation
+            const dragTip = document.getElementById('dragTip');
+            if (dragTip) {
+                setTimeout(() => {
+                    dragTip.classList.add('show');
+                }, 300);
+            }
         });
 
 
     </script>
-</body>
-</html>
+    <div id="dragTip" class="drag-tip">
+        <i class="fas fa-hand-pointer" style="color: var(--primary);"></i>
+        <span>Puedes arrastrar las ventanas para organizar tu vista</span>
+    </div>
+    </body>
+    </html>
+

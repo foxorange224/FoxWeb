@@ -57,5 +57,20 @@
         ],
         "author": "FoxOrange224",
         "featured": false
+    },
+    {
+        "id": "sobre-los-anuncios",
+        "title": "Transparencia: Sobre los Anuncios en FoxWeb",
+        "url": "/blog/sobre-los-anuncios/",
+        "date": "2026-05-09",
+        "excerpt": "Entiende por qué FoxWeb utiliza anuncios, cómo ayudan a mantener el proyecto gratuito y cómo puedes gestionarlos desde tu configuración.",
+        "tags": [
+            "Anuncios",
+            "Transparencia",
+            "Configuración",
+            "Apoyo"
+        ],
+        "author": "FoxOrange224",
+        "featured": false
     }
 ]

@@ -1,3 +1,39 @@
+<div id=hl2Modal class=modal role=dialog aria-modal=true aria-labelledby=hl2ModalTitle>
+
+    <div class="modal-content modal-compact"><button type="button" class=close onclick="closeModal('hl2Modal')"
+            aria-label="Cerrar modal">&times;</button>
+        <i class="fa-solid fa-compact-disc" style=font-size:2.5em;color:var(--primary);margin-bottom:10px></i>
+        <h2 id=hl2ModalTitle style=margin-bottom:8px;color:var(--primary);font-size:1.3rem>Half-Life 2
+            (Descargar en partes)</h2>
+
+        <p style=color:var(--text-dim);margin-bottom:15px;font-size:.9rem>Tendras que descargar el Half-Life 2 por partes, por las limitaciones de Mediafire.
+
+        <div class=modal-buttons-container>
+            <a href=http://www.mediafire.com/file/9uw4k8ynytp43wp/HL2_by_BlizzBoyGames.part1.rar class="modal-btn bit-32" target=_blank
+                rel="noopener noreferrer" aria-label="Descargar: Parte 1 del RAR"><i
+                    class="fa-solid fa-compact-disc"></i>Descargar 2 GB: Parte 1 del RAR</a>
+            <a href=http://www.mediafire.com/file/2hyt7s3hiv77l6f/HL2_by_BlizzBoyGames.part2.rar class="modal-btn bit-32" target=_blank
+                rel="noopener noreferrer" aria-label="Descargar: Parte 2 del RAR"><i
+                    class="fa-solid fa-compact-disc"></i>Descargar 551.25 MB: Parte 2 del RAR</a>
+
+        </div>
+
+        <div
+            style="margin-top:15px;padding:12px;background:#ff45000d;border-radius:6px;border-left:3px solid var(--primary)">
+
+            <p style=margin:0;font-size:.85em;color:var(--text-dim)><i></i><strong>Importante:</strong>
+                La contraseña es: www.blizzboygames.net del archivo comprimido, para decomprimir el juego se extrae la .part1.rar que contiene la ISO del juego que puedes extraerlo con <a href="https://www.7-zip.org/download.html">7zip</a> o un montador de ISO de su preferencia.</p>
+        </div>
+        <div
+            style="margin-top:15px;padding:12px;background:#ff45000d;border-radius:6px;border-left:3px solid var(--primary)">
+            <p style=margin:0;font-size:.85em;color:var(--text-dim)><i></i><strong>Requisitos Recomendados:</strong>
+               <p><i> Procesador: Pentium 4 (3.0 GHz o más rápido) </i></p>
+               <p><i> Memoria: 1 GB de RAM o más </i></p>
+               <p><i> Gráficos: Compatible con DirectX® 9 </i></p></p>
+        </div>
+    </div>
+</div>
+
 <div id=mypalModal class=modal role=dialog aria-modal=true aria-labelledby=mypalModalTitle>
 
     <div class="modal-content modal-compact"><button type="button" class=close onclick="closeModal('mypalModal')"
@@ -336,23 +372,27 @@
 
 <div id=donateModal class=modal role=dialog aria-modal=true aria-labelledby=donateModalTitle>
 
-    <div class="donate-modal-content modal-compact"><button type="button" class=close onclick="closeModal('donateModal')"
+    <div class="modal-content modal-compact"><button type="button" class=close onclick="closeModal('donateModal')"
             aria-label="Cerrar modal de donación">&times;</button>
+        <i class="fa-brands fa-paypal" style=font-size:2.5em;color:#007bff;margin-bottom:10px></i>
+        <h2 id=donateModalTitle style=margin-bottom:8px;color:#007bff;font-size:1.3rem>¡Apoya FoxWeb!</h2>
 
-        <div class=donate-icon><i class="fa-brands fa-paypal" style=font-size:2.8em></i>
-        </div>
-        <h2 id=donateModalTitle class=donate-title style=font-size:1.5rem>¡Apoya FoxWeb!</h2>
-
-        <p class=donate-message style=font-size:.95rem>Doname en PayPal para que este proyecto siga y evolucione más
+        <p style=color:var(--text-dim);margin-bottom:15px;font-size:.9rem>Doname en PayPal para que este proyecto siga y evolucione más
             rápido.
             <br>Tu apoyo ayuda a mantener los servidores, agregar más contenido y mejorar la experiencia para todos.
-        </p><a href=https://www.paypal.com/ncp/payment/QLFVSACHGMW5E class=donate-btn target=_blank
-            rel="noopener noreferrer" aria-label="Donar con PayPal" style="padding:14px 25px;font-size:.95rem"><i
+        </p>
+        <div class=modal-buttons-container>
+            <a href=https://www.paypal.com/ncp/payment/QLFVSACHGMW5E class="modal-btn" target=_blank
+                rel="noopener noreferrer" aria-label="Donar con PayPal"
+                style=background-color:#007bff;color:#fff;border-color:#007bff;padding:14px 25px;font-size:.95rem><i
                 class="fa-brands fa-paypal"></i>Donar con PayPal</a>
+        </div>
 
-        <div class=donate-note style=padding:15px;font-size:.9rem><i class="fa-solid fa-heart"
+        <div style=margin-top:15px;padding:12px;background:#007bff1a;border-radius:6px;border-left:3px solid #007bff>
+            <p style=margin:0;font-size:.85em;color:var(--text-dim)><i class="fa-solid fa-heart"
                 style=color:#ff4757;font-size:1em></i><strong>¡Gracias por tu apoyo!</strong> Cada
-            donación, por pequeña que sea, hace una gran diferencia.
+            donación, por pequeña que sea, hace una gran diferencia. Cuando tengamos nuestra primera donación habilitaremos una pagina para la lista de donaciones.
+            </p>
         </div>
     </div>
 </div>

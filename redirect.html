@@ -150,9 +150,14 @@
             <img src="/assets/logo.webp" alt="FoxWeb" onerror="this.style.display='none'" loading="lazy" width="120" height="120">
         </div>
         <div class="spinner"></div>
-        <p class="message" id="countdown-text">Redireccionando... 5</p>
+        <p class="message" id="countdown-text">Redireccionando...</p>
         <p class="url" id="url-display"></p>
-        <img src="/assets/banner.webp" alt="Banner Publicitario" style="max-width: 100%; height: auto; margin-top: 1.5rem; border-radius: 8px;" loading="lazy" width="728" height="90">
+        <!-- BEGIN AADS AD UNIT 2437150 -->
+        <div id="frame-loading" style="width: 100%;margin: auto;position: relative; z-index: 99998; margin-top: 1.5rem;">
+              <iframe data-aa='2437150' src='//acceptable.a-ads.com/2437150/?size=Adaptive'
+                            style='border:0; padding:0; width:70%; height:auto; overflow:hidden;display: block;margin: auto'></iframe>
+        </div>
+        <!-- END AADS AD UNIT 2437150 -->
     </div>
     
     <div class="container" id="error" style="display: none;">
@@ -163,11 +168,26 @@
             <p class="message">⚠️ Falta la URL</p>
         </div>
         <p class="usage">Uso: /redirect?url=www.ejemplo.com</p>
-        <img src="/assets/banner.webp" alt="Banner Publicitario" style="max-width: 100%; height: auto; margin-top: 1.5rem; border-radius: 8px;" loading="lazy" width="728" height="90">
+        <!-- BEGIN AADS AD UNIT 2437150 -->
+        <div id="frame-error" style="width: 100%;margin: auto;position: relative; z-index: 99998; margin-top: 1.5rem;">
+              <iframe data-aa='2437150' src='//acceptable.a-ads.com/2437150/?size=Adaptive'
+                            style='border:0; padding:0; width:70%; height:auto; overflow:hidden;display: block;margin: auto'></iframe>
+        </div>
+        <!-- END AADS AD UNIT 2437150 -->
     </div>
-
+    
     <script>
-        (function() {
+        (async function() {
+            // Check ads preference
+            const redirectAdsEnabled = localStorage.getItem('foxweb_redirect_ads_enabled') !== 'false';
+            if (!redirectAdsEnabled) {
+                const loadingAd = document.getElementById('frame-loading');
+                const errorAd = document.getElementById('frame-error');
+                if (loadingAd) loadingAd.style.display = 'none';
+                if (errorAd) errorAd.style.display = 'none';
+            }
+
+            // Lista blanca de dominios permitidos para redirección
             // Lista blanca de dominios permitidos para redirección
             const ALLOWED_DOMAINS = [
               'mediafire.com', 'drive.google.com', 'mega.nz', 'dropbox.com',
@@ -185,19 +205,69 @@
               'reactos.org', 'gparted.org', 'ventoy.net',
               'store.steampowered.com', 'llaun.ch', 'optijuegos.net',
               'gofile.io', 'assault.cubers.net', 'openttd.org',
-              'supertuxkart.net', 'retroarch.com'
+              'supertuxkart.net', 'retroarch.com', 'discord.gg', 'discord.com'
             ];
             
             // Obtener parámetros de la URL
             const params = new URLSearchParams(window.location.search);
             let url = params.get('url');
+            const id = params.get('id');
             
             const urlDisplay = document.getElementById('url-display');
             const loadingDiv = document.getElementById('loading');
             const errorDiv = document.getElementById('error');
             
+            // Lógica de redirección por ID
+            if (id) {
+                try {
+                    const response = await fetch('/database/data.json');
+                    const data = await response.json();
+                    
+                    let foundItem = null;
+                    const categories = ['programas', 'sistemas', 'juegos', 'apks', 'extras'];
+                    
+                    for (const cat of categories) {
+                        if (data[cat]) {
+                            const item = data[cat].find(i => i.id === id);
+                            if (item) {
+                                foundItem = item;
+                                break;
+                            }
+                        }
+                    }
+                    
+                    if (foundItem) {
+                        if (foundItem.modal && (!foundItem.enlace || foundItem.enlace === '#')) {
+                            // Es un modal
+                            loadingDiv.style.display = 'none';
+                            errorDiv.style.display = 'block';
+                            const errorMessage = errorDiv.querySelector('.message');
+                            if (errorMessage) {
+                                errorMessage.innerHTML = '⚠️ Contenido de Modal<br><small>Este contenido es un modal que solo se muestra en el sitio principal.</small>';
+                            }
+                            return;
+                        } else if (foundItem.enlace && foundItem.enlace !== '#') {
+                            url = foundItem.enlace;
+                        }
+                    } else {
+                        // ID no encontrado
+                        loadingDiv.style.display = 'none';
+                        errorDiv.style.display = 'block';
+                        const errorMessage = errorDiv.querySelector('.message');
+                        if (errorMessage) {
+                            errorMessage.innerHTML = '⚠️ ID no encontrado<br><small>El enlace solicitado no existe en nuestra base de datos.</small>';
+                        }
+                        return;
+                    }
+                } catch (e) {
+                    loadingDiv.style.display = 'none';
+                    errorDiv.style.display = 'block';
+                    return;
+                }
+            }
+            
             if (!url) {
-                // No hay URL, mostrar error
+                // No hay URL ni ID válido, mostrar error
                 loadingDiv.style.display = 'none';
                 errorDiv.style.display = 'block';
                 return;
@@ -239,19 +309,44 @@
             }
             
             // Contador regresivo de 3 segundos
-            let countdown = 3;
-            const messageEl = document.getElementById('countdown-text');
-            
-            const countdownInterval = setInterval(function() {
-                messageEl.textContent = 'Redireccionando... ' + countdown;
-                countdown--;
+            function startCountdown() {
+                let countdown = 3;
+                const messageEl = document.getElementById('countdown-text');
                 
-                if (countdown < 0) {
-                    clearInterval(countdownInterval);
-                    messageEl.textContent = 'Redireccionando...';
-                    window.location.href = url;
+                const countdownInterval = setInterval(function() {
+                    messageEl.textContent = 'Redireccionando... ' + countdown;
+                    countdown--;
+                    
+                    if (countdown < 0) {
+                        clearInterval(countdownInterval);
+                        messageEl.textContent = 'Redireccionando...';
+                        window.location.href = url;
+                    }
+                }, 1000);
+            }
+
+            // Lógica para iniciar la cuenta regresiva
+            if (redirectAdsEnabled) {
+                const adIframe = document.querySelector('#frame-loading iframe');
+                if (adIframe) {
+                    // Esperar a que el anuncio cargue
+                    adIframe.onload = () => {
+                        console.log('[Redirect] Ad loaded, starting countdown');
+                        startCountdown();
+                    };
+                    // Fallback por si el anuncio tarda demasiado o falla
+                    setTimeout(() => {
+                        if (document.getElementById('countdown-text').textContent === 'Redireccionando...') {
+                            console.log('[Redirect] Ad load timeout, starting countdown anyway');
+                            startCountdown();
+                        }
+                    }, 5000);
+                } else {
+                    startCountdown();
                 }
-            }, 1000);
+            } else {
+                startCountdown();
+            }
         })();
     </script>
 </body>

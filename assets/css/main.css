@@ -149,6 +149,17 @@
     border: 1px solid var(--border);
     text-decoration: none;
 }
+.modal-btn.donate {
+    background-color: var(--primary);
+    color: #fff;
+    border-color: var(--primary);
+}
+
+.modal-btn.donate:hover {
+    background-color: var(--primary-hover);
+    border-color: var(--primary-hover);
+    box-shadow: none;
+}
 
 .modal-btn.bit-64 {
     background-color: var(--primary);
@@ -252,6 +263,10 @@
     outline: none
 }
 
+html, body, * {
+    cursor: url('/assets/cursor.webp'), auto !important;
+}
+
 html {
     font-size: 14px;
     scroll-behavior: smooth;
@@ -269,8 +284,32 @@ body {
     -moz-osx-font-smoothing: grayscale;
 }
 
+
+body {
+    font-family: inter, -apple-system, BlinkMacSystemFont, segoe ui, Roboto, sans-serif;
+    background-color: var(--bg-body);
+    color: var(--text-main);
+    line-height: 1.6;
+    min-height: 100vh;
+    overflow-x: hidden;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    cursor: url('/assets/cursor.webp'), auto;
+}
+
+a, button, input, textarea, select {
+    cursor: url('/assets/cursor.webp'), auto;
+}
+
+
+a, button {
+    cursor: url('/assets/cursor.webp'), pointer;
+}
+
+
 img {
     max-width: 100%;
+
     height: auto;
     display: block
 }

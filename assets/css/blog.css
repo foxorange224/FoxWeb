@@ -289,21 +289,62 @@
             border-bottom: 1px solid var(--border);
             padding-bottom: 10px;
         }
-
+        
         .post-card h3 {
             color: var(--primary);
             margin-top: 20px;
         }
-
+        
         .post-card p,
         .post-card ul li {
             color: var(--text-secondary);
             line-height: 1.6;
             margin-bottom: 15px;
         }
-
+        
         .post-card ul {
             padding-left: 20px;
+        }
+        
+        /* Estilos para el CTA del blog */
+        .blog-cta {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            padding: 30px;
+            margin-top: 40px;
+            text-align: center;
+            box-shadow: var(--shadow-md);
+        }
+        
+        .blog-cta p {
+            color: var(--text-main);
+            font-size: 1.1rem;
+            margin-bottom: 20px;
+            font-weight: 600;
+        }
+        
+        .blog-cta .enter-button {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            background: var(--primary);
+            color: white;
+            padding: 12px 24px;
+            border-radius: var(--radius-md);
+            text-decoration: none;
+            font-weight: 600;
+            transition: background 0.2s ease, transform 0.2s ease;
+            box-shadow: 0 4px 12px rgba(179, 71, 0, 0.3);
+        }
+        
+        .blog-cta .enter-button:hover {
+            background: var(--primary-hover);
+            transform: translateY(-2px);
+        }
+        
+        .blog-cta .enter-button i {
+            font-size: 1rem;
         }
 
         .post-img {

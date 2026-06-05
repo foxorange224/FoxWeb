@@ -495,7 +495,7 @@ function renderTabWithPagination(tabId) {
     
     paginatedItems.forEach((item, index) => {
         const globalIndex = ((PaginationState.getPage(tabId) - 1) * PAGINATION_CONFIG.itemsPerPage) + index;
-        const itemId = `${tabId.toLowerCase()}_${globalIndex}`;
+        const itemId = item.id || `${tabId.toLowerCase()}_${globalIndex}`;
         const card = createContentCard(item, tabId, itemId, viewMode);
         if (card) fragment.appendChild(card);
     });
