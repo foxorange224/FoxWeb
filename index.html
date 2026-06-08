@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>FoxWeb | Descargas</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.5.1/css/all.min.css">
     <style>
         body {
             background-color: black;
@@ -82,8 +83,8 @@
         }
 
         .card img {
-            width: 64px;
-            height: 64px;
+            width: 84px;
+            height: 84px;
             object-fit: contain;
             margin-bottom: 10px;
         }
@@ -197,6 +198,110 @@
             z-index: 3100;
         }
 
+        /* Notifications Modal */
+        #notifications-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.9);
+            z-index: 4000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .notif-modal-content {
+            background: #111;
+            border: 1px solid #333;
+            width: 90%;
+            max-width: 500px;
+            max-height: 80vh;
+            border-radius: 8px;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+
+        .notif-modal-header {
+            padding: 20px;
+            border-bottom: 1px solid #333;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .notif-modal-header h2 {
+            margin: 0;
+            font-size: 1.5rem;
+        }
+
+        .notif-list {
+            padding: 10px;
+            overflow-y: auto;
+            flex-grow: 1;
+        }
+
+        .notif-item {
+            background: #1a1a1a;
+            border: 1px solid #333;
+            border-radius: 6px;
+            padding: 15px;
+            margin-bottom: 10px;
+            position: relative;
+            transition: background 0.2s;
+        }
+
+        .notif-item:hover {
+            background: #222;
+        }
+
+        .notif-item .notif-title {
+            font-weight: bold;
+            display: block;
+            margin-bottom: 5px;
+            color: #fff;
+        }
+
+        .notif-item .notif-msg {
+            font-size: 0.9rem;
+            color: #aaa;
+            margin-bottom: 10px;
+            display: block;
+        }
+
+        .notif-item .notif-date {
+            font-size: 0.75rem;
+            color: #666;
+        }
+
+        .notif-item .btn-del {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: none;
+            border: none;
+            color: #ff4444;
+            cursor: pointer;
+            font-size: 1.2rem;
+        }
+
+        .notif-modal-footer {
+            padding: 15px;
+            border-top: 1px solid #333;
+            text-align: right;
+        }
+
+        .btn-clear-all {
+            background: #8C0700;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+        }
 
         /* Notification Styles */
         #notification-container {
@@ -208,7 +313,6 @@
             flex-direction: column;
             gap: 10px;
         }
-
 
         .notification {
             background: #333;
@@ -228,6 +332,10 @@
             from { transform: translateX(100%); }
             to { transform: translateX(0); }
         }
+
+        body.no-scroll {
+            overflow: hidden;
+        }
     </style>
 </head>
 <body>
@@ -236,6 +344,9 @@
             <img src="/assets/logo.webp" height="80">
         </a>
         <a href="/about"><p>Acerca de</p></a>
+        <button class="cat-btn" onclick="openNotificationsModal()" style="margin-left: 10px;">
+            <i class="fa-solid fa-bell"></i> Notificaciones
+        </button>
     </header>
 
     <div class="nav-categories" id="category-nav">
@@ -248,6 +359,21 @@
 
     <div id="notification-container"></div>
 
+    <div id="notifications-modal">
+        <div class="notif-modal-content">
+            <div class="notif-modal-header">
+                <h2>Notificaciones</h2>
+                <button class="close-desc" style="position: static; padding: 5px 10px;" onclick="closeNotificationsModal()">&times;</button>
+            </div>
+            <div class="notif-list" id="notif-list">
+                <!-- Notifications injected here -->
+            </div>
+            <div class="notif-modal-footer">
+                <button class="btn-clear-all" onclick="clearAllNotifications()">Borrar Todas</button>
+            </div>
+        </div>
+    </div>
+
     <div id="description-overlay">
         <button class="close-desc" onclick="closeDescription()">Cerrar</button>
         <div class="desc-container" id="desc-container">
@@ -258,6 +384,7 @@
     <script>
         const DB_URL = 'https://database.foxweb.qzz.io';
         let allData = {};
+        let allNotifications = [];
 
         async function init() {
             try {
@@ -265,7 +392,17 @@
                 allData = await response.json();
                 
                 setupCategories();
-                renderCategory(Object.keys(allData)[0]);
+                
+                const hash = window.location.hash.substring(1);
+                const categories = Object.keys(allData);
+                const targetCat = categories.find(c => c.toLowerCase() === hash.toLowerCase());
+                
+                if (targetCat) {
+                    switchCategory(targetCat);
+                } else {
+                    switchCategory(categories[0]);
+                }
+                
                 setupNotifications();
             } catch (e) {
                 console.error('Error loading data:', e);
@@ -278,16 +415,31 @@
             
             categories.forEach((cat, index) => {
                 const btn = document.createElement('button');
-                btn.className = 'cat-btn' + (index === 0 ? ' active' : '');
+                btn.className = 'cat-btn';
+                btn.id = `btn-${cat}`;
                 btn.textContent = cat.charAt(0).toUpperCase() + cat.slice(1);
                 btn.onclick = () => {
-                    document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active'));
-                    btn.classList.add('active');
-                    renderCategory(cat);
+                    window.location.hash = cat;
                 };
                 nav.appendChild(btn);
             });
         }
+
+        function switchCategory(cat) {
+            document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active'));
+            const activeBtn = document.getElementById(`btn-${cat}`);
+            if (activeBtn) activeBtn.classList.add('active');
+            renderCategory(cat);
+        }
+
+        window.onhashchange = () => {
+            const hash = window.location.hash.substring(1);
+            const categories = Object.keys(allData);
+            const targetCat = categories.find(c => c.toLowerCase() === hash.toLowerCase());
+            if (targetCat) {
+                switchCategory(targetCat);
+            }
+        };
 
         function renderCategory(cat) {
             const grid = document.getElementById('content-grid');
@@ -316,6 +468,7 @@
             const container = document.getElementById('desc-container');
             const iconUrl = `${DB_URL}/icons/${item.id}.webp`;
             
+            document.body.classList.add('no-scroll');
             overlay.style.display = 'block';
             container.innerHTML = 'Cargando...';
 
@@ -326,10 +479,16 @@
                     mdText = await mdResponse.text();
                 }
 
-                // Parse custom buttons: [boton de descarga, color=#hex, icono=fa-xxx, enlace=url, title="text"]
-                const parsedMd = mdText.replace(/\[boton de descarga, color=([^,]+), icono=([^,]+), enlace=([^,]+), title="([^"]+)"\]/g, (match, color, icon, link, title) => {
+                let renderedMd = mdText.replace(/\[boton de descarga, color=([^,]+), icono=([^,]+), enlace=([^,]+), title="([^"]+)"\]/g, (match, color, icon, link, title) => {
                     return `<a href="${link}" style="background-color: ${color}; color: white; padding: 10px 20px; border-radius: 5px; text-decoration: none; display: inline-flex; align-items: center; gap: 10px; margin: 10px 0; font-weight: bold;"><i class="${icon}"></i> ${title}</a>`;
                 });
+
+                renderedMd = renderedMd
+                    .replace(/^# (.*$)/gim, '<h1>$1</h1>')
+                    .replace(/^## (.*$)/gim, '<h2>$1</h2>')
+                    .replace(/^### (.*$)/gim, '<h3>$1</h3>')
+                    .replace(/`(.*?)`/g, '<code>$1</code>')
+                    .replace(/\n/g, '<br>');
 
                 const downloadButton = item.enlace && item.enlace !== '#' 
                     ? `<a href="#" class="btn-download" 
@@ -350,7 +509,7 @@
                     </div>
                     ${downloadButton}
                     <div class="desc-md-content">
-                        ${parsedMd.replace(/\\n/g, '<br>')}
+                        ${renderedMd}
                     </div>
                 `;
             } catch (e) {
@@ -361,6 +520,7 @@
 
         function closeDescription() {
             document.getElementById('description-overlay').style.display = 'none';
+            document.body.classList.remove('no-scroll');
         }
 
         function handleDownload(e, enlace) {
@@ -374,14 +534,34 @@
             try {
                 const response = await fetch(`${DB_URL}/notifications.json`);
                 const data = await response.json();
+                allNotifications = data.notifications;
                 
-                data.notifications.forEach((notif, index) => {
-                    setTimeout(() => {
-                        showNotification(notif);
-                    }, index * 3000);
+                const activeNotifs = getActiveNotifications();
+                const seenNotifs = JSON.parse(localStorage.getItem('seen_notifications') || '[]');
+                
+                activeNotifs.forEach((notif, index) => {
+                    if (!seenNotifs.includes(notif.id)) {
+                        setTimeout(() => {
+                            showNotification(notif);
+                            markAsSeen(notif.id);
+                        }, index * 3000);
+                    }
                 });
             } catch (e) {
                 console.error('Error loading notifications:', e);
+            }
+        }
+
+        function getActiveNotifications() {
+            const deletedNotifs = JSON.parse(localStorage.getItem('deleted_notifications') || '[]');
+            return allNotifications.filter(n => !deletedNotifs.includes(n.id));
+        }
+
+        function markAsSeen(id) {
+            const seenNotifs = JSON.parse(localStorage.getItem('seen_notifications') || '[]');
+            if (!seenNotifs.includes(id)) {
+                seenNotifs.push(id);
+                localStorage.setItem('seen_notifications', JSON.stringify(seenNotifs));
             }
         }
 
@@ -399,10 +579,56 @@
             }, 5000);
         }
 
-        // Global function for modal closing (called from modals.html)
+        function openNotificationsModal() {
+            const modal = document.getElementById('notifications-modal');
+            const list = document.getElementById('notif-list');
+            
+            modal.style.display = 'flex';
+            list.innerHTML = '';
+
+            const activeNotifs = getActiveNotifications();
+
+            if (activeNotifs.length === 0) {
+                list.innerHTML = '<p style="text-align:center; color:#666;">No hay notificaciones.</p>';
+                return;
+            }
+
+            activeNotifs.forEach(notif => {
+                const item = document.createElement('div');
+                item.className = 'notif-item';
+                item.innerHTML = `
+                    <button class="btn-del" onclick="deleteNotification('${notif.id}')">&times;</button>
+                    <span class="notif-title">${notif.title}</span>
+                    <span class="notif-msg">${notif.message}</span>
+                    <span class="notif-date">${new Date(notif.date).toLocaleString()}</span>
+                `;
+                list.appendChild(item);
+            });
+        }
+
+        function closeNotificationsModal() {
+            document.getElementById('notifications-modal').style.display = 'none';
+        }
+
+        function deleteNotification(id) {
+            const deletedNotifs = JSON.parse(localStorage.getItem('deleted_notifications') || '[]');
+            if (!deletedNotifs.includes(id)) {
+                deletedNotifs.push(id);
+                localStorage.setItem('deleted_notifications', JSON.stringify(deletedNotifs));
+            }
+            openNotificationsModal();
+        }
+
+        function clearAllNotifications() {
+            const deletedNotifs = JSON.parse(localStorage.getItem('deleted_notifications') || '[]');
+            const allIds = allNotifications.map(n => n.id);
+            const updatedDeleted = [...new Set([...deletedNotifs, ...allIds])];
+            localStorage.setItem('deleted_notifications', JSON.stringify(updatedDeleted));
+            
+            openNotificationsModal();
+        }
         
         init();
     </script>
 </body>
 </html>
-    
